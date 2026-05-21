@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda a operar serviços Linux com systemctl: units, enable, restart, daemon-reload, targets e troubleshooting real."
+    />
+    <title>Módulo 06 — Serviços com systemctl | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="systemctl">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html#modulos" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 06</span>
+          <h1 class="module-page-title">Serviços com systemctl</h1>
+          <p class="module-intro">
+            Depois que você entende processos, o próximo passo natural é operar
+            serviços de verdade. Aqui entra o <code>systemd</code>: start, stop,
+            restart, logs, dependências e o raciocínio correto quando um daemon
+            não sobe.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 18 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <section class="content-section" id="o-que-e-systemd">
+          <div class="section-header">
+            <h2>O que o systemd faz</h2>
+            <button class="mark-studied" data-section="o-que-e-systemd">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>systemd</strong> é o gerenciador de init e serviços da
+              maioria das distribuições Linux modernas. Ele é o processo PID 1
+              em muitos sistemas e decide a ordem em que serviços sobem,
+              reiniciam, aguardam dependências e escrevem logs.
+            </p>
+            <p>
+              Na prática, <code>systemctl</code> é a interface operacional mais
+              usada: você pergunta status, reinicia um serviço travado, habilita
+              no boot e descobre rapidamente por que algo falhou.
+            </p>
+          </div>
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia</span>
+            <p>
+              Pense no systemd como o coordenador de um prédio técnico. Cada
+              elevador, bomba de água e porta automática é um serviço. O
+              coordenador sabe o que deve ligar primeiro, o que depende de quê e
+              quem precisa ser reiniciado quando algo falha.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Guarde isto</span>
+            <ul>
+              <li><code>systemd</code> coordena boot e serviços.</li>
+              <li>
+                <code>systemctl</code> é o comando operacional do dia a dia.
+              </li>
+              <li>
+                Serviço que falha quase sempre deixa pista em status e log.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="content-section" id="units-e-status">
+          <div class="section-header">
+            <h2>Units, status e ciclo básico</h2>
+            <button class="mark-studied" data-section="units-e-status">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O systemd trabalha com <strong>units</strong>. O tipo mais comum é
+              <code>.service</code>, mas existem outros: <code>.socket</code>,
+              <code>.timer</code>, <code>.mount</code>, <code>.target</code>.
+              Quando você fala "nginx", normalmente está lidando com
+              <code>nginx.service</code>.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>sudo systemctl status nginx
+sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo systemctl restart nginx
+sudo systemctl reload nginx
+sudo systemctl is-active nginx</code></pre>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Reiniciar sem olhar o status</strong>: muita gente roda
+              <code>restart</code> em loop e perde a causa raiz. O correto é:
+              ver <code>status</code>, ler a mensagem de falha e só depois agir.
+            </p>
+            <p>
+              <strong>Confundir reload com restart</strong>:
+              <code>reload</code> recarrega configuração sem matar o processo
+              principal, quando o software suporta isso.
+              <code>restart</code> derruba e sobe de novo.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="boot-enable">
+          <div class="section-header">
+            <h2>Enable, disable e o boot</h2>
+            <button class="mark-studied" data-section="boot-enable">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <code>start</code> sobe o serviço agora. <code>enable</code> faz o
+              serviço subir automaticamente no próximo boot. São coisas
+              diferentes.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo prático</span>
+            <pre><code>sudo systemctl start ssh
+sudo systemctl enable ssh
+sudo systemctl disable ssh
+sudo systemctl is-enabled ssh</code></pre>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Mini troubleshooting</span>
+            <ul>
+              <li>
+                Se o serviço funciona agora, mas some após reboot, verifique
+                <code>is-enabled</code>.
+              </li>
+              <li>
+                Se está enabled mas não sobe, olhe dependências e falhas no
+                boot.
+              </li>
+              <li>
+                Para confirmar:
+                <code>systemctl list-unit-files --type=service | grep nome</code
+                >.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="content-section" id="arquivos-unit">
+          <div class="section-header">
+            <h2>Arquivos de unit e daemon-reload</h2>
+            <button class="mark-studied" data-section="arquivos-unit">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Services costumam ser definidos em arquivos como
+              <code>/etc/systemd/system/minha-app.service</code>. Neles você
+              declara <code>ExecStart</code>, usuário, dependências, restart
+              policy e outros comportamentos.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo concreto</span>
+            <pre><code>[Unit]
+Description=Minha API Node
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/srv/minha-api
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+            <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now minha-api
+sudo systemctl status minha-api</code></pre>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erro comum</span>
+            <p>
+              Editou a unit e nada mudou? Faltou <code>daemon-reload</code>. Sem
+              isso, o systemd continua usando a definição antiga em memória.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="falhas-reais">
+          <div class="section-header">
+            <h2>Quando o serviço não sobe</h2>
+            <button class="mark-studied" data-section="falhas-reais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Fluxo real</span>
+            <pre><code>sudo systemctl status nginx
+sudo journalctl -u nginx -n 50 --no-pager
+sudo ss -tulpn | grep ':80'
+sudo nginx -t</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Raciocínio</span>
+            <p>
+              Quase toda falha de serviço cai em uma destas categorias: porta já
+              ocupada, arquivo de configuração inválido, permissão insuficiente,
+              caminho errado em <code>ExecStart</code> ou dependência não
+              disponível.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Checklist</span>
+            <ul>
+              <li><code>status</code> para a visão resumida.</li>
+              <li><code>journalctl -u</code> para a evidência detalhada.</li>
+              <li>
+                Teste a config com a ferramenta nativa sempre que existir.
+              </li>
+              <li>Confirme porta, usuário e caminho de execução.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="flashcards-section">
+          <h2>Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <section class="quiz-section">
+          <h2>Quiz</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <nav class="module-nav">
+          <a href="shell.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="logs.html" class="module-nav-link next">Próximo Módulo →</a>
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

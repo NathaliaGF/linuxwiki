@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda a gerenciar pacotes no Linux com APT, DNF, Pacman, Snap, Flatpak e como compilar da fonte."
+    />
+    <title>Módulo 07 — Gerenciamento de Pacotes | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="pacotes">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 07</span>
+          <h1 class="module-page-title">Gerenciamento de Pacotes</h1>
+          <p class="module-intro">
+            Domine o gerenciamento de software no Linux: entenda como
+            repositórios, verificação GPG e resolução de dependências funcionam.
+            Aprenda APT, DNF, Pacman e quando compilar da fonte faz sentido.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 25 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="o-que-e-gerenciador">
+          <div class="section-header">
+            <h2>O que é um gerenciador de pacotes</h2>
+            <button class="mark-studied" data-section="o-que-e-gerenciador">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um <strong>gerenciador de pacotes</strong> é o sistema responsável
+              por instalar, atualizar, remover e verificar softwares no Linux.
+              Ele não apenas copia arquivos — ele entende relacionamentos entre
+              programas.
+            </p>
+            <ul>
+              <li>
+                <strong>Resolve dependências automaticamente</strong> — se o
+                pacote X precisa da biblioteca Y, que depende de Z, o
+                gerenciador baixa e instala tudo na ordem correta.
+              </li>
+              <li>
+                <strong>Mantém banco de dados</strong> de pacotes instalados,
+                versões e arquivos pertencentes a cada pacote.
+              </li>
+              <li>
+                <strong>Verifica integridade</strong> com checksums e
+                assinaturas criptográficas antes de instalar qualquer coisa.
+              </li>
+              <li>
+                <strong>Gerencia atualizações</strong> do sistema inteiro com um
+                único comando.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label"
+              >💡 Analogia — App Store com superpoderes</span
+            >
+            <p>
+              Imagine uma app store que também gerencia as bibliotecas
+              compartilhadas, drivers, serviços do sistema e que verifica a
+              assinatura criptográfica de cada download antes de instalar. E que
+              funciona no terminal com um único comando. Isso é o gerenciador de
+              pacotes Linux.
+            </p>
+            <p>
+              A diferença crítica: ele entende que "remover o Python pode
+              quebrar 40 outros programas" e avisa antes de fazer isso.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                Gerenciador de pacotes resolve dependências automaticamente
+              </li>
+              <li>Mantém banco de dados de tudo instalado e seus arquivos</li>
+              <li>Verifica integridade criptográfica antes de instalar</li>
+              <li>
+                Cada família de distros tem o seu: APT (Debian/Ubuntu), DNF
+                (Fedora/RHEL), Pacman (Arch)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="repositorios">
+          <div class="section-header">
+            <h2>Repositórios e como funcionam</h2>
+            <button class="mark-studied" data-section="repositorios">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um <strong>repositório</strong> é um servidor que contém pacotes
+              compilados, assinados e indexados. O gerenciador baixa o índice e
+              sabe o que está disponível sem precisar baixar cada pacote.
+            </p>
+            <ul>
+              <li>
+                <strong>/etc/apt/sources.list</strong> e
+                <strong>/etc/apt/sources.list.d/</strong> (Debian/Ubuntu): lista
+                de repositórios configurados.
+              </li>
+              <li>
+                <strong>Repositórios oficiais vs PPAs</strong> (Personal Package
+                Archives, Ubuntu): PPAs são contribuições de terceiros — úteis,
+                mas use com cautela em servidores de produção.
+              </li>
+              <li>
+                <strong>stable, testing, unstable</strong> (Debian): canais de
+                atualização com diferentes níveis de estabilidade e modernidade.
+              </li>
+              <li>
+                <strong>Ubuntu LTS</strong>: suporte de 5 anos. Ubuntu não-LTS:
+                9 meses. Escolha LTS para servidores.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver repositórios configurados no Ubuntu
+cat /etc/apt/sources.list
+
+# Exemplo de linha de repositório:
+# deb http://br.archive.ubuntu.com/ubuntu jammy main restricted universe
+
+# Adicionar um repositório externo de forma segura (método moderno)
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list
+
+sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Adicionar PPAs em servidores de produção</strong> sem
+                avaliar quem mantém — PPAs não passam pelo processo de revisão
+                da Canonical.
+              </li>
+              <li>
+                <strong>Esquecer de rodar apt update</strong> após adicionar um
+                repositório — o índice local não conhece os novos pacotes ainda.
+              </li>
+              <li>
+                <strong>Misturar canais Debian</strong> (stable + testing) sem
+                saber o que está fazendo — pode causar quebras de dependência.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="gpg">
+          <div class="section-header">
+            <h2>Verificação GPG: por que confiar nos pacotes</h2>
+            <button class="mark-studied" data-section="gpg">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Cada repositório tem um <strong>par de chaves GPG</strong>. O
+              mantenedor assina os pacotes com a chave privada. Seu sistema
+              verifica essa assinatura com a chave pública antes de instalar.
+            </p>
+            <ul>
+              <li>
+                Método antigo: <code>apt-key add</code> /
+                <code>apt-key list</code> — depreciado, chave fica em keyring
+                global.
+              </li>
+              <li>
+                Método moderno: arquivo <code>.gpg</code> em
+                <code>/etc/apt/trusted.gpg.d/</code> + atributo
+                <code>signed-by=</code> no sources.list — chave vinculada a
+                repositório específico.
+              </li>
+              <li>
+                Sem verificação GPG, um atacante poderia substituir pacotes por
+                versões maliciosas — chamado de
+                <strong>ataque de supply chain</strong>.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Nunca desabilite verificação GPG</strong>
+                (<code>--allow-unauthenticated</code>) em produção — isso remove
+                toda a proteção contra pacotes adulterados.
+              </li>
+              <li>
+                <strong>Baixar chaves GPG via HTTP</strong> sem verificar
+                fingerprint — sempre confira o fingerprint no site oficial do
+                projeto.
+              </li>
+              <li>
+                <strong>apt-key add com curl | sudo apt-key add -</strong> é
+                inseguro e depreciado — use o método com trusted.gpg.d.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="apt">
+          <div class="section-header">
+            <h2>APT: Debian, Ubuntu e derivados</h2>
+            <button class="mark-studied" data-section="apt">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>APT</strong> (Advanced Package Tool) é o gerenciador de
+              pacotes das distribuições baseadas em Debian. É uma camada de alto
+              nível sobre o <code>dpkg</code> (que lida com arquivos .deb
+              individualmente).
+            </p>
+            <p>
+              APT resolve dependências automaticamente, enquanto dpkg apenas
+              instala o que você especifica.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>sudo apt update                    # atualiza índice de repositórios
+sudo apt upgrade                   # atualiza pacotes instalados
+sudo apt full-upgrade              # upgrade com remoção de conflitos
+sudo apt install nginx             # instala nginx
+sudo apt install -y curl wget      # instala múltiplos sem confirmação
+sudo apt remove nginx              # remove pacote (mantém config)
+sudo apt purge nginx               # remove pacote E arquivos de config
+sudo apt autoremove                # remove dependências órfãs
+apt search "web server"            # busca no repositório
+apt show nginx                     # informações sobre o pacote
+dpkg -l | grep nginx               # lista pacotes instalados filtrado
+dpkg -L nginx                      # lista arquivos instalados pelo pacote
+dpkg -S /usr/bin/python3           # qual pacote instalou este arquivo</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — apt vs dpkg</span>
+            <p>
+              dpkg é como copiar um arquivo manualmente. APT é como um
+              assistente que descobre o que você precisa antes de copiar, vai
+              buscar tudo, verifica as assinaturas e instala na ordem certa.
+              Para trabalho do dia a dia, use sempre o APT.
+            </p>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>apt upgrade vs apt full-upgrade</strong>:
+                <code>upgrade</code> nunca remove pacotes;
+                <code>full-upgrade</code> pode remover pacotes conflitantes para
+                completar o upgrade. Em servidores, prefira
+                <code>upgrade</code> e inspecione manualmente conflitos.
+              </li>
+              <li>
+                <strong>Esquecer o apt update antes de apt install</strong>:
+                você pode instalar versões antigas que já foram supersedidas.
+              </li>
+              <li>
+                <strong>apt remove deixa configs</strong>: se quiser uma remoção
+                limpa, use <code>apt purge</code>.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="dnf-rpm">
+          <div class="section-header">
+            <h2>DNF/YUM: Red Hat, Fedora, CentOS</h2>
+            <button class="mark-studied" data-section="dnf-rpm">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>DNF</strong> (Dandified YUM) é o gerenciador de pacotes
+              das distribuições Red Hat desde o Fedora 22 e RHEL 8. YUM foi o
+              predecessor — ainda funciona como wrapper em muitos sistemas, mas
+              DNF é o padrão moderno.
+            </p>
+            <p>
+              Trabalha com pacotes <strong>.rpm</strong>, assim como APT
+              trabalha com .deb. O utilitário de baixo nível equivalente ao dpkg
+              é o <code>rpm</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>sudo dnf install nginx             # instala nginx
+sudo dnf remove nginx              # remove nginx
+sudo dnf update                    # atualiza tudo
+sudo dnf search nginx              # busca pacotes
+sudo dnf info nginx                # informações do pacote
+sudo dnf list installed | grep nginx  # pacotes instalados filtrado
+rpm -qa | grep nginx               # query de baixo nível (todos os pacotes)
+rpm -ql nginx                      # lista arquivos do pacote instalado
+rpm -qi nginx                      # informações detalhadas via rpm</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Rocky Linux e AlmaLinux são clones binários do RHEL gratuitos —
+              ideais para praticar comandos DNF/RPM sem pagar licença Red Hat. O
+              comando <code>dnf module</code> (Application Streams) permite
+              instalar múltiplas versões de uma mesma linguagem — ex: Python 3.9
+              e 3.11 lado a lado.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="pacman">
+          <div class="section-header">
+            <h2>Pacman: Arch Linux</h2>
+            <button class="mark-studied" data-section="pacman">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>Pacman</strong> é o gerenciador de pacotes do Arch Linux e
+              derivados (Manjaro, EndeavourOS). É conhecido pela sintaxe concisa
+              com flags de uma letra e pela velocidade.
+            </p>
+            <p>
+              O <strong>AUR</strong> (Arch User Repository) é um repositório
+              mantido pela comunidade com dezenas de milhares de pacotes
+              adicionais, acessados via helpers como <code>yay</code> ou
+              <code>paru</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>sudo pacman -S nginx               # instala (sync)
+sudo pacman -R nginx               # remove
+sudo pacman -Rs nginx              # remove + dependências não usadas
+sudo pacman -Syu                   # sync + update (equivale a apt update && apt upgrade)
+sudo pacman -Ss "web server"       # busca no repositório
+sudo pacman -Qi nginx              # info do pacote instalado
+sudo pacman -Ql nginx              # lista arquivos do pacote
+
+# AUR com yay (não precisa de sudo)
+yay -S pacote-aur                  # instala do AUR
+yay -Syu                           # atualiza tudo incluindo AUR</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Flags do Pacman</span>
+            <p>
+              As flags do pacman seguem lógica: <code>-S</code> = Sync
+              (repositório), <code>-R</code> = Remove, <code>-Q</code> = Query
+              (banco local), <code>-U</code> = Upgrade de arquivo local. Combine
+              com modificadores: <code>-y</code> = atualiza banco de dados,
+              <code>-u</code> = upgrade, <code>-s</code> = search. Decorar a
+              lógica é mais fácil que decorar cada combinação.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 7 -->
+        <section class="content-section" id="snap-flatpak">
+          <div class="section-header">
+            <h2>Snap e Flatpak: o futuro dos pacotes universais</h2>
+            <button class="mark-studied" data-section="snap-flatpak">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>Snap</strong> (Canonical) e <strong>Flatpak</strong> (Red
+              Hat/Comunidade) são formatos de pacote universais que empacotam a
+              aplicação com todas as dependências em um contêiner sandbox.
+            </p>
+            <ul>
+              <li>
+                <strong>Vantagem</strong>: funcionam em qualquer distro,
+                atualizações automáticas, isolamento de segurança.
+              </li>
+              <li>
+                <strong>Desvantagem</strong>: pacotes maiores (incluem libs
+                próprias), podem ser mais lentos para iniciar, uso maior de
+                disco.
+              </li>
+              <li>
+                <strong>Snap</strong>: centralizado na Snap Store (Canonical).
+                Padrão no Ubuntu para muitas aplicações desktop.
+              </li>
+              <li>
+                <strong>Flatpak</strong>: descentralizado, usa Flathub como
+                repositório principal. Preferido pela comunidade de desktop
+                Linux.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Snap
+snap find vlc                      # busca
+sudo snap install vlc              # instala
+sudo snap remove vlc               # remove
+snap list                          # lista instalados
+
+# Flatpak
+flatpak search vlc                 # busca
+flatpak install flathub org.videolan.VLC  # instala
+flatpak uninstall org.videolan.VLC # remove
+flatpak list                       # lista instalados
+flatpak update                     # atualiza todos</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Misturar snap e apt para a mesma aplicação</strong>:
+                pode causar conflitos ou duplicações desnecessárias.
+              </li>
+              <li>
+                <strong>Usar snap/flatpak em servidores</strong>: para
+                servidores, prefira pacotes nativos da distro — mais previsíveis
+                e sem overhead de sandbox.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 8 -->
+        <section class="content-section" id="compilar-fonte">
+          <div class="section-header">
+            <h2>Compilar da fonte: ./configure &amp;&amp; make</h2>
+            <button class="mark-studied" data-section="compilar-fonte">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Compilar da fonte significa obter o código-fonte do software e
+              transformá-lo em binário você mesmo. Necessário quando:
+            </p>
+            <ul>
+              <li>
+                A versão nos repositórios está desatualizada e você precisa de
+                uma funcionalidade nova.
+              </li>
+              <li>
+                Precisa de flags de compilação específicas ou patches
+                customizados.
+              </li>
+              <li>O software não está disponível nos repositórios.</li>
+            </ul>
+            <p>
+              A desvantagem:
+              <strong>o gerenciador de pacotes não conhece</strong> o que você
+              instalou manualmente. Atualizações e remoções são feitas
+              manualmente.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Fluxo clássico autotools
+./configure --prefix=/usr/local    # verifica dependências, gera Makefile
+make                               # compila (use make -j$(nproc) para paralelo)
+sudo make install                  # instala em /usr/local
+
+# Instalar dependências de compilação antes
+sudo apt install build-essential libssl-dev  # Debian/Ubuntu
+sudo dnf groupinstall "Development Tools"   # Fedora/RHEL
+
+# CMake (mais moderno)
+mkdir build &amp;&amp; cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+make -j$(nproc)
+sudo make install
+
+# Desinstalar (se o projeto suportar)
+sudo make uninstall</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Não ler o output do ./configure</strong>: quando falha,
+                mostra exatamente qual biblioteca está faltando. Leia a última
+                linha do erro.
+              </li>
+              <li>
+                <strong>Instalar em /usr ao invés de /usr/local</strong>: pode
+                conflitar com pacotes do gerenciador. Use sempre
+                <code>--prefix=/usr/local</code>.
+              </li>
+              <li>
+                <strong>Esquecer build-essential</strong>: sem gcc, make e
+                headers, nada compila. Em Debian/Ubuntu:
+                <code>sudo apt install build-essential</code>.
+              </li>
+              <li>
+                <strong>Não usar -j$(nproc)</strong>: compilar single-thread em
+                uma máquina com 8 cores é 8x mais lento do que necessário.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 07</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="usuarios.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="rede-linux.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const flashcards = [
+        {
+          front: "Para que serve <code>apt update</code>?",
+          back: "Atualiza o índice local de pacotes disponíveis nos repositórios. NÃO instala ou atualiza nada — apenas baixa a lista atualizada. Sempre rode antes de <code>apt install</code> ou <code>apt upgrade</code> para garantir que você vê as versões mais recentes.",
+        },
+        {
+          front:
+            "Qual a diferença entre <code>apt remove</code> e <code>apt purge</code>?",
+          back: "<code>apt remove</code> desinstala o pacote mas mantém arquivos de configuração (em /etc e ~/.config). <code>apt purge</code> remove o pacote E os arquivos de configuração. Se quiser reinstalar limpo depois, use purge. Se quiser reinstalar preservando configs, use remove.",
+        },
+        {
+          front: "O que o gerenciador de pacotes faz com dependências?",
+          back: "Resolve automaticamente — se nginx precisa da libssl, o gerenciador baixa e instala libssl também. Ao remover, <code>apt autoremove</code> limpa dependências que ficaram sem uso. Compilar da fonte não tem esse mecanismo — você resolve manualmente.",
+        },
+        {
+          front: "Por que a verificação GPG de repositórios é importante?",
+          back: "Garante autenticidade — os pacotes foram assinados pelo mantenedor oficial. Sem isso, um ataque man-in-the-middle ou repositório comprometido poderia distribuir pacotes maliciosos. Nunca desabilite verificação GPG em produção.",
+        },
+        {
+          front:
+            "Qual o equivalente de <code>apt install</code> no Arch Linux?",
+          back: "<code>pacman -S pacote</code>. Para atualizar tudo: <code>pacman -Syu</code> (sync + upgrade). Para remover: <code>pacman -R</code>. Para remover com dependências desnecessárias: <code>pacman -Rs</code>. O AUR (Arch User Repository) tem pacotes adicionais via helpers como yay.",
+        },
+        {
+          front: "O que faz <code>./configure</code> antes de compilar?",
+          back: "Verifica se todas as dependências de compilação estão presentes, detecta capacidades do sistema e gera o Makefile personalizado para o ambiente atual. Se falhar, mostra qual biblioteca está faltando. Leia o output com atenção — quase sempre diz exatamente o que instalar.",
+        },
+      ];
+
+      window._quizData_pacotes = [
+        {
+          question:
+            "Qual comando atualiza o índice de repositórios no Ubuntu sem instalar nada?",
+          options: ["apt upgrade", "apt update", "apt refresh", "apt sync"],
+          correct: 1,
+          explanation:
+            "<code>apt update</code> baixa as listas de pacotes dos repositórios configurados. É o primeiro passo antes de instalar ou atualizar qualquer coisa — sem ele, você instala versões antigas.",
+        },
+        {
+          question: "Para instalar o nginx no Fedora 38+, o comando correto é:",
+          options: [
+            "apt install nginx",
+            "yum install nginx",
+            "dnf install nginx",
+            "pacman -S nginx",
+          ],
+          correct: 2,
+          explanation:
+            "Fedora usa DNF (Dandified YUM) desde o Fedora 22. YUM ainda funciona como wrapper, mas DNF é o padrão moderno. Arch usa pacman; Debian/Ubuntu usam apt.",
+        },
+        {
+          question:
+            "Você removeu um pacote mas quer limpar também os arquivos de configuração que ficaram. O comando é:",
+          options: [
+            "apt remove --clean",
+            "apt purge pacote",
+            "apt delete pacote",
+            "dpkg --purge-all",
+          ],
+          correct: 1,
+          explanation:
+            "<code>apt purge</code> remove o pacote e todos os arquivos de configuração relacionados. Útil quando você quer reinstalar do zero ou simplesmente limpar o sistema.",
+        },
+        {
+          question: "O que faz <code>sudo pacman -Syu</code> no Arch Linux?",
+          options: [
+            "Remove pacotes não utilizados",
+            "Instala e atualiza todos os pacotes do sistema",
+            "Busca atualizações sem instalar",
+            "Sincroniza apenas o banco de dados",
+          ],
+          correct: 1,
+          explanation:
+            "<code>-S</code> = sync (modo de instalação), <code>-y</code> = atualiza banco de dados, <code>-u</code> = upgrade de todos os pacotes. É o equivalente ao <code>apt update &amp;&amp; apt upgrade</code>, mas em um só comando.",
+        },
+        {
+          question:
+            "Ao compilar da fonte com autotools, qual é a sequência correta?",
+          options: [
+            "make → configure → make install",
+            "configure → make install → make",
+            "make install → configure → make",
+            "./configure → make → sudo make install",
+          ],
+          correct: 3,
+          explanation:
+            "<code>./configure</code> verifica dependências e gera Makefile. <code>make</code> compila o código. <code>sudo make install</code> copia os binários para o sistema. Esta ordem é obrigatória — make sem configure não tem Makefile; make install sem make não tem o que instalar.",
+        },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initFlashcards(flashcards, "pacotes");
+        initQuiz(window._quizData_pacotes, "pacotes");
+      });
+    </script>
+  </body>
+</html>

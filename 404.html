@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Página não encontrada | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <div class="page-404">
+        <div class="code-big">404</div>
+        <h1>Página não encontrada</h1>
+        <p>
+          Este arquivo não existe no filesystem do LinuxWiki.<br />
+          Talvez o link esteja quebrado ou a página foi movida.
+        </p>
+
+        <div class="page-404-actions">
+          <a href="index.html" class="btn-primary">← Voltar ao início</a>
+          <a href="pages/filosofia.html" class="btn-secondary">Módulo 01</a>
+        </div>
+
+        <div class="page-404-terminal">
+          <span class="prompt-error">bash:</span>
+          <span class="prompt-muted">cd</span>
+          <span class="prompt-highlight">$(request.url)</span><br />
+          <span class="prompt-error"
+            >bash: cd: $(request.url): No such file or directory</span
+          ><br /><br />
+          <span class="prompt-hint"># Dica: use 'ls' para ver o que existe</span
+          ><br />
+          <span class="prompt-muted">$ ls /pages/</span><br />
+          <span class="prompt-list"
+            >filosofia.html&nbsp;&nbsp;filesystem.html&nbsp;&nbsp;permissoes.html</span
+          ><br />
+          <span class="prompt-list"
+            >processos.html&nbsp;&nbsp;shell.html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;usuarios.html</span
+          ><br />
+          <span class="prompt-list"
+            >pacotes.html&nbsp;&nbsp;&nbsp;&nbsp;rede-linux.html&nbsp;&nbsp;scripting.html</span
+          ><br />
+          <span class="prompt-list"
+            >certificacoes.html&nbsp;&nbsp;simulado.html&nbsp;&nbsp;revisao.html</span
+          >
+        </div>
+      </div>
+    </main>
+
+    <script src="data/modules/index.js"></script>
+    <script src="scripts/catalog.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/progress.js"></script>
+    <script src="scripts/flashcards.js"></script>
+    <script src="scripts/quiz.js"></script>
+    <script src="scripts/terminal.js"></script>
+    <script src="scripts/pwa.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

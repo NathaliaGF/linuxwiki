@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Domine o sistema de permissões do Linux: rwx, octal, chmod, chown, SUID, SGID, sticky bit e umask."
+    />
+    <title>Módulo 03 — Permissões | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="permissoes">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <!-- CABEÇALHO DO MÓDULO -->
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 03</span>
+          <h1 class="module-page-title">Permissões no Linux</h1>
+          <p class="module-intro">
+            Entenda o sistema rwx de permissões, a notação octal, como usar
+            chmod e chown, e os bits especiais SUID, SGID e sticky bit — a base
+            de qualquer trabalho seguro com Linux.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 22 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="sistema-rwx">
+          <div class="section-header">
+            <h2>O sistema rwx: leitura, escrita, execução</h2>
+            <button class="mark-studied" data-section="sistema-rwx">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Cada arquivo e diretório no Linux tem
+              <strong>três tipos de permissão</strong>:
+            </p>
+            <ul>
+              <li><strong>r (read = 4)</strong> — leitura</li>
+              <li><strong>w (write = 2)</strong> — escrita</li>
+              <li><strong>x (execute = 1)</strong> — execução</li>
+            </ul>
+            <p>O comportamento muda dependendo se é um arquivo ou diretório:</p>
+            <p>
+              Para <strong>arquivos</strong>: <code>r</code> = pode ler o
+              conteúdo; <code>w</code> = pode modificar ou truncar;
+              <code>x</code> = pode executar como programa.
+            </p>
+            <p>
+              Para <strong>diretórios</strong>: <code>r</code> = pode listar os
+              arquivos com <code>ls</code>; <code>w</code> = pode criar,
+              renomear e deletar arquivos dentro; <code>x</code> = pode entrar
+              com <code>cd</code> e acessar arquivos se souber o nome.
+            </p>
+            <p>
+              Atenção: sem <code>x</code> em um diretório, você não consegue
+              entrar nele mesmo tendo <code>r</code>. E com <code>x</code> mas
+              sem <code>r</code>, você pode entrar e acessar arquivos cujos
+              nomes já conhece, mas não pode listar.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Lendo permissões com ls -la
+ls -la /etc/passwd
+-rw-r--r-- 1 root root 2847 Mai 20 10:00 /etc/passwd
+
+# Decompondo a string de permissões:
+# - rw- r-- r--
+# ↑ ↑   ↑   ↑
+# | |   |   └── others: r-- (só leitura)
+# | |   └─────── group:  r-- (só leitura)
+# | └─────────── user:   rw- (leitura e escrita)
+# └───────────── tipo: - (arquivo regular)
+#                      d (diretório)
+#                      l (symlink)
+#                      c (char device)
+#                      b (block device)
+
+# O arquivo pertence ao usuário root, grupo root
+# 1 = número de hard links
+# 2847 = tamanho em bytes</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label"
+              >💡 Analogia — Crachás de acesso corporativo</span
+            >
+            <p>
+              Permissões são como chaves e crachás em um prédio corporativo. O
+              dono do arquivo é o funcionário que tem a chave do escritório —
+              acesso total ao próprio espaço. O grupo é o departamento — membros
+              têm acesso ao espaço compartilhado da equipe. Outros são
+              visitantes externos — permissões mínimas, controladas.
+            </p>
+            <p>
+              O root é o segurança-geral: entra em qualquer lugar
+              independentemente das chaves.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="usuarios-grupos">
+          <div class="section-header">
+            <h2>Usuário, Grupo e Outros</h2>
+            <button class="mark-studied" data-section="usuarios-grupos">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Cada arquivo tem exatamente
+              <strong>três classes de permissões</strong>, aplicadas em ordem:
+            </p>
+            <ul>
+              <li>
+                <strong>user (u)</strong> — o dono do arquivo (UID). Verificado
+                primeiro.
+              </li>
+              <li>
+                <strong>group (g)</strong> — o grupo dono (GID). Verificado se o
+                usuário não for o dono.
+              </li>
+              <li>
+                <strong>others (o)</strong> — todos os demais. Aplicado se não
+                for dono nem membro do grupo.
+              </li>
+            </ul>
+            <p>
+              O kernel verifica as classes
+              <strong>em ordem e para na primeira que corresponder</strong>. Se
+              você for o dono do arquivo, apenas as permissões de
+              <em>user</em> se aplicam — mesmo que as permissões de grupo sejam
+              mais permissivas.
+            </p>
+            <p>
+              O usuário <strong>root (UID=0)</strong> ignora quase todas as
+              restrições de permissão — exceto o bit de execute em arquivos sem
+              nenhum x.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver dono e grupo de um arquivo
+ls -la projeto/
+# drwxrwxr-x 2 joao devs 4096 Mai 20 ... projeto/
+#              ↑    ↑
+#              |    └── grupo: devs
+#              └──────── dono: joao
+
+# Ver grupos do usuário atual
+id
+# uid=1000(joao) gid=1000(joao) groups=1000(joao),27(sudo),1001(devs)
+
+# Ver grupos de outro usuário
+groups maria
+
+# Arquivos criados por joao com grupo devs
+# Membros do grupo devs têm as permissões de "group"
+# Usuários fora de devs e que não são joao têm "others"</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong
+                >"Se meu grupo tem mais acesso, o kernel usa o grupo"</strong
+              >
+              — errado. Se você for o dono, o kernel aplica as permissões de
+              <em>user</em> e ignora as de <em>group</em>. Um arquivo
+              <code>---rwx---</code> (dono sem acesso, grupo com tudo) significa
+              que o dono não consegue acessar seu próprio arquivo — o grupo
+              pode, mas não o dono.
+            </p>
+            <p>
+              <strong>"Root precisa de x para executar"</strong> — root ignora
+              bits r e w, mas para executar um arquivo, ao menos uma das classes
+              precisa ter x definido.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="octal">
+          <div class="section-header">
+            <h2>Representação Octal</h2>
+            <button class="mark-studied" data-section="octal">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              As permissões rwx podem ser representadas como números octais,
+              onde cada permissão tem um valor:
+            </p>
+            <ul>
+              <li><strong>r = 4</strong></li>
+              <li><strong>w = 2</strong></li>
+              <li><strong>x = 1</strong></li>
+              <li><strong>nenhuma = 0</strong></li>
+            </ul>
+            <p>
+              Você soma os valores para cada classe (user, group, others) e
+              obtém três dígitos octais:
+            </p>
+            <ul>
+              <li><strong>7</strong> = rwx (4+2+1) — tudo</li>
+              <li><strong>6</strong> = rw- (4+2+0) — leitura e escrita</li>
+              <li><strong>5</strong> = r-x (4+0+1) — leitura e execução</li>
+              <li><strong>4</strong> = r-- (4+0+0) — só leitura</li>
+              <li><strong>0</strong> = --- (0+0+0) — nada</li>
+            </ul>
+            <p>
+              Combinações mais comuns: <strong>755</strong> (rwxr-xr-x) para
+              executáveis e diretórios públicos,
+              <strong>644</strong> (rw-r--r--) para arquivos de texto,
+              <strong>700</strong> (rwx------) para diretórios privados,
+              <strong>600</strong> (rw-------) para arquivos privados (chaves
+              SSH).
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Decodificando permissões octais:
+
+# chmod 755 → rwxr-xr-x
+# user:  7 = rwx (4+2+1)
+# group: 5 = r-x (4+0+1)
+# other: 5 = r-x (4+0+1)
+
+# chmod 644 → rw-r--r--
+# user:  6 = rw- (4+2+0)
+# group: 4 = r-- (4+0+0)
+# other: 4 = r-- (4+0+0)
+
+# chmod 700 → rwx------
+# user:  7 = rwx (4+2+1)
+# group: 0 = --- (0+0+0)
+# other: 0 = --- (0+0+0)
+
+# chmod 600 → rw-------  ← chaves SSH privadas
+# user:  6 = rw- (4+2+0)
+# group: 0 = ---
+# other: 0 = ---
+
+# Verificar: stat mostra octal diretamente
+stat -c "%a %n" arquivo.txt
+# 644 arquivo.txt</code></pre>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="chmod-chown">
+          <div class="section-header">
+            <h2>chmod, chown e chgrp na prática</h2>
+            <button class="mark-studied" data-section="chmod-chown">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>chmod</strong> — muda as permissões de um arquivo ou
+              diretório. Aceita notação octal ou simbólica.
+            </p>
+            <p>
+              Notação simbólica usa: classe (<code>u</code>=user,
+              <code>g</code>=group, <code>o</code>=others, <code>a</code>=all),
+              operador (<code>+</code>=adicionar, <code>-</code>=remover,
+              <code>=</code>=definir exatamente) e permissões (<code>r</code>,
+              <code>w</code>, <code>x</code>).
+            </p>
+            <p>
+              <strong>chown</strong> — muda o dono e/ou grupo de um arquivo.
+              Requer root ou ser o dono. Use
+              <code>chown usuario:grupo arquivo</code> ou apenas
+              <code>chown usuario arquivo</code>. A flag <code>-R</code> aplica
+              recursivamente.
+            </p>
+            <p>
+              <strong>chgrp</strong> — muda apenas o grupo. Equivalente a
+              <code>chown :grupo arquivo</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># chmod — notação octal
+chmod 755 script.sh        # rwxr-xr-x
+chmod 644 config.txt       # rw-r--r--
+chmod 700 ~/.ssh           # rwx------
+chmod 600 ~/.ssh/id_rsa    # rw------- (chave privada SSH)
+
+# chmod — notação simbólica (não afeta outras permissões)
+chmod u+x script.sh        # adiciona execute para o dono
+chmod g-w arquivo.txt      # remove write do grupo
+chmod o= arquivo.txt       # remove TODAS permissões de others
+chmod a+r arquivo.txt      # adiciona read para todos (all)
+chmod u+x,g+x script.sh    # múltiplas mudanças de uma vez
+
+# chown — mudar dono
+chown joao arquivo.txt            # muda só o dono
+chown joao:devs arquivo.txt       # muda dono e grupo
+chown :devs arquivo.txt           # muda só o grupo
+chown -R www-data:www-data /var/www/html  # recursivo
+
+# Ver permissões do /etc/passwd
+ls -la /etc/passwd
+-rw-r--r-- 1 root root 2847 Mai 20 10:00 /etc/passwd
+
+# Ver permissões de um diretório web típico
+ls -la /var/www/html/
+# drwxr-xr-x 2 www-data www-data 4096 ... /var/www/html/</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong><code>chmod -R 777 /var/www</code></strong> — o erro
+              clássico de iniciante. Dar 777 a tudo significa que qualquer
+              usuário do sistema pode modificar qualquer arquivo do seu site. Em
+              servidores compartilhados, isso é crítico. Use 755 para
+              diretórios, 644 para arquivos, e 750/640 para áreas restritas.
+            </p>
+            <p>
+              <strong>Usar octal quando quer mudança incremental</strong> — se
+              você quer apenas adicionar execute sem alterar r e w, use
+              <code>chmod +x</code>, não <code>chmod 755</code> (que sobrescreve
+              tudo).
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="bits-especiais">
+          <div class="section-header">
+            <h2>Bits especiais: SUID, SGID e Sticky Bit</h2>
+            <button class="mark-studied" data-section="bits-especiais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Além dos 9 bits rwx, existem três bits especiais que modificam o
+              comportamento de execução e acesso:
+            </p>
+            <p><strong>SUID (Set User ID) — bit 4000</strong></p>
+            <p>
+              Quando ativo em um executável, o programa roda com as permissões
+              do <em>dono do arquivo</em>, não de quem o executou. Aparece como
+              <code>s</code> no lugar do <code>x</code> do user:
+              <code>-rwsr-xr-x</code>.
+            </p>
+            <p>
+              Exemplo clássico: <code>/usr/bin/passwd</code> precisa escrever em
+              <code>/etc/shadow</code> (arquivo só de root). Com SUID de root,
+              qualquer usuário pode mudar sua própria senha sem ter acesso root
+              direto.
+            </p>
+            <p><strong>SGID (Set Group ID) — bit 2000</strong></p>
+            <p>
+              Em executável: roda com permissões do grupo dono. Aparece como
+              <code>s</code> no x do grupo: <code>-rwxr-sr-x</code>.
+            </p>
+            <p>
+              Em diretório: arquivos criados herdam o grupo do diretório, não o
+              grupo primário de quem criou. Muito útil para colaboração em
+              equipe.
+            </p>
+            <p><strong>Sticky Bit — bit 1000</strong></p>
+            <p>
+              Em diretórios: usuários só podem deletar arquivos que são seus
+              próprios, mesmo que tenham permissão <code>w</code> no diretório.
+              Aparece como <code>t</code> no x de others:
+              <code>drwxrwxrwt</code>.
+            </p>
+            <p>
+              O <code>/tmp</code> sempre tem sticky bit — qualquer um cria
+              arquivos lá, mas só o dono (ou root) pode deletar o seu.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># SUID no passwd — qualquer usuário pode mudar sua senha
+ls -la /usr/bin/passwd
+-rwsr-xr-x 1 root root 68208 Jan 15 ... /usr/bin/passwd
+# ↑ 's' no lugar de 'x' do user = SUID ativo
+
+# Sticky bit no /tmp
+ls -ld /tmp
+drwxrwxrwt 14 root root 4096 Mai 20 11:20 /tmp
+#         ↑ 't' no lugar de 'x' de others = sticky bit
+
+# Ativar SUID em um executável
+chmod u+s meu_programa     # notação simbólica
+chmod 4755 meu_programa    # notação octal (4xxx)
+
+# Ativar SGID em um diretório compartilhado
+chmod g+s /equipe/projetos
+# Arquivos criados aqui herdam o grupo de /equipe/projetos
+
+# Ativar sticky bit
+chmod +t /diretorio/compartilhado
+chmod 1777 /tmp             # rwxrwxrwt em octal = 1777
+
+# Ver SUID/SGID — s maiúsculo = bit especial sem x correspondente
+# -rwSr-xr-x → SUID ativo mas sem execute (S maiúsculo = incomum)
+# -rwsr-xr-x → SUID ativo com execute (s minúsculo = normal)
+
+# Encontrar todos os arquivos SUID do sistema
+find / -perm -4000 -type f 2>/dev/null</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Criar executáveis SUID desnecessariamente</strong> — SUID
+              é um vetor de escalada de privilégios. Um binário SUID de root com
+              vulnerabilidade pode comprometer o sistema inteiro. Auditores de
+              segurança verificam todos os binários SUID como parte da análise.
+            </p>
+            <p>
+              <strong>Confundir S maiúsculo com s minúsculo</strong> —
+              <code>S</code> (maiúsculo) significa que o bit especial está ativo
+              mas o bit <code>x</code> correspondente não está — o que
+              geralmente indica um erro de configuração.
+              <code>s</code> (minúsculo) significa que ambos estão ativos.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <strong>SUID (4xxx):</strong> executável roda como o dono —
+                cuidado, é privilegiado
+              </li>
+              <li>
+                <strong>SGID em dir (2xxx):</strong> novos arquivos herdam o
+                grupo do diretório
+              </li>
+              <li>
+                <strong>Sticky (1xxx):</strong> só o dono pode deletar seu
+                arquivo no diretório
+              </li>
+              <li>
+                <code>s</code> minúsculo = bit especial + execute.
+                <code>S</code> maiúsculo = bit especial sem execute
+              </li>
+              <li>
+                <code>t</code> minúsculo = sticky + execute.
+                <code>T</code> maiúsculo = sticky sem execute
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="umask">
+          <div class="section-header">
+            <h2>umask: a máscara de permissões padrão</h2>
+            <button class="mark-studied" data-section="umask">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Quando você cria um arquivo ou diretório, o sistema precisa
+              definir suas permissões iniciais. A <strong>umask</strong> (user
+              file creation mask) define quais permissões serão
+              <em>retiradas</em> das permissões máximas padrão.
+            </p>
+            <p>
+              Permissões máximas padrão: <strong>666</strong> para arquivos
+              (rw-rw-rw-) e <strong>777</strong> para diretórios (rwxrwxrwx). O
+              kernel não cria arquivos com execute por padrão — daí o 666 em vez
+              de 777 para arquivos.
+            </p>
+            <p>A umask é subtraída dessas permissões máximas:</p>
+            <ul>
+              <li>
+                <strong>umask 022</strong> (mais comum): arquivos = 666 - 022 =
+                <strong>644</strong> (rw-r--r--), diretórios = 777 - 022 =
+                <strong>755</strong> (rwxr-xr-x)
+              </li>
+              <li>
+                <strong>umask 027</strong>: arquivos = 640 (rw-r-----),
+                diretórios = 750 (rwxr-x---)
+              </li>
+              <li>
+                <strong>umask 077</strong>: arquivos = 600 (rw-------),
+                diretórios = 700 (rwx------) — tudo privado
+              </li>
+            </ul>
+            <p>
+              Ver a umask atual: comando <code>umask</code>. Configurar
+              permanentemente em <code>~/.bashrc</code> ou
+              <code>/etc/profile</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver a umask atual
+umask
+# 0022
+
+# Ver em formato simbólico
+umask -S
+# u=rwx,g=rx,o=rx
+
+# Como a umask age:
+# Permissão máxima para arquivo:    666  (rw-rw-rw-)
+# Umask 022:                      - 022  (----w--w-)
+# Resultado:                        644  (rw-r--r--)
+
+# Permissão máxima para diretório:  777  (rwxrwxrwx)
+# Umask 022:                      - 022  (----w--w-)
+# Resultado:                        755  (rwxr-xr-x)
+
+# Testar: criar arquivo e diretório
+touch teste.txt && ls -la teste.txt
+# -rw-r--r-- 1 joao joao 0 Mai 20 11:30 teste.txt
+
+mkdir testedir && ls -ld testedir
+# drwxr-xr-x 2 joao joao 4096 Mai 20 11:30 testedir
+
+# Mudar umask temporariamente na sessão atual
+umask 027
+touch privado.txt && ls -la privado.txt
+# -rw-r----- 1 joao joao 0 Mai 20 11:31 privado.txt
+
+# Configurar permanentemente no .bashrc
+echo "umask 022" >> ~/.bashrc</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>"umask 022 remove permissão de execução"</strong> — a
+              umask age sobre as permissões máximas padrão. Para arquivos, o
+              máximo já é 666 (sem execute), então a umask não afeta execute em
+              arquivos. Para diretórios (max 777), a umask 022 remove apenas w
+              de grupo e outros.
+            </p>
+            <p>
+              <strong>Confundir umask com chmod</strong> — umask é uma máscara
+              que define o padrão para arquivos <em>novos</em>. Não altera
+              arquivos existentes. Para arquivos já criados, use
+              <code>chmod</code>.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                umask é subtraída das permissões máximas (666 arquivos, 777
+                dirs)
+              </li>
+              <li>
+                <strong>umask 022</strong> → arquivos 644, diretórios 755
+                (padrão na maioria das distros)
+              </li>
+              <li>
+                <strong>umask 027</strong> → arquivos 640, diretórios 750 (mais
+                restritivo, comum em servidores)
+              </li>
+              <li>
+                Configure em <code>~/.bashrc</code> (usuário) ou
+                <code>/etc/profile</code> (todos os usuários)
+              </li>
+              <li>
+                umask não afeta arquivos já existentes — apenas os criados
+                depois
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 03</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="filesystem.html" class="module-nav-link prev">← Anterior</a>
+          <a href="processos.html" class="module-nav-link next">Próximo →</a>
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda Shell Scripting com Bash: variáveis, condicionais, loops, funções, exit codes e scripts reais de backup e monitoramento."
+    />
+    <title>Módulo 09 — Shell Scripting | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="scripting">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 09</span>
+          <h1 class="module-page-title">Shell Scripting</h1>
+          <p class="module-intro">
+            Automatize tarefas repetitivas, crie scripts de backup,
+            monitoramento e setup de servidores. Aprenda a escrever scripts Bash
+            robustos com tratamento de erros, funções reutilizáveis e as boas
+            práticas que separam um script frágil de um script confiável.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 30 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="shebang-basico">
+          <div class="section-header">
+            <h2>Shebang e estrutura básica</h2>
+            <button class="mark-studied" data-section="shebang-basico">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>shebang</strong> (<code>#!</code>) na primeira linha diz
+              ao kernel qual interpretador usar para executar o script. Sem ele,
+              o kernel tenta usar o shell atual — comportamento imprevisível.
+            </p>
+            <ul>
+              <li>
+                <code>#!/bin/bash</code>: usa o bash em /bin/bash. Funciona na
+                maioria dos sistemas Linux.
+              </li>
+              <li>
+                <code>#!/usr/bin/env bash</code>: mais portável — usa o bash que
+                estiver no $PATH. Útil quando o bash pode estar em locais
+                diferentes (macOS, alguns servidores).
+              </li>
+            </ul>
+            <p>
+              <strong>Boas práticas iniciais:</strong> adicione
+              <code>set -euo pipefail</code> logo após o shebang — essa linha
+              previne uma classe inteira de erros silenciosos.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+# set -e  : encerra o script se qualquer comando retornar erro
+# set -u  : trata variáveis não definidas como erro
+# set -o pipefail : propaga erros em pipes
+
+echo "Iniciando script..."
+
+# Tornando executável e executando:
+chmod +x meu-script.sh
+./meu-script.sh          # ./ é necessário porque . geralmente não está no $PATH</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Esquecer o shebang</strong>: o script pode funcionar no
+                terminal (que já é bash) mas falhar quando chamado por cron ou
+                outro processo.
+              </li>
+              <li>
+                <strong>Não usar set -e</strong>: sem ele, o script continua
+                rodando depois de um erro e pode fazer dano em estado
+                inconsistente.
+              </li>
+              <li>
+                <strong>Tentar rodar com bash script.sh sem chmod +x</strong>:
+                funciona, mas é boa prática tornar explícito.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="variaveis-strings">
+          <div class="section-header">
+            <h2>Variáveis, strings e substituição</h2>
+            <button class="mark-studied" data-section="variaveis-strings">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Variáveis em bash não têm tipo — tudo é string. Use
+              <code>${}</code> para delimitar o nome da variável quando
+              necessário, e <strong>sempre coloque aspas duplas</strong> ao usar
+              variáveis para evitar <em>word splitting</em> e
+              <em>glob expansion</em>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>#!/bin/bash
+set -euo pipefail
+
+# Declaração (sem espaços em torno do =)
+nome="João"
+contador=0
+
+# Uso — sempre com aspas para evitar word splitting
+echo "Olá, $nome"
+echo "Olá, ${nome}!"    # chaves para delimitar nome de variável
+
+# Substituição de comando ($() é moderno; `backtick` é legado)
+data=$(date +%Y-%m-%d)
+arquivos=$(ls -1 | wc -l)
+
+# String operations
+texto="hello world"
+echo ${#texto}           # comprimento: 11
+echo ${texto^^}          # maiúsculo: HELLO WORLD
+echo ${texto^}           # primeira letra maiúscula: Hello world
+echo ${texto/hello/oi}   # substituição: oi world
+
+# Valor padrão / verificação
+echo ${VAR:-"padrão"}    # usa "padrão" se VAR não definida (não altera VAR)
+echo ${VAR:="padrão"}    # usa "padrão" E define VAR se não definida
+echo ${VAR:?"VAR é obrigatória"}  # encerra com erro se não definida</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Espaços ao redor do =</strong>:
+                <code>nome = "João"</code> causa erro. Bash interpreta como
+                comando <code>nome</code> com argumentos <code>=</code> e
+                <code>"João"</code>.
+              </li>
+              <li>
+                <strong>Não usar aspas</strong>:
+                <code>arquivo="meu arquivo.txt"</code> e depois
+                <code>rm $arquivo</code> tenta remover dois arquivos (<code
+                  >meu</code
+                >
+                e <code>arquivo.txt</code>). Use sempre
+                <code>rm "$arquivo"</code>.
+              </li>
+              <li>
+                <strong>Confundir $() com $(())</strong>: <code>$()</code> é
+                substituição de comando; <code>$(())</code> é aritmética
+                inteira: <code>echo $((2 + 3))</code>.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="condicionais">
+          <div class="section-header">
+            <h2>Condicionais: if, elif, else, case</h2>
+            <button class="mark-studied" data-section="condicionais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Bash tem duas formas de teste: <code>[ ]</code> (comando
+              <code>test</code>, POSIX) e <code>[[ ]]</code> (keyword bash, mais
+              seguro). Prefira <code>[[ ]]</code> em scripts bash — não faz word
+              splitting nos argumentos e suporta regex com <code>=~</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># if com [[ ]] (recomendado em bash)
+if [[ "$1" = "admin" ]]; then
+    echo "Bem-vindo, admin"
+elif [[ "$1" = "user" ]]; then
+    echo "Bem-vindo, usuário"
+else
+    echo "Não reconhecido"
+fi
+
+# Operadores de arquivo
+[[ -f arquivo ]]   # existe e é arquivo regular
+[[ -d dir     ]]   # existe e é diretório
+[[ -r arquivo ]]   # tem permissão de leitura
+[[ -w arquivo ]]   # tem permissão de escrita
+[[ -x arquivo ]]   # tem permissão de execução
+[[ -z string  ]]   # string está vazia
+[[ -n string  ]]   # string não está vazia
+
+# Operadores numéricos
+[[ $a -eq $b ]]    # equal
+[[ $a -ne $b ]]    # not equal
+[[ $a -lt $b ]]    # less than
+(( a > 5 ))        # aritmética diretamente — mais legível para números
+
+# case — mais limpo que múltiplos elif
+case "$distro" in
+    ubuntu|debian)  echo "APT" ;;
+    fedora|rhel)    echo "DNF" ;;
+    arch)           echo "pacman" ;;
+    *)              echo "Desconhecida" ;;
+esac</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — [[ ]] vs [ ]</span>
+            <p>
+              Pense em <code>[ ]</code> como uma calculadora básica dos anos 80
+              — funciona, mas tem casos de borda bizarros (tente
+              <code>[ $var = "" ]</code> com var indefinida sem aspas).
+              <code>[[ ]]</code> é a calculadora moderna que trata os casos
+              estranhos automaticamente. Ao escrever scripts bash, sempre use
+              <code>[[ ]]</code>.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="loops">
+          <div class="section-header">
+            <h2>Loops: for, while, until</h2>
+            <button class="mark-studied" data-section="loops">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># for em lista explícita
+for fruta in maçã banana laranja; do
+    echo "Fruta: $fruta"
+done
+
+# for em arquivos (glob expansion)
+for arquivo in /var/log/*.log; do
+    echo "Tamanho: $(wc -c &lt; "$arquivo") bytes — $arquivo"
+done
+
+# for range C-style
+for (( i=1; i&lt;=10; i++ )); do
+    echo $i
+done
+
+# while — executa enquanto condição for verdadeira
+contador=0
+while [[ $contador -lt 5 ]]; do
+    echo "Contador: $contador"
+    (( contador++ ))
+done
+
+# Ler arquivo linha por linha (forma correta)
+while IFS= read -r linha; do
+    echo "Linha: $linha"
+done &lt; /etc/hosts
+
+# until — executa ATÉ a condição ser verdadeira
+until ping -c1 google.com &amp;&gt;/dev/null; do
+    echo "Aguardando conectividade..."
+    sleep 5
+done
+echo "Conectado!"</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>for linha in $(cat arquivo)</strong>: itera sobre
+                palavras, não linhas. Use o padrão
+                <code>while IFS= read -r linha; do ... done &lt; arquivo</code>.
+              </li>
+              <li>
+                <strong>Esquecer IFS= no read</strong>: sem <code>IFS=</code>,
+                espaços no início e fim da linha são removidos. Sem
+                <code>-r</code>, barras invertidas são interpretadas.
+              </li>
+              <li>
+                <strong>Loop infinito por engano</strong>: sempre verifique que
+                a condição do while pode se tornar falsa. Adicione um contador
+                de segurança se necessário.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="funcoes">
+          <div class="section-header">
+            <h2>Funções e argumentos</h2>
+            <button class="mark-studied" data-section="funcoes">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Funções em bash reutilizam código e organizam scripts complexos.
+              Declare todas as variáveis internas com <code>local</code> para
+              evitar contaminar o escopo global.
+            </p>
+            <p>
+              Argumentos de funções: <code>$1</code>, <code>$2</code>, ...
+              <code>$@</code> = todos os argumentos (separados),
+              <code>$#</code> = quantidade de argumentos, <code>$*</code> =
+              todos como uma string.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Funções de log — padrão comum em scripts
+log_info() {
+    echo "[INFO] $(date '+%H:%M:%S') $*"
+}
+
+log_error() {
+    echo "[ERROR] $(date '+%H:%M:%S') $*" &gt;&amp;2   # stderr
+}
+
+verificar_root() {
+    if [[ $EUID -ne 0 ]]; then
+        log_error "Este script requer privilégios de root"
+        exit 1
+    fi
+}
+
+# Argumentos: use "$@" para preservar argumentos com espaços
+calcular_media() {
+    local soma=0
+    local count=$#
+    for n in "$@"; do
+        (( soma += n ))
+    done
+    echo $(( soma / count ))
+}
+
+media=$(calcular_media 10 20 30 40)
+log_info "Média: $media"
+
+# Retornar valor via echo (capturar com $())
+obter_distro() {
+    if [[ -f /etc/os-release ]]; then
+        source /etc/os-release
+        echo "$ID"
+    else
+        echo "unknown"
+    fi
+}
+
+distro=$(obter_distro)
+log_info "Distro: $distro"</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Esquecer local</strong>: variáveis sem
+                <code>local</code> são globais e podem sobrescrever variáveis do
+                script principal.
+              </li>
+              <li>
+                <strong>Usar return para retornar strings</strong>:
+                <code>return</code> só retorna números (exit code 0-255). Para
+                retornar strings, use <code>echo</code> e capture com
+                <code>$()</code>.
+              </li>
+              <li>
+                <strong>Usar $* ao invés de "$@"</strong>:
+                <code>"$*"</code> junta tudo em uma string;
+                <code>"$@"</code> preserva argumentos individuais. Use sempre
+                <code>"$@"</code> para iterar.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="exit-codes">
+          <div class="section-header">
+            <h2>Exit codes e tratamento de erros</h2>
+            <button class="mark-studied" data-section="exit-codes">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Todo comando Unix retorna um <strong>exit code</strong>:
+              <code>0</code> = sucesso, qualquer outro valor = erro. A variável
+              <code>$?</code> contém o exit code do último comando. Com
+              <code>set -e</code>, qualquer exit code não-zero encerra o script.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Verificando exit code
+ls /etc/passwd
+echo "Exit code: $?"      # 0 (sucesso)
+
+ls /naoexiste
+echo "Exit code: $?"      # 2 (arquivo não encontrado)
+
+# Tratamento de erro — prefira if ! ao invés de verificar $?
+if ! cp origem destino 2&gt;/dev/null; then
+    log_error "Falha ao copiar arquivo"
+    exit 1
+fi
+
+# Valores comuns de exit code
+# 0   = sucesso
+# 1   = erro geral
+# 2   = uso incorreto do shell/comando
+# 126 = arquivo não executável
+# 127 = comando não encontrado
+# 130 = Ctrl+C (SIGINT)
+
+# set -e com || true — desabilita para um comando específico
+rm -rf /tmp/cache 2&gt;/dev/null || true   # falha é aceitável aqui
+
+# Trap — executa código ao sair ou receber sinal
+cleanup() {
+    rm -f /tmp/arquivo_temporario
+    log_info "Limpeza realizada"
+}
+trap cleanup EXIT          # executa cleanup() ao sair (sucesso ou erro)
+trap 'log_error "Interrompido"; exit 130' INT TERM</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              <code>trap</code> é uma das ferramentas mais poderosas para
+              scripts robustos. <code>trap cleanup EXIT</code> garante que
+              recursos temporários (arquivos, locks, containers) sejam liberados
+              mesmo que o script seja interrompido por erro ou Ctrl+C. É o
+              equivalente do bloco <code>finally</code> em outras linguagens.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 7 -->
+        <section class="content-section" id="scripts-reais">
+          <div class="section-header">
+            <h2>Scripts reais: backup, monitor, setup</h2>
+            <button class="mark-studied" data-section="scripts-reais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Os três scripts abaixo aplicam todos os conceitos anteriores em
+              casos de uso reais. Analise cada um prestando atenção em:
+              tratamento de erros, uso de variáveis com defaults, funções de log
+              e limpeza de arquivos antigos.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Script 1 — backup.sh</span>
+            <pre><code>#!/bin/bash
+set -euo pipefail
+
+# Configuração com valores default
+ORIGEM="${1:-$HOME}"
+DESTINO="${2:-/backup}"
+DATA=$(date +%Y-%m-%d_%H-%M-%S)
+ARQUIVO="backup_${DATA}.tar.gz"
+
+log() { echo "[$(date '+%H:%M:%S')] $*"; }
+
+# Verificações antes de começar
+[[ -d "$ORIGEM" ]] || { echo "Origem não existe: $ORIGEM"; exit 1; }
+mkdir -p "$DESTINO"
+
+log "Iniciando backup de $ORIGEM"
+log "Destino: $DESTINO/$ARQUIVO"
+
+# Criar backup excluindo arquivos temporários
+tar -czf "$DESTINO/$ARQUIVO" --exclude='*.tmp' --exclude='.cache' "$ORIGEM"
+
+TAMANHO=$(du -sh "$DESTINO/$ARQUIVO" | cut -f1)
+log "Backup concluído: $ARQUIVO ($TAMANHO)"
+
+# Manter apenas os últimos 7 backups (rotação automática)
+cd "$DESTINO"
+ls -t backup_*.tar.gz | tail -n +8 | xargs -r rm --
+log "Backups antigos removidos. Total atual: $(ls backup_*.tar.gz | wc -l)"</code></pre>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Script 2 — monitor-disco.sh</span>
+            <pre><code>#!/bin/bash
+set -euo pipefail
+
+LIMITE="${1:-90}"     # % de uso para alertar (default: 90)
+EMAIL="${2:-root}"
+
+# Lê saída do df linha por linha usando process substitution
+while IFS= read -r linha; do
+    uso=$(echo "$linha" | awk '{print $5}' | tr -d '%')
+    ponto=$(echo "$linha" | awk '{print $6}')
+
+    if (( uso >= LIMITE )); then
+        mensagem="ALERTA: Disco $ponto está em ${uso}% (limite: ${LIMITE}%)"
+        echo "$mensagem"
+        # Tenta enviar email, ignora erro se mail não disponível
+        echo "$mensagem" | mail -s "Alerta disco - $(hostname)" "$EMAIL" 2&gt;/dev/null || true
+    fi
+done &lt; &lt;(df -h | tail -n +2 | grep -v tmpfs)</code></pre>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Script 3 — setup-servidor.sh</span>
+            <pre><code>#!/bin/bash
+set -euo pipefail
+
+# Verificar root antes de qualquer coisa
+[[ $EUID -eq 0 ]] || { echo "Execute como root: sudo $0"; exit 1; }
+
+# Funções de log coloridas
+log() { echo -e "\033[0;32m[✓]\033[0m $*"; }
+err() { echo -e "\033[0;31m[✗]\033[0m $*" &gt;&amp;2; exit 1; }
+
+log "Atualizando sistema..."
+apt-get update -q &amp;&amp; apt-get upgrade -y -q
+
+log "Instalando pacotes essenciais..."
+apt-get install -y -q curl wget git vim ufw fail2ban
+
+log "Configurando firewall..."
+ufw --force reset
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw --force enable
+
+log "Configurando fail2ban..."
+systemctl enable --now fail2ban
+
+log "Setup concluído em $(hostname)!"</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                Sempre comece com <code>#!/usr/bin/env bash</code> e
+                <code>set -euo pipefail</code>
+              </li>
+              <li>Use aspas duplas em todas as expansões de variável</li>
+              <li>
+                Prefira <code>[[ ]]</code> ao invés de <code>[ ]</code> em
+                scripts bash
+              </li>
+              <li>Use <code>local</code> para variáveis internas de funções</li>
+              <li>
+                Leia arquivos linha por linha com
+                <code>while IFS= read -r linha; do</code>
+              </li>
+              <li>Use <code>trap cleanup EXIT</code> para limpeza garantida</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 09</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="rede-linux.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="certificacoes.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const flashcards = [
+        {
+          front:
+            "O que faz <code>set -euo pipefail</code> no início de um script?",
+          back: "<code>set -e</code>: encerra o script se qualquer comando falhar (exit code != 0). <code>set -u</code>: trata variáveis não definidas como erro. <code>set -o pipefail</code>: propaga erros em pipes (sem ele, <code>echo err | grep x</code> retorna 0 mesmo que grep falhe). Juntos, previnem erros silenciosos.",
+        },
+        {
+          front:
+            "Qual a diferença entre <code>$*</code> e <code>$@</code> em funções?",
+          back: 'Ambos representam todos os argumentos. Com aspas: <code>"$*"</code> junta tudo em uma string com espaço; <code>"$@"</code> preserva cada argumento separado. Quase sempre use <code>"$@"</code> — preserva argumentos com espaços: <code>for arg in "$@"; do</code> (funciona com \'arquivo com espaço.txt\').',
+        },
+        {
+          front: "O que é <code>$?</code> e quando usá-lo?",
+          back: "Contém o exit code do último comando executado. 0 = sucesso, qualquer outro valor = erro. Use imediatamente após o comando — executar qualquer outro comando, inclusive echo, substitui $?. Prefira: <code>if ! comando; then</code> (evita race condition com $?).",
+        },
+        {
+          front: "Como ler um arquivo linha por linha em bash de forma segura?",
+          back: "<code>while IFS= read -r linha; do ... done &lt; arquivo.txt</code> — <code>IFS=</code> preserva espaços no início/fim; <code>-r</code> previne que \\ seja interpretado. Alternativa com process substitution: <code>while ... done &lt; &lt;(comando)</code>. NÃO use: <code>for linha in $(cat arquivo)</code> — quebra em palavras, não linhas.",
+        },
+        {
+          front: "Para que serve o <code>local</code> em funções bash?",
+          back: "Declara uma variável com escopo local à função — não vaza para o escopo global. Sem <code>local</code>, variáveis de função modificam o ambiente global, causando efeitos colaterais difíceis de debugar. Boa prática: declare todas as variáveis internas de funções com <code>local</code>.",
+        },
+        {
+          front: "O que é um heredoc e quando usar?",
+          back: "Bloco de texto multilinha inline: <code>cat &lt;&lt; 'EOF' ... EOF</code>. Permite passar texto longo para um comando sem arquivo temporário. Útil em scripts para criar arquivos de configuração, emails ou SQL. Aspas simples no delimitador (<code>'EOF'</code>) desabilita expansão de variáveis dentro do bloco.",
+        },
+      ];
+
+      window._quizData_scripting = [
+        {
+          question: "O que <code>set -e</code> faz em um script bash?",
+          options: [
+            "Habilita modo de depuração",
+            "Encerra o script se qualquer comando falhar",
+            "Exporta todas as variáveis",
+            "Habilita modo estrito de variáveis",
+          ],
+          correct: 1,
+          explanation:
+            "<code>set -e</code> (errexit) encerra o script imediatamente se qualquer comando retornar exit code diferente de zero. Sem isso, erros passam silenciosamente e o script continua com estado inconsistente.",
+        },
+        {
+          question:
+            "Para iterar sobre todos os argumentos de uma função preservando espaços, use:",
+          options: [
+            "for a in $*",
+            'for a in "$*"',
+            'for a in "$@"',
+            "for a in $@",
+          ],
+          correct: 2,
+          explanation:
+            '<code>"$@"</code> expande cada argumento separadamente, preservando espaços. <code>"$*"</code> junta tudo em uma string. Sem aspas, ambos quebram em palavras. Sempre use <code>"$@"</code> para iterar sobre argumentos.',
+        },
+        {
+          question: "O exit code 0 em um script Unix significa:",
+          options: [
+            "Erro genérico",
+            "Sucesso",
+            "Arquivo não encontrado",
+            "Permissão negada",
+          ],
+          correct: 1,
+          explanation:
+            "Por convenção Unix, 0 = sucesso, qualquer valor não-zero = erro. Valores específicos: 1 = erro geral, 2 = uso incorreto do shell, 126 = não executável, 127 = comando não encontrado, 130 = Ctrl+C.",
+        },
+        {
+          question:
+            "Qual a diferença entre <code>[[ ]]</code> e <code>[ ]</code> no bash?",
+          options: [
+            "[ ] é mais moderno",
+            "[[ ]] é built-in do bash com mais features e menos armadilhas",
+            "São idênticos",
+            "[[ ]] é mais lento",
+          ],
+          correct: 1,
+          explanation:
+            "<code>[[ ]]</code> é keyword do bash: não faz word splitting ou path expansion nos argumentos, suporta <code>=~</code> para regex, e permite <code>&amp;&amp;</code> e <code>||</code> dentro. <code>[ ]</code> é o comando test POSIX, mais portável mas com mais casos de borda. Use <code>[[ ]]</code> em scripts bash.",
+        },
+        {
+          question: "O comando <code>$(date +%Y-%m-%d)</code> retorna:",
+          options: [
+            "Um objeto de data",
+            "O timestamp Unix",
+            "A data no formato YYYY-MM-DD",
+            "A data por extenso",
+          ],
+          correct: 2,
+          explanation:
+            "<code>$()</code> é substituição de comando — executa o comando e substitui pelo output. <code>date +%Y-%m-%d</code> formata a data: <code>%Y</code>=ano 4 dígitos, <code>%m</code>=mês 2 dígitos, <code>%d</code>=dia 2 dígitos. Resultado: 2026-05-20.",
+        },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initFlashcards(flashcards, "scripting");
+        initQuiz(window._quizData_scripting, "scripting");
+      });
+    </script>
+  </body>
+</html>

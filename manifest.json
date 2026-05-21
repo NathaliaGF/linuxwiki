@@ -1,0 +1,49 @@
+{
+  "name": "LinuxWiki — Aprenda Linux do Zero",
+  "short_name": "LinuxWiki",
+  "description": "Wiki educacional gratuita para aprender Linux — do conceito ao comando. 10 módulos, flashcards SM-2, quizzes e terminal simulado.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#22c55e",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Continuar estudando",
+      "url": "/pages/filosofia.html",
+      "description": "Ir para o Módulo 01"
+    },
+    {
+      "name": "Simulado",
+      "url": "/pages/simulado.html",
+      "description": "Fazer o simulado geral"
+    },
+    {
+      "name": "Cheat Sheets",
+      "url": "/pages/resumos.html",
+      "description": "Ver referência rápida de comandos"
+    }
+  ]
+}

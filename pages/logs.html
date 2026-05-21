@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda logs no Linux com journalctl e /var/log: filtros úteis, leitura por serviço, follow e troubleshooting orientado por evidência."
+    />
+    <title>Módulo 07 — Logs com journalctl e /var/log | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="logs">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html#modulos" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 07</span>
+          <h1 class="module-page-title">Logs com journalctl e /var/log</h1>
+          <p class="module-intro">
+            Troubleshooting sem log vira chute. Este módulo te ensina a procurar
+            evidência de forma objetiva: últimos eventos, filtro por serviço,
+            follow em tempo real e leitura das trilhas clássicas em
+            <code>/var/log</code>.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 17 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <section class="content-section" id="por-que-logs">
+          <div class="section-header">
+            <h2>Por que logs importam</h2>
+            <button class="mark-studied" data-section="por-que-logs">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Log é a memória operacional do sistema. Se um serviço caiu às
+              03:14, o log é o registro mais próximo do que realmente aconteceu.
+              Sem ele, você fica preso a sintoma e intuição.
+            </p>
+          </div>
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia</span>
+            <p>
+              Pense em logs como a caixa-preta de um avião. Ela não impede o
+              problema, mas explica a sequência de eventos com muito mais
+              precisão do que qualquer relato humano.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="journalctl-basico">
+          <div class="section-header">
+            <h2>journalctl no dia a dia</h2>
+            <button class="mark-studied" data-section="journalctl-basico">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>sudo journalctl -xe
+sudo journalctl -u nginx
+sudo journalctl -u nginx -n 50 --no-pager
+sudo journalctl -u ssh --since "today"
+sudo journalctl -f</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <code>journalctl</code> lê o journal do systemd. O segredo é
+              filtrar cedo: por unit, por tempo, por prioridade ou acompanhando
+              em tempo real com <code>-f</code>.
+            </p>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erro comum</span>
+            <p>
+              Rodar <code>journalctl</code> puro e se afogar em milhares de
+              linhas. Entre com contexto: serviço, intervalo de tempo e volume
+              esperado.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="var-log">
+          <div class="section-header">
+            <h2>Arquivos clássicos em /var/log</h2>
+            <button class="mark-studied" data-section="var-log">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Mesmo com journal, muitos softwares ainda escrevem em arquivos
+              tradicionais. Saber os caminhos clássicos acelera muito o
+              diagnóstico.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Referências práticas</span>
+            <pre><code>/var/log/syslog      # Debian/Ubuntu, visão geral
+/var/log/messages    # RHEL/CentOS/Fedora
+/var/log/auth.log    # autenticação
+/var/log/kern.log    # eventos do kernel
+/var/log/nginx/error.log
+/var/log/apache2/error.log</code></pre>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Mini troubleshooting</span>
+            <ul>
+              <li>
+                Falha de login? Veja <code>auth.log</code> ou journal do
+                serviço.
+              </li>
+              <li>Erro de aplicação web? Vá direto ao error log dela.</li>
+              <li>
+                Problema no disco ou driver? Procure sinais em
+                <code>kern.log</code> ou <code>dmesg</code>.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="content-section" id="grep-tail-less">
+          <div class="section-header">
+            <h2>Ferramentas que aceleram leitura</h2>
+            <button class="mark-studied" data-section="grep-tail-less">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>tail -f /var/log/nginx/error.log
+less +G /var/log/syslog
+grep -i error /var/log/syslog
+grep -Ei "denied|failed|timeout" /var/log/auth.log
+journalctl -u nginx | grep -i upstream</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Nem todo diagnóstico pede ferramenta sofisticada. Muitas vezes
+              <code>tail -f</code>, <code>less</code> e
+              <code>grep</code> resolvem rápido, desde que você saiba qual
+              evento está procurando.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="metodo-leitura">
+          <div class="section-header">
+            <h2>Como ler sem se perder</h2>
+            <button class="mark-studied" data-section="metodo-leitura">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Método</span>
+            <p>
+              Comece pelo momento do incidente. Depois identifique o processo
+              envolvido. Só então procure mensagens imediatamente antes e
+              depois. Isso cria uma narrativa temporal, não uma caça aleatória
+              por palavras assustadoras.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Checklist</span>
+            <ul>
+              <li>Qual serviço ou subsistema está implicado?</li>
+              <li>Quando o problema aconteceu?</li>
+              <li>O erro é recorrente ou pontual?</li>
+              <li>Há mensagem de causa direta, não só de efeito?</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="flashcards-section">
+          <h2>Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <section class="quiz-section">
+          <h2>Quiz</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <nav class="module-nav">
+          <a href="systemctl.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="rede-linux.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

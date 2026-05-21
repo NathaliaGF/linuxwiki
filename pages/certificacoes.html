@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Guia completo de certificações Linux: LPIC-1, CompTIA Linux+, RHCSA, LFCS, roadmap DevOps/SRE e quais distros escolher para cada objetivo."
+    />
+    <title>Módulo 10 — Certificações e Próximos Passos | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="certificacoes">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 10</span>
+          <h1 class="module-page-title">Certificações e Próximos Passos</h1>
+          <p class="module-intro">
+            Você chegou ao módulo final. Entenda quais certificações Linux valem
+            o investimento, como cada uma funciona e o que estudar depois.
+            Inclui roadmap completo do Linux ao DevOps/SRE e guia de escolha de
+            distribuição por objetivo.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 20 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="por-que-certificar">
+          <div class="section-header">
+            <h2>Por que certificações importam (e quando não importam)</h2>
+            <button class="mark-studied" data-section="por-que-certificar">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Certificações servem a propósitos específicos — entender quando
+              elas ajudam e quando não são necessárias evita desperdício de
+              tempo e dinheiro.
+            </p>
+            <ul>
+              <li>
+                <strong>Sinalizam conhecimento</strong> de forma verificável
+                para recrutadores e clientes que não têm como avaliar sua
+                experiência diretamente.
+              </li>
+              <li>
+                <strong>Estruturam o aprendizado</strong> — o currículo da
+                certificação cobre áreas que você evitaria naturalmente,
+                fechando lacunas.
+              </li>
+              <li>
+                <strong>Requisito em alguns setores</strong>: consultorias,
+                órgãos governamentais e grandes corporações frequentemente
+                exigem certificações como pré-requisito formal.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Quando NÃO certificar</span>
+            <p>
+              Para empresas de produto e startups, experiência prática
+              demonstrável (GitHub, projetos reais, contribuições open-source)
+              costuma pesar mais que certificações. Uma RHCSA pode ser mais
+              impressionante que um diploma genérico, mas um projeto real em
+              produção vencendo ambos. Invista em prática primeiro — a
+              experiência é o que permite passar nas provas práticas.
+            </p>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Custo aproximado (2025): LPIC-1 ~$200 por exame (são 2 exames =
+              ~$400 total), RHCSA ~$400, CompTIA Linux+ ~$370. Os preços variam
+              por região — o site Pearson VUE e os sites oficiais têm valores
+              atualizados. Vouchers de desconto frequentemente disponíveis em
+              treinamentos oficiais.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="lpic1">
+          <div class="section-header">
+            <h2>LPIC-1: Linux Professional Institute</h2>
+            <button class="mark-studied" data-section="lpic1">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>LPIC-1</strong> (Linux Professional Institute
+              Certification Level 1) é uma certificação vendor-neutral — os
+              conceitos cobertos funcionam em qualquer distribuição Linux.
+            </p>
+            <p>
+              São dois exames separados, ambos necessários para obter a
+              certificação:
+            </p>
+            <ul>
+              <li>
+                <strong>Exame 101-500</strong>: arquitetura do sistema,
+                instalação e configuração de Linux, gerenciamento de pacotes
+                (apt, rpm), comandos GNU/Unix, sistema de arquivos.
+              </li>
+              <li>
+                <strong>Exame 102-500</strong>: shell e scripts, interfaces
+                gráficas, tarefas administrativas (usuários, grupos, automação
+                via cron), serviços essenciais, fundamentos de redes, segurança
+                básica.
+              </li>
+            </ul>
+            <p>
+              <strong>Validade</strong>: 5 anos. Formato: múltipla escolha e
+              fill-in-the-blank. Bom ponto de entrada para quem quer demonstrar
+              conhecimento formal de forma independente de distro.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>Dois exames: 101-500 + 102-500</li>
+              <li>Vendor-neutral — vale para qualquer distro</li>
+              <li>Formato teórico (múltipla escolha)</li>
+              <li>Validade de 5 anos</li>
+              <li>Boa porta de entrada para o mercado</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="comptia-linux">
+          <div class="section-header">
+            <h2>CompTIA Linux+</h2>
+            <button class="mark-studied" data-section="comptia-linux">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              A <strong>CompTIA Linux+</strong> (exame XK0-005) é um único exame
+              com foco mais aplicado do que teórico. Se diferencia das outras
+              certificações por cobrir tópicos modernos:
+            </p>
+            <ul>
+              <li>
+                <strong>Gerenciamento de sistemas</strong> (40%): administração
+                geral, systemd, storage.
+              </li>
+              <li>
+                <strong>Segurança</strong> (21%): hardening, SELinux/AppArmor,
+                criptografia, auditing.
+              </li>
+              <li>
+                <strong>Scripting e automação</strong> (19%): bash scripting,
+                conceitos de automação.
+              </li>
+              <li>
+                <strong>Troubleshooting</strong> (20%): diagnóstico e resolução
+                de problemas.
+              </li>
+            </ul>
+            <p>
+              Reconhecida pelo <strong>DoD dos EUA</strong> (Departamento de
+              Defesa) para cargos de segurança — isso a torna requisito em
+              muitos contratos governamentais americanos. Vendor-neutral.
+            </p>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Não há pré-requisito formal, mas a CompTIA recomenda 12 meses de
+              experiência prática. A CompTIA Linux+ é parte da linha "core" de
+              certificações junto com A+, Network+ e Security+. Se você planeja
+              seguir carreira em segurança ou infraestrutura com foco em
+              compliance, a combinação Linux+ + Security+ é especialmente
+              valorizada.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="rhcsa">
+          <div class="section-header">
+            <h2>RHCSA: Red Hat Certified System Administrator</h2>
+            <button class="mark-studied" data-section="rhcsa">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              A <strong>RHCSA</strong> é considerada uma das certificações Linux
+              mais valiosas no mercado por uma razão simples: é 100% prática.
+              Você administra sistemas RHEL reais em um ambiente de laboratório
+              por 2-3 horas, sem alternativas de múltipla escolha para
+              adivinhar.
+            </p>
+            <p>Tópicos cobertos:</p>
+            <ul>
+              <li>Gerenciamento de arquivos, usuários e grupos</li>
+              <li>
+                Gerenciamento de processos e serviços com
+                <strong>systemd</strong>
+              </li>
+              <li>Configuração básica de rede</li>
+              <li>Storage com <strong>LVM</strong> (Logical Volume Manager)</li>
+              <li>
+                <strong>SELinux</strong>: contextos, booleans, troubleshooting
+              </li>
+              <li>Containers básicos com <strong>podman</strong></li>
+            </ul>
+            <p>
+              <strong>Validade</strong>: 3 anos. Focada em RHEL/CentOS
+              Stream/Rocky Linux.
+            </p>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Estudar teoria sem prática</strong>: o exame é 100%
+                prático. Se você não consegue configurar SELinux ou LVM de
+                cabeça num terminal, não está pronto.
+              </li>
+              <li>
+                <strong>Pagar pelo RHEL para praticar</strong>: use Rocky Linux
+                ou AlmaLinux — são clones binários gratuitos. O ambiente de
+                exame usa RHEL, mas os comandos são idênticos.
+              </li>
+              <li>
+                <strong>Ignorar SELinux</strong>: é um dos tópicos mais cobrados
+                e mais evitados. Domine <code>setenforce</code>,
+                <code>chcon</code>, <code>restorecon</code> e
+                <code>setsebool</code>.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="lfcs">
+          <div class="section-header">
+            <h2>LFCS: Linux Foundation Certified SysAdmin</h2>
+            <button class="mark-studied" data-section="lfcs">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>LFCS</strong> (Linux Foundation Certified SysAdmin) é um
+              exame prático de 2 horas em sistema live, vendor-neutral. Cobre
+              conceitos gerais de administração Linux sem focar em uma distro
+              específica.
+            </p>
+            <ul>
+              <li>
+                Formato prático, similar à RHCSA mas em sistema genérico (Ubuntu
+                ou CentOS).
+              </li>
+              <li>
+                Menos reconhecida que RHCSA no mercado, mas mais acessível e
+                útil para demonstrar competências gerais.
+              </li>
+              <li>
+                Boa opção para quem trabalha com distros não-Red Hat e quer uma
+                certificação prática.
+              </li>
+              <li>
+                A Linux Foundation também oferece LFCE (Engineer) como próximo
+                nível.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="roadmap">
+          <div class="section-header">
+            <h2>Roadmap: Linux → Cloud → DevOps/SRE</h2>
+            <button class="mark-studied" data-section="roadmap">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Linux é a base de toda a stack moderna. Cada camada constrói sobre
+              a anterior — pular etapas causa lacunas que se manifestam nos
+              piores momentos (incidentes de produção).
+            </p>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Distros recomendadas por objetivo</span>
+            <ul>
+              <li>
+                <strong>Iniciante</strong>: <strong>Ubuntu LTS</strong> —
+                estabilidade, enorme comunidade, PPA para softwares extras,
+                excelente documentação. Escolha se quer usar Linux, não aprender
+                seus internos.
+              </li>
+              <li>
+                <strong>Desenvolvedor</strong>: <strong>Fedora</strong> —
+                tecnologia de ponta (kernel recente, Wayland, Pipewire),
+                patrocinado pela Red Hat, DNF rápido. Ideal para desenvolvimento
+                de software moderno.
+              </li>
+              <li>
+                <strong>Aprender a fundo</strong>: <strong>Arch Linux</strong> —
+                você instala tudo manualmente, aprende cada decisão. A Arch Wiki
+                é o melhor recurso de documentação Linux existente. Escolha se
+                quer entender, não apenas usar.
+              </li>
+              <li>
+                <strong>Servidor estável</strong>: <strong>Debian</strong> —
+                ciclos de release longos, extremamente estável, sem patrocinador
+                corporativo. Ideal para servidores que precisam de anos sem
+                quebrar.
+              </li>
+              <li>
+                <strong>Ambiente Red Hat</strong>:
+                <strong>Rocky Linux</strong> ou <strong>AlmaLinux</strong> —
+                clones gratuitos do RHEL para quem quer o ambiente RHEL sem
+                pagar licença.
+              </li>
+              <li>
+                <strong>Containers/Minimalismo</strong>:
+                <strong>Alpine Linux</strong> — imagem base de ~5MB, usa musl
+                libc, mínima superfície de ataque. Padrão em imagens Docker de
+                produção.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 7 -->
+        <section class="content-section" id="proximos-passos">
+          <div class="section-header">
+            <h2>Próximos passos práticos</h2>
+            <button class="mark-studied" data-section="proximos-passos">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O estudo teórico só consolida quando combinado com prática real.
+              Aqui estão passos concretos para aplicar tudo que você aprendeu
+              neste módulo e nos anteriores.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ Ações concretas para esta semana</span>
+            <ul>
+              <li>
+                Monte um laboratório: VirtualBox ou WSL2 com Ubuntu LTS para
+                prática diária
+              </li>
+              <li>
+                Configure um servidor web (nginx) do zero num servidor VPS
+                (DigitalOcean, Linode — a partir de $5/mês)
+              </li>
+              <li>
+                Escreva um script de backup e configure-o no cron (<code
+                  >crontab -e</code
+                >)
+              </li>
+              <li>
+                Pratique os comandos de rede: <code>ss</code>, <code>dig</code>,
+                <code>curl -v</code>, tunel SSH
+              </li>
+              <li>
+                Para RHCSA: instale Rocky Linux numa VM e pratique LVM, SELinux
+                e systemd
+              </li>
+              <li>
+                Leia a Arch Wiki — mesmo sem usar Arch, é a melhor referência de
+                conceitos Linux
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label"
+              >💡 Analogia — Aprender Linux é como aprender a cozinhar</span
+            >
+            <p>
+              Você pode assistir todos os vídeos de culinária do mundo, mas a
+              habilidade só vem cozinhando. Cada comando que você digita, cada
+              erro que você depura, cada servidor que você configura — isso é o
+              que forma o conhecimento real. Os módulos do LinuxWiki são a
+              receita; o terminal é a cozinha.
+            </p>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Recursos para continuar</span>
+            <ul>
+              <li>
+                <strong>Arch Wiki</strong> (wiki.archlinux.org) — referência
+                técnica de alta qualidade para qualquer distro
+              </li>
+              <li>
+                <strong>man pages</strong> — <code>man comando</code> e
+                <code>man -k palavra-chave</code> diretamente no terminal
+              </li>
+              <li>
+                <strong>explainshell.com</strong> — explica cada parte de um
+                comando shell
+              </li>
+              <li>
+                <strong>overthewire.org/wargames/bandit</strong> — aprenda Linux
+                na prática através de desafios de segurança
+              </li>
+              <li>
+                <strong>linuxupskillchallenge.org</strong> — curso gratuito de
+                administração de servidores Linux em 20 dias
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ROADMAP VISUAL -->
+        <section class="content-section" id="roadmap-visual">
+          <div class="section-header">
+            <h2>Roadmap Visual</h2>
+            <button class="mark-studied" data-section="roadmap-visual">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-info">
+            <div class="card-label">🗺 Do Linux ao DevOps/SRE</div>
+            <div class="roadmap">
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">🐧</div>
+                <div class="roadmap-step-label">Linux</div>
+              </div>
+              <div class="roadmap-arrow">→</div>
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">📜</div>
+                <div class="roadmap-step-label">Shell Script</div>
+              </div>
+              <div class="roadmap-arrow">→</div>
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">🐳</div>
+                <div class="roadmap-step-label">Docker</div>
+              </div>
+              <div class="roadmap-arrow">→</div>
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">☸️</div>
+                <div class="roadmap-step-label">Kubernetes</div>
+              </div>
+              <div class="roadmap-arrow">→</div>
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">☁️</div>
+                <div class="roadmap-step-label">Cloud</div>
+              </div>
+              <div class="roadmap-arrow">→</div>
+              <div class="roadmap-step">
+                <div class="roadmap-step-icon">🚀</div>
+                <div class="roadmap-step-label">DevOps/SRE</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 10</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="scripting.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="../pages/simulado.html" class="module-nav-link next"
+            >Fazer o Simulado Geral →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const flashcards = [
+        {
+          front: "Qual a principal diferença entre RHCSA e LPIC-1?",
+          back: "RHCSA é um exame prático — você administra sistemas reais sem múltipla escolha. LPIC-1 é teórico com múltipla escolha. RHCSA é focado em RHEL/CentOS/Rocky; LPIC-1 é vendor-neutral. RHCSA é geralmente mais valorizada por empresas, especialmente as que usam Red Hat.",
+        },
+        {
+          front:
+            "Qual distro usar para estudar para o RHCSA sem pagar Red Hat?",
+          back: "Rocky Linux ou AlmaLinux — clones binários do RHEL 1:1. Gratuitos, mantidos pela comunidade. Rocky Linux foi criado pelo co-fundador do CentOS após a Red Hat mudar o CentOS para CentOS Stream.",
+        },
+        {
+          front: "O que é o roadmap Linux → DevOps/SRE?",
+          back: "Linux fundamentals → Shell scripting → Containers (Docker) → Orquestração (Kubernetes) → Cloud provider (AWS/GCP/Azure) → Infraestrutura como código (Terraform, Ansible) → Observabilidade (Prometheus, Grafana) → DevOps/SRE. Linux é a base de toda a stack.",
+        },
+        {
+          front: "Por que Alpine Linux é popular em containers Docker?",
+          back: "Imagem base de ~5MB (vs ~72MB do Ubuntu). Usa musl libc e busybox ao invés de glibc e GNU coreutils. Menor superfície de ataque — menos pacotes instalados = menos vulnerabilidades. Downside: algumas aplicações que assumem glibc podem ter problemas de compatibilidade.",
+        },
+        {
+          front: "O que cobre o exame CompTIA Linux+ XK0-005?",
+          back: "Gerenciamento de sistema (40%), segurança (21%), scripting e automação (19%), troubleshooting (20%). Diferencia-se por cobrir segurança (SELinux/AppArmor, hardening), containers básicos e automação — mais alinhado com práticas modernas de DevOps.",
+        },
+        {
+          front: "Qual a diferença entre Fedora e RHEL?",
+          back: "Fedora é a 'distribuição upstream' — tecnologia de ponta, ciclo de release rápido (6 meses), mantida pela comunidade com patrocínio Red Hat. RHEL (Red Hat Enterprise Linux) pega tecnologias maduras do Fedora, testa exaustivamente e oferece com suporte comercial de 10 anos.",
+        },
+      ];
+
+      window._quizData_certificacoes = [
+        {
+          question:
+            "Qual certificação Linux usa exclusivamente exame prático (sem múltipla escolha)?",
+          options: ["LPIC-1", "CompTIA Linux+", "RHCSA", "LFCA"],
+          correct: 2,
+          explanation:
+            "RHCSA é 100% prático — 2-3 horas administrando sistemas RHEL reais. Você recebe tarefas: configure SELinux, crie usuários, monte LVM, configure serviço. Não há alternativas para memorizar. Considerada a mais difícil de passar na sorte.",
+        },
+        {
+          question:
+            "Qual distro Linux é recomendada para quem quer aprender os internos do sistema instalando tudo manualmente?",
+          options: ["Ubuntu", "Debian", "Arch Linux", "Fedora"],
+          correct: 2,
+          explanation:
+            "Arch Linux tem instalação completamente manual — você decide cada pacote, bootloader, filesystem. Obriga a entender cada decisão. A Arch Wiki é o recurso de documentação Linux mais completo e preciso disponível.",
+        },
+        {
+          question:
+            "No roadmap DevOps, qual tecnologia vem depois de dominar Linux fundamentals?",
+          options: [
+            "Kubernetes",
+            "Cloud (AWS)",
+            "Containers Docker",
+            "Terraform",
+          ],
+          correct: 2,
+          explanation:
+            "A progressão natural é: Linux → Shell Scripting → Docker (containers) → Kubernetes (orquestração) → Cloud → IaC. Docker é mais simples que Kubernetes e é o fundamento para entender orquestração de containers.",
+        },
+        {
+          question:
+            "Qual distro é clone binário do RHEL, gratuita, ideal para praticar para o RHCSA?",
+          options: ["Ubuntu", "Fedora", "Rocky Linux", "Kali Linux"],
+          correct: 2,
+          explanation:
+            "Rocky Linux e AlmaLinux são rebuilds do RHEL com código-fonte público. 100% compatíveis binariamente. Rocky foi criado por Gregory Kurtzer, co-fundador do CentOS original, após a Red Hat mudar o CentOS para CentOS Stream.",
+        },
+        {
+          question:
+            "Por que o Alpine Linux é popular como imagem base em Docker?",
+          options: [
+            "Tem o melhor suporte a pacotes",
+            "É mais fácil de usar",
+            "Imagem base de ~5MB, menor superfície de ataque",
+            "É oficialmente recomendada pela Docker",
+          ],
+          correct: 2,
+          explanation:
+            "Alpine usa musl libc e busybox em vez de glibc e GNU coreutils completos, resultando em imagens minúsculas. Menos software instalado = menos vulnerabilidades potenciais. Padrão para imagens de produção onde tamanho e segurança importam.",
+        },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initFlashcards(flashcards, "certificacoes");
+        initQuiz(window._quizData_certificacoes, "certificacoes");
+      });
+    </script>
+  </body>
+</html>

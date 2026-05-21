@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Domine o shell Linux: bash, zsh, variáveis de ambiente, pipes, redirecionamentos, stdin/stdout/stderr, globbing, histórico e aliases — com terminal simulado para praticar."
+    />
+    <title>Módulo 05 — Shell | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="shell">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 05</span>
+          <h1 class="module-page-title">Shell</h1>
+          <p class="module-intro">
+            O shell é a sua interface de poder com o sistema. Aprenda a dominar
+            variáveis de ambiente, pipes, redirecionamentos e o globbing — e
+            pratique no terminal simulado direto no browser.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 22 min de leitura</span>
+            <span class="module-meta-item">🃏 7 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="bash-vs-outros">
+          <div class="section-header">
+            <h2>bash, zsh e sh: qual usar e por quê</h2>
+            <button class="mark-studied" data-section="bash-vs-outros">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>shell</strong> é o intérprete que lê seus comandos, faz
+              expansões (variáveis, globs, etc.) e pede ao kernel que execute os
+              programas. Existem vários shells — cada um com suas
+              características.
+            </p>
+            <p>
+              <strong>bash (Bourne Again Shell)</strong> — o padrão na maioria
+              das distros Linux. Compatível com scripts <code>sh</code>.
+              Configurado em <code>~/.bashrc</code> (shells interativos
+              não-login) e <code>~/.bash_profile</code> (shells de login). Se
+              você não sabe qual usar, use bash.
+            </p>
+            <p>
+              <strong>zsh</strong> — mais features que bash: autocompletion
+              inteligente, correção automática de typos, themes via Oh My Zsh,
+              melhor histórico compartilhado entre sessões. Padrão no macOS
+              desde Catalina. Configurado em <code>~/.zshrc</code>.
+            </p>
+            <p>
+              <strong>sh (POSIX shell)</strong> — o mínimo compatível com o
+              padrão POSIX. Use o shebang <code>#!/bin/sh</code> em scripts que
+              precisam rodar em qualquer sistema Unix (incluindo sistemas sem
+              bash instalado).
+            </p>
+            <p>
+              <strong>fish (Friendly Interactive Shell)</strong> — muito
+              amigável para uso interativo: syntax highlighting em tempo real,
+              sugestões de autocompletion. Porém não é POSIX-compatível —
+              scripts fish não rodam em bash.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver qual shell você está usando
+$ echo $SHELL
+/bin/bash
+
+$ echo $0
+bash
+
+# Ver shells instalados no sistema
+$ cat /etc/shells
+/bin/sh
+/bin/bash
+/usr/bin/bash
+/bin/zsh
+/usr/bin/zsh
+/usr/bin/fish
+
+# Mudar shell padrão permanentemente
+$ chsh -s /usr/bin/zsh
+# (precisa fazer logout/login para ter efeito)
+
+# Diferença de shebang:
+#!/bin/bash   # script usa features bash-específicas
+#!/bin/sh     # script usa apenas POSIX — mais portável
+#!/usr/bin/env bash  # forma mais portável de referenciar bash</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <strong>bash</strong>: padrão no Linux — aprenda bem antes de
+                migrar
+              </li>
+              <li>
+                <strong>zsh</strong>: mais features interativas; padrão no macOS
+              </li>
+              <li>
+                <strong>sh</strong>: scripts portáveis — use quando precisar
+                rodar em qualquer Unix
+              </li>
+              <li>
+                <strong>fish</strong>: ótimo interativo, mas não-POSIX — evite
+                para scripts
+              </li>
+              <li>
+                <code>chsh -s /caminho/shell</code> muda o shell padrão do
+                usuário
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="variaveis-ambiente">
+          <div class="section-header">
+            <h2>Variáveis de ambiente: $PATH, $HOME, $USER</h2>
+            <button class="mark-studied" data-section="variaveis-ambiente">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Variáveis de ambiente são pares chave=valor que o shell mantém e
+              passa para processos filhos. Elas configuram o comportamento do
+              sistema e dos programas.
+            </p>
+            <p>
+              <strong>$PATH</strong> — lista de diretórios separados por
+              <code>:</code> onde o shell busca executáveis. Quando você digita
+              <code>python3</code>, o shell percorre $PATH da esquerda para a
+              direita procurando um executável com esse nome. Se não encontrar:
+              <code>command not found</code>.
+            </p>
+            <p>
+              <strong>$HOME</strong> — diretório home do usuário atual. Igual a
+              <code>~</code>.
+            </p>
+            <p><strong>$USER</strong> — nome do usuário atual.</p>
+            <p><strong>$SHELL</strong> — caminho do shell padrão do usuário.</p>
+            <p>
+              <strong>$PWD</strong> — diretório atual (equivalente ao output de
+              <code>pwd</code>).
+            </p>
+            <p>
+              <strong>$EDITOR</strong> — editor preferido. Usado por
+              <code>git commit</code>, <code>crontab -e</code>, etc.
+            </p>
+            <p>
+              Para criar uma variável: <code>VARIAVEL=valor</code> (sem export —
+              só no processo atual, processos filhos não veem). Com
+              <code>export VARIAVEL=valor</code>, fica disponível para processos
+              filhos. Para persistir entre sessões, adicione em
+              <code>~/.bashrc</code> ou <code>~/.bash_profile</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver o $PATH atual
+$ echo $PATH
+/home/usuario/.local/bin:/usr/local/bin:/usr/bin:/bin
+
+# O shell tenta cada diretório em ordem:
+# 1. /home/usuario/.local/bin/python3 ?  NÃO
+# 2. /usr/local/bin/python3 ?            NÃO
+# 3. /usr/bin/python3 ?                  SIM → executa
+
+# Adicionar diretório ao PATH (persistir em ~/.bashrc)
+export PATH="$HOME/.local/bin:$PATH"
+
+# Definir editor padrão
+export EDITOR=vim
+
+# Variável local vs exportada
+TESTE="local"
+export TESTE_EXPORT="global"
+bash -c 'echo $TESTE'         # vazio — filho não vê
+bash -c 'echo $TESTE_EXPORT'  # global — filho vê
+
+# Ver todas as variáveis de ambiente
+$ env | sort | head -10
+$ printenv HOME
+
+# Carregar arquivo .env de um projeto
+$ source .env
+$ . .env      # equivalente (. é alias para source)</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Espaços em torno do =</strong> —
+              <code>VARIAVEL = valor</code> dá erro. Em shell, não pode ter
+              espaço: <code>VARIAVEL=valor</code> sem espaços.
+            </p>
+            <p>
+              <strong>Não usar aspas em valores com espaços</strong> —
+              <code>NOME=João Silva</code> vai tentar executar "Silva" como
+              comando. Correto: <code>NOME="João Silva"</code>.
+            </p>
+            <p>
+              <strong>Modificar PATH sem o $PATH original</strong> —
+              <code>export PATH=/novo/dir</code> apaga todo o PATH existente.
+              Sempre faça: <code>export PATH="/novo/dir:$PATH"</code>.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                $PATH determina onde o shell busca executáveis (da esquerda para
+                direita)
+              </li>
+              <li>
+                <code>export VAR=valor</code> — disponível para processos filhos
+              </li>
+              <li><code>VAR=valor</code> sem export — só no shell atual</li>
+              <li>
+                Persistir variáveis: adicionar em <code>~/.bashrc</code> (bash)
+                ou <code>~/.zshrc</code> (zsh)
+              </li>
+              <li>
+                <code>source arquivo</code> carrega variáveis no shell atual
+                (diferente de executar)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="pipes-redirects">
+          <div class="section-header">
+            <h2>Pipes e Redirecionamentos</h2>
+            <button class="mark-studied" data-section="pipes-redirects">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Linha de montagem</span>
+            <p>
+              O pipe é como uma linha de montagem industrial: cada programa faz
+              uma coisa específica e passa o resultado para o próximo.
+              <code>ps aux | grep nginx | awk '{print $2}'</code>: ps lista
+              todos os processos, grep filtra só os de nginx, awk extrai só os
+              PIDs. Três ferramentas simples, cada uma com uma função —
+              combinadas em algo poderoso.
+            </p>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>Pipe <code>|</code></strong> — conecta o stdout de um
+              processo ao stdin do próximo. Os dois processos rodam em paralelo
+              — não é sequencial. O kernel usa um buffer interno para transferir
+              os dados.
+            </p>
+            <p>
+              <strong><code>&gt;</code></strong> — redireciona stdout para
+              arquivo (sobrescreve o conteúdo existente).
+            </p>
+            <p>
+              <strong><code>&gt;&gt;</code></strong> — redireciona stdout para
+              arquivo (append — adiciona ao final).
+            </p>
+            <p>
+              <strong><code>2&gt;</code></strong> — redireciona stderr (file
+              descriptor 2) para arquivo.
+            </p>
+            <p>
+              <strong><code>2&gt;&amp;1</code></strong> — redireciona stderr
+              para onde stdout está apontando. <em>A ordem importa</em> — deve
+              vir depois do redirecionamento de stdout.
+            </p>
+            <p>
+              <strong><code>&amp;&gt;</code></strong> ou
+              <strong><code>&gt;&amp;</code></strong> — redireciona stdout E
+              stderr juntos (bash).
+            </p>
+            <p>
+              <strong><code>&lt; arquivo</code></strong> — usa arquivo como
+              stdin do programa.
+            </p>
+            <p>
+              <strong><code>&lt;&lt; EOF</code></strong> — heredoc: stdin
+              multilinha inline no script.
+            </p>
+            <p>
+              <strong><code>/dev/null</code></strong> — dispositivo que descarta
+              qualquer dado escrito nele. Use para silenciar output indesejado.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Pipe — encontrar os 5 processos que mais usam memória
+$ ps aux --sort=-%mem | head -6
+
+# Redirecionamento de stdout
+$ ls /etc > lista_etc.txt         # sobrescreve
+$ ls /etc >> lista_etc.txt        # append
+
+# Redirecionamento de stderr
+$ ls /naoexiste 2> erros.txt      # erros vão para arquivo
+$ ls /etc /naoexiste &> tudo.txt  # stdout e stderr juntos
+
+# Silenciar completamente
+$ comando_barulhento > /dev/null 2>&1
+
+# stdin de arquivo
+$ sort < nomes.txt
+$ wc -l < arquivo.txt
+
+# Heredoc — útil em scripts
+$ cat << EOF
+Linha 1
+Linha 2
+EOF
+
+# Pipeline clássico: contar arquivos por extensão
+$ find . -type f | sed 's/.*\.//' | sort | uniq -c | sort -rn
+     42 py
+     17 txt
+      8 sh
+      3 json
+
+# Tee — escreve em arquivo E mostra no terminal
+$ comando | tee output.txt
+$ comando | tee -a output.txt  # append</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Ordem errada em 2&gt;&amp;1</strong> —
+              <code>comando 2&gt;&amp;1 &gt; arquivo</code> está errado. O
+              stderr vai para o terminal (stdout original), não para o arquivo.
+              Correto: <code>comando &gt; arquivo 2&gt;&amp;1</code> — primeiro
+              redireciona stdout para arquivo, depois stderr para onde stdout
+              está.
+            </p>
+            <p>
+              <strong>Sobrescrever arquivo com &gt;</strong> —
+              <code>ls &gt; arquivo.txt</code> em um arquivo existente apaga
+              tudo. Se quiser preservar, use <code>&gt;&gt;</code> ou habilite
+              <code>set -o noclobber</code> no bash.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li><code>|</code> conecta stdout → stdin (paralelamente)</li>
+              <li>
+                <code>&gt;</code> sobrescreve; <code>&gt;&gt;</code> adiciona ao
+                final
+              </li>
+              <li>
+                <code>2&gt;arquivo</code> redireciona stderr;
+                <code>2&gt;&amp;1</code> junta com stdout
+              </li>
+              <li>
+                <code>/dev/null</code> descarta qualquer dado — "buraco negro"
+                do Unix
+              </li>
+              <li>
+                Ordem importa: <code>&gt; arq 2&gt;&amp;1</code> (correto) vs
+                <code>2&gt;&amp;1 &gt; arq</code> (errado)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="stdin-stdout-stderr">
+          <div class="section-header">
+            <h2>stdin, stdout e stderr: os três file descriptors</h2>
+            <button class="mark-studied" data-section="stdin-stdout-stderr">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Todo processo no Unix começa com três
+              <strong>file descriptors</strong> (FDs) abertos — canais de
+              comunicação numerados:
+            </p>
+            <ul>
+              <li>
+                <strong>FD 0 — stdin</strong> (standard input): entrada padrão.
+                Por default, o teclado. O que o programa "lê" quando você não
+                especifica entrada.
+              </li>
+              <li>
+                <strong>FD 1 — stdout</strong> (standard output): saída padrão.
+                Por default, o terminal. Onde os resultados são escritos.
+              </li>
+              <li>
+                <strong>FD 2 — stderr</strong> (standard error): saída de erro.
+                Por default, também o terminal. Onde mensagens de erro são
+                escritas.
+              </li>
+            </ul>
+            <p>
+              Programas bem escritos enviam <em>resultados</em> para stdout e
+              <em>erros</em> para stderr. Isso é fundamental: permite que você
+              processe resultados em um pipeline enquanto ainda vê os erros no
+              terminal, ou que redirecione erros para um arquivo de log
+              separado.
+            </p>
+            <p>
+              Todos os FDs são, internamente, ponteiros para arquivos — porque
+              no Unix, tudo é arquivo. Você pode redirecionar qualquer FD para
+              qualquer arquivo, dispositivo, socket ou pipe.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver FDs abertos do seu shell
+$ ls -la /proc/$$/fd/
+lrwxrwxrwx 0 -> /dev/pts/0    # FD 0 = stdin (terminal)
+lrwxrwxrwx 1 -> /dev/pts/0    # FD 1 = stdout (terminal)
+lrwxrwxrwx 2 -> /dev/pts/0    # FD 2 = stderr (terminal)
+
+# Separar stdout e stderr de um comando
+$ ls /etc /naoexiste > resultados.txt 2> erros.txt
+$ cat resultados.txt   # arquivos de /etc
+$ cat erros.txt        # "ls: cannot access '/naoexiste'"
+
+# Redirecionar stderr para stdout (útil para grep em erros)
+$ make 2>&1 | grep "error:"
+
+# Mandar mensagem de erro explicitamente para stderr em script
+$ echo "ERRO: arquivo não encontrado" >&2
+
+# Script bem comportado:
+#!/bin/bash
+if [ ! -f "$1" ]; then
+    echo "Erro: arquivo '$1' não existe" >&2   # erro -> stderr
+    exit 1
+fi
+cat "$1"  # resultado -> stdout (FD 1)</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>FD 0 = stdin, FD 1 = stdout, FD 2 = stderr</li>
+              <li>
+                Programas bem escritos: resultados → stdout, erros → stderr
+              </li>
+              <li>
+                <code>echo "erro" &gt;&amp;2</code> — escreve em stderr de
+                dentro de scripts
+              </li>
+              <li>Separar: <code>&gt; ok.log 2&gt; erros.log</code></li>
+              <li>
+                Juntar: <code>&gt; tudo.log 2&gt;&amp;1</code> ou
+                <code>&amp;&gt; tudo.log</code>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="expansao-globbing">
+          <div class="section-header">
+            <h2>Expansão e globbing</h2>
+            <button class="mark-studied" data-section="expansao-globbing">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O shell faz várias <strong>expansões</strong> antes de executar um
+              comando — transforma o que você digitou em algo concreto. Entender
+              a ordem das expansões evita surpresas.
+            </p>
+            <p>
+              <strong>Globbing (expansão de pathname)</strong> — corresponde a
+              nomes de arquivos usando caracteres especiais:
+            </p>
+            <ul>
+              <li>
+                <code>*</code> — qualquer sequência de caracteres (exceto /)
+              </li>
+              <li><code>?</code> — exatamente um caractere qualquer</li>
+              <li><code>[abc]</code> — qualquer um dos caracteres listados</li>
+              <li><code>[a-z]</code> — qualquer caractere no range</li>
+              <li>
+                <code>**</code> — recursivo (requer
+                <code>shopt -s globstar</code> no bash)
+              </li>
+            </ul>
+            <p>
+              <strong>Brace expansion <code>{a,b,c}</code></strong> — o shell
+              gera strings antes de qualquer outra expansão. Não precisa de
+              arquivos existentes. <code>mkdir {jan,fev,mar}_2025</code> cria
+              três diretórios.
+            </p>
+            <p>
+              <strong>Expansão de variável <code>$VAR</code></strong> —
+              substitui o nome da variável pelo seu valor.
+            </p>
+            <p>
+              <strong>Expansão aritmética <code>$((expr))</code></strong> —
+              calcula expressões matemáticas.
+            </p>
+            <p>
+              <strong>Substituição de comando <code>$(comando)</code></strong> —
+              executa comando e substitui pelo output.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Globbing básico
+$ ls *.py             # todos os .py
+$ ls arquivo?.txt     # arquivo1.txt, arquivo2.txt, etc.
+$ ls [Rr]eadme*       # README ou readme, qualquer extensão
+
+# Brace expansion — não precisa de arquivos existentes
+$ mkdir {jan,fev,mar,abr,mai,jun}_2025
+$ touch log_{error,warn,info}.txt
+$ cp arquivo.txt{,.bak}   # cria arquivo.txt.bak (expansão esperta!)
+
+# Globbing recursivo (requer globstar no bash)
+$ shopt -s globstar
+$ ls **/*.py          # todos .py em todos os subdiretórios
+
+# Substituição de comando
+$ echo "Hoje é $(date +%Y-%m-%d)"
+Hoje é 2026-05-20
+
+$ files=$(ls *.log)
+$ echo "Encontrei: $files"
+
+# Expansão aritmética
+$ echo $((2 ** 10))
+1024
+$ echo $(($(cat /proc/sys/kernel/pid_max) / 2))
+
+# Aspas: double quotes preservam $VAR; single quotes literal
+$ echo "$HOME"     # /home/usuario
+$ echo '$HOME'     # $HOME (literal)</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Glob sem aspas em variável</strong> — se
+              <code>$ARQUIVO</code> contém espaços ou caracteres glob, usar sem
+              aspas pode causar word splitting e expansão indesejada. Sempre use
+              aspas duplas: <code>"$ARQUIVO"</code>.
+            </p>
+            <p>
+              <strong>Brace expansion vs glob</strong> —
+              <code>{*.py,*.js}</code> não funciona como esperado. Brace
+              expansion acontece antes do glob. Para múltiplas extensões, use:
+              <code>*.py *.js</code> separados por espaço, ou
+              <code>extglob</code>.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>*</code> qualquer string; <code>?</code> um char;
+                <code>[abc]</code> um dos chars
+              </li>
+              <li>
+                <code>{a,b,c}</code> brace expansion — gera strings, não depende
+                de arquivos
+              </li>
+              <li>
+                <code>$(comando)</code> substituição de comando — captura output
+              </li>
+              <li><code>$((expr))</code> aritmética no shell</li>
+              <li>
+                Aspas duplas preservam variáveis; aspas simples são
+                completamente literais
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="historico-aliases">
+          <div class="section-header">
+            <h2>Histórico e aliases</h2>
+            <button class="mark-studied" data-section="historico-aliases">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O bash salva os comandos que você digita em
+              <code>~/.bash_history</code> (zsh usa
+              <code>~/.zsh_history</code>). O histórico é uma das ferramentas de
+              produtividade mais subestimadas do shell.
+            </p>
+            <p><strong>Navegação no histórico:</strong></p>
+            <ul>
+              <li><kbd>↑</kbd> / <kbd>↓</kbd> — navega pelo histórico</li>
+              <li>
+                <kbd>Ctrl+R</kbd> — busca reversa interativa — comece a digitar
+                e encontra o comando mais recente que combina
+              </li>
+              <li><code>history</code> — lista o histórico com números</li>
+              <li><code>!42</code> — re-executa o comando número 42</li>
+              <li>
+                <code>!!</code> — re-executa o último comando (útil com sudo:
+                <code>sudo !!</code>)
+              </li>
+              <li>
+                <code>!ls</code> — re-executa o último comando que começou com
+                <code>ls</code>
+              </li>
+            </ul>
+            <p>
+              <strong>Aliases</strong> — atalhos para comandos longos.
+              <code>alias nome='comando longo'</code>. Definidos no shell atual;
+              para persistir, adicione em <code>~/.bashrc</code> ou
+              <code>~/.zshrc</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Histórico
+$ history | tail -10
+  421  ls -la /etc/nginx/
+  422  sudo nginx -t
+  423  sudo systemctl reload nginx
+  424  tail -f /var/log/nginx/error.log
+
+$ !422          # re-executa: sudo nginx -t
+$ !!            # re-executa último comando
+$ sudo !!       # esqueceu o sudo? re-executa com sudo
+
+# Ctrl+R (busca reversa)
+# Digite: Ctrl+R → "nginx" → mostra último comando com "nginx"
+# Enter para executar, Ctrl+R de novo para buscar anterior
+# Ctrl+C para cancelar
+
+# Aliases úteis
+$ alias ll='ls -la --color=auto'
+$ alias gs='git status'
+$ alias gp='git push'
+$ alias cls='clear'
+$ alias ..='cd ..'
+$ alias ...='cd ../..'
+$ alias grep='grep --color=auto'
+
+# Ver aliases definidos
+$ alias
+alias ll='ls -la --color=auto'
+alias gs='git status'
+
+# Remover alias
+$ unalias gs
+
+# Adicionar em ~/.bashrc para persistir:
+# echo "alias ll='ls -la --color=auto'" >> ~/.bashrc
+# source ~/.bashrc  # recarregar</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Para aliases mais complexos que precisam de argumentos, use
+              <strong>funções</strong> no bash:
+            </p>
+            <pre><code># Alias não aceita argumentos facilmente — use função
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+# mkcd novo_projeto → cria e já entra no diretório</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <kbd>Ctrl+R</kbd> — busca no histórico (mais útil que ↑↑↑)
+              </li>
+              <li>
+                <code>!!</code> re-executa último; <code>!N</code> re-executa
+                número N; <code>!string</code> re-executa último que começa com
+                string
+              </li>
+              <li><code>alias nome='comando'</code> — atalhos de comandos</li>
+              <li>
+                Persistir aliases: adicionar em <code>~/.bashrc</code> e
+                recarregar com <code>source ~/.bashrc</code>
+              </li>
+              <li>Para aliases com argumentos, use funções bash</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 7 — TERMINAL SIMULADO -->
+        <section class="content-section" id="terminal-pratica">
+          <div class="section-header">
+            <h2>Terminal Simulado — Pratique aqui</h2>
+            <button class="mark-studied" data-section="terminal-pratica">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <p class="terminal-notice">
+            ℹ️ Terminal simulado para prática básica — use um terminal real para
+            comandos avançados.
+          </p>
+          <div id="terminal-simulado" class="terminal-wrapper">
+            <div class="terminal-titlebar">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <span class="terminal-title">usuario@linuxwiki: ~</span>
+            </div>
+            <div class="terminal-output"></div>
+            <div class="terminal-input-row">
+              <span class="terminal-prompt"></span>
+              <input
+                class="terminal-input"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Digite um comando (ex: help)"
+              />
+            </div>
+          </div>
+          <div class="card card-info with-top-gap">
+            <div class="card-label">ℹ️ Comandos disponíveis no simulador</div>
+            <p>
+              Tente: <code>ls</code>, <code>ls -la</code>, <code>pwd</code>,
+              <code>cd documentos</code>, <code>cat notas.txt</code>,
+              <code>echo $HOME</code>, <code>whoami</code>, <code>date</code>,
+              <code>uname -a</code>, <code>history</code>, <code>clear</code>
+            </p>
+            <p class="section-body-note">
+              Use ↑ / ↓ para navegar no histórico de comandos.
+            </p>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 05</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="processos.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="systemctl.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

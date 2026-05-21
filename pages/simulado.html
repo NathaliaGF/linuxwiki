@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Simulado Geral LinuxWiki — 30 questões cobrindo todos os módulos, com cronômetro de 30 minutos e resultado por tema."
+    />
+    <title>Simulado Geral | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="simulado">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+        <div class="module-header">
+          <span class="module-number-badge">Ferramenta</span>
+          <h1 class="module-page-title">Simulado Geral</h1>
+          <p class="module-intro">
+            30 questões cobrindo todos os 10 módulos. Você tem 30 minutos. Ao
+            final, recebe um breakdown de acertos por tema para identificar onde
+            revisar.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 30 minutos</span>
+            <span class="module-meta-item">📝 30 questões</span>
+            <span class="module-meta-item">📊 Resultado por módulo</span>
+          </div>
+        </div>
+
+        <!-- Intro -->
+        <div id="simulado-intro">
+          <div class="card card-info with-bottom-gap-lg">
+            <div class="card-label">ℹ️ Como funciona</div>
+            <ul>
+              <li>30 questões de múltipla escolha, 4 alternativas cada</li>
+              <li>
+                Cronômetro de <strong>30 minutos</strong> — ao zerar, o simulado
+                é encerrado automaticamente
+              </li>
+              <li>Feedback imediato após cada resposta com explicação</li>
+              <li>
+                Resultado final com <strong>breakdown por módulo</strong> —
+                identifique onde revisar
+              </li>
+              <li>
+                Questões cobrindo: Filosofia, Filesystem, Permissões, Processos,
+                Shell, Usuários, Pacotes, Rede, Scripting e Certificações
+              </li>
+            </ul>
+          </div>
+
+          <div class="simulado-header">
+            <div>
+              <div class="timer-display" id="simulado-timer">30:00</div>
+              <div class="simulado-metric-label">tempo disponível</div>
+            </div>
+            <div>
+              <div class="simulado-progress-text" id="simulado-progress">
+                0 / 30
+              </div>
+              <div class="simulado-metric-label">questões respondidas</div>
+            </div>
+            <button class="btn-start-simulado" id="btn-start-simulado">
+              Iniciar Simulado →
+            </button>
+          </div>
+        </div>
+
+        <!-- Área do simulado -->
+        <div id="simulado-area" class="is-hidden"></div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const simuladoQuestions = [
+        // Filosofia Linux
+        {
+          module: "Filosofia Linux",
+          question: "Linus Torvalds anunciou o Linux em 1991 em qual fórum?",
+          options: ["Stack Overflow", "comp.os.minix", "Reddit", "Slashdot"],
+          correct: 1,
+          explanation:
+            "Em 25 de agosto de 1991, Linus postou na newsgroup comp.os.minix: \"I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu)\".",
+        },
+        {
+          module: "Filosofia Linux",
+          question: "Qual a diferença entre kernel e distro Linux?",
+          options: [
+            "São a mesma coisa",
+            "O kernel é a interface gráfica; a distro é o núcleo",
+            "O kernel é o núcleo do SO; a distro é kernel + ferramentas + gerenciador de pacotes",
+            "A distro é mais antiga que o kernel",
+          ],
+          correct: 2,
+          explanation:
+            "O kernel Linux gerencia hardware, memória e processos. Uma distribuição (distro) combina o kernel com ferramentas GNU, gerenciador de pacotes e opcionalmente uma interface gráfica.",
+        },
+        {
+          module: "Filosofia Linux",
+          question:
+            "Qual distro Linux é recomendada para aprender os internos do sistema, com instalação manual?",
+          options: ["Ubuntu", "Debian", "Arch Linux", "Linux Mint"],
+          correct: 2,
+          explanation:
+            "Arch Linux tem instalação completamente manual — você decide cada componente. A Arch Wiki é considerada o melhor recurso de documentação Linux disponível.",
+        },
+        // Filesystem
+        {
+          module: "Filesystem",
+          question: "O que é um inode em sistemas de arquivos Linux?",
+          options: [
+            "O nome de um arquivo",
+            "Uma estrutura de dados com metadados do arquivo (permissões, dono, localização)",
+            "Um tipo de link simbólico",
+            "Um bloco de dados no disco",
+          ],
+          correct: 1,
+          explanation:
+            "O inode armazena metadados: permissões, dono, grupo, timestamps e ponteiros para blocos de dados. O nome do arquivo fica no diretório, não no inode.",
+        },
+        {
+          module: "Filesystem",
+          question:
+            "Qual diretório no Linux contém informações sobre processos em execução (sistema de arquivos virtual)?",
+          options: ["/var/run", "/dev", "/proc", "/sys/proc"],
+          correct: 2,
+          explanation:
+            "/proc é um sistema de arquivos virtual criado pelo kernel na memória RAM. /proc/PID/ expõe tudo sobre aquele processo. /proc/cpuinfo, /proc/meminfo mostram estado do sistema.",
+        },
+        {
+          module: "Filesystem",
+          question: "Qual a diferença entre hard link e symbolic link?",
+          options: [
+            "Hard link aponta para inode (mesmos dados); symlink é um arquivo com caminho para outro",
+            "Symlink aponta para inode; hard link é um atalho",
+            "Hard links funcionam entre sistemas de arquivos; symlinks não",
+            "São idênticos, apenas nomes diferentes",
+          ],
+          correct: 0,
+          explanation:
+            "Hard link: outro nome para o mesmo inode. Deletar um não afeta o outro. Symlink: arquivo separado contendo um caminho — se o destino for deletado, o symlink fica quebrado.",
+        },
+        // Permissões
+        {
+          module: "Permissões",
+          question: "O que significa o octal 755 em chmod?",
+          options: [
+            "Dono: rw-, Grupo: r-x, Outros: r-x",
+            "Dono: rwx, Grupo: r-x, Outros: r-x",
+            "Dono: rwx, Grupo: rw-, Outros: r--",
+            "Dono: rw-, Grupo: rw-, Outros: r-x",
+          ],
+          correct: 1,
+          explanation:
+            "7=rwx (4+2+1), 5=r-x (4+0+1), 5=r-x. Representado como rwxr-xr-x. Padrão para executáveis e diretórios de acesso público.",
+        },
+        {
+          module: "Permissões",
+          question: "Para que serve o SUID bit em /usr/bin/passwd?",
+          options: [
+            "Protege o arquivo de ser deletado",
+            "Permite que qualquer usuário mude sua senha (roda como root)",
+            "Registra quem executou o arquivo",
+            "Impede execução por usuários comuns",
+          ],
+          correct: 1,
+          explanation:
+            "passwd precisa escrever em /etc/shadow (somente root). Com SUID de root (-rwsr-xr-x), o programa roda com permissões de root independente de quem executou.",
+        },
+        {
+          module: "Permissões",
+          question: 'O /tmp tem permissões drwxrwxrwt. O que o "t" garante?',
+          options: [
+            "Que o diretório é temporário",
+            "Que somente root pode criar arquivos",
+            "Que usuários só podem deletar seus próprios arquivos (sticky bit)",
+            "Que o diretório é montado na memória",
+          ],
+          correct: 2,
+          explanation:
+            "O sticky bit em diretório (t no lugar do x de others) impede que usuários deletem arquivos de outros, mesmo tendo permissão w no diretório.",
+        },
+        // Processos
+        {
+          module: "Processos",
+          question: "Qual sinal é enviado ao pressionar Ctrl+C no terminal?",
+          options: [
+            "SIGTERM (15)",
+            "SIGKILL (9)",
+            "SIGINT (2)",
+            "SIGSTOP (19)",
+          ],
+          correct: 2,
+          explanation:
+            "Ctrl+C gera SIGINT (signal interrupt, número 2). O processo pode capturá-lo. Ctrl+Z gera SIGTSTP (pausa); Ctrl+\\ gera SIGQUIT.",
+        },
+        {
+          module: "Processos",
+          question: 'Um processo em estado "D" (Disk sleep) no ps aux:',
+          options: [
+            "Pode ser morto com kill -9",
+            "Está em modo de baixo consumo",
+            "Não pode ser morto por sinais — aguarda I/O de forma ininterrupta",
+            "É um processo zumbi",
+          ],
+          correct: 2,
+          explanation:
+            "Estado D (uninterruptible sleep) — processo dentro de chamada de sistema de I/O crítica. O kernel não entrega sinais neste estado. Você não consegue matar sem reiniciar.",
+        },
+        {
+          module: "Processos",
+          question: "O que é um processo zombie (Z)?",
+          options: [
+            "Processo consumindo 100% de CPU",
+            "Processo que terminou mas cujo exit code não foi coletado pelo pai",
+            "Processo rodando sem terminal associado",
+            "Processo com permissões de root sem ser root",
+          ],
+          correct: 1,
+          explanation:
+            "Zombie: processo que terminou mas o pai não chamou wait() para coletar o exit code. Ocupa entrada na tabela de processos mas pouca memória. Zombies acumulados podem esgotar PIDs disponíveis.",
+        },
+        // Shell
+        {
+          module: "Shell",
+          question: "O que faz o redirecionamento 2>&1?",
+          options: [
+            "Redireciona stdin para stdout",
+            "Redireciona stderr para onde stdout está apontando",
+            "Duplica stdout para stderr",
+            "Redireciona stderr para /dev/null",
+          ],
+          correct: 1,
+          explanation:
+            'fd 2 (stderr) passa a apontar para o mesmo lugar que fd 1 (stdout). Em "cmd > arq.txt 2>&1": stdout e stderr vão para arq.txt. A ordem importa — 2>&1 deve vir depois de >.',
+        },
+        {
+          module: "Shell",
+          question: "O que é $PATH?",
+          options: [
+            "O diretório home do usuário",
+            "O arquivo de configuração do bash",
+            "Lista de diretórios onde o shell busca executáveis",
+            "O caminho do shell atual",
+          ],
+          correct: 2,
+          explanation:
+            'Quando você digita um comando, o shell percorre $PATH da esquerda para direita procurando o executável. Se não encontrar em nenhum diretório: "command not found".',
+        },
+        {
+          module: "Shell",
+          question: 'O pipe (|) em "ps aux | grep nginx" funciona como:',
+          options: [
+            "Executa ps aux e depois grep nginx sequencialmente",
+            "Conecta stdout de ps aux ao stdin de grep, ambos rodando em paralelo",
+            "Salva output de ps aux em um arquivo temporário para grep ler",
+            "Combina os dois comandos em um processo único",
+          ],
+          correct: 1,
+          explanation:
+            "O pipe conecta os processos via buffer no kernel — eles rodam em paralelo. ps escreve; grep lê ao mesmo tempo. Não há arquivo temporário intermediário.",
+        },
+        // Usuários
+        {
+          module: "Usuários",
+          question:
+            "Qual arquivo contém os hashes de senha dos usuários no Linux?",
+          options: [
+            "/etc/passwd",
+            "/etc/shadow",
+            "/etc/security",
+            "/etc/login.defs",
+          ],
+          correct: 1,
+          explanation:
+            "/etc/shadow armazena hashes e políticas de senha, legível apenas por root. /etc/passwd tem dados públicos (UID, shell, home) — separação criada para segurança.",
+        },
+        {
+          module: "Usuários",
+          question: "O comando usermod -G docker joao (sem -a) resulta em:",
+          options: [
+            "Joao adicionado ao grupo docker mantendo grupos anteriores",
+            'Grupos suplementares de joao substituídos por apenas "docker"',
+            "Joao removido do grupo docker",
+            "Erro de sintaxe",
+          ],
+          correct: 1,
+          explanation:
+            "-G sem -a SUBSTITUI todos os grupos suplementares. Se joao estava em sudo, adm, docker: após usermod -G docker joao, ele fica APENAS em docker. Sempre use -aG para adicionar.",
+        },
+        {
+          module: "Usuários",
+          question: "Qual o UID do usuário root?",
+          options: ["1000", "999", "0", "-1"],
+          correct: 2,
+          explanation:
+            "UID 0 é o que confere poderes de root — não o nome. O kernel ignora quase todas as verificações de permissão para UID 0. UIDs 1-999 são contas de sistema; 1000+ são usuários humanos.",
+        },
+        // Pacotes
+        {
+          module: "Pacotes",
+          question:
+            "Qual a sequência correta para compilar software com autotools?",
+          options: [
+            "make → ./configure → make install",
+            "./configure → make install → make",
+            "./configure → make → sudo make install",
+            "sudo make install → ./configure → make",
+          ],
+          correct: 2,
+          explanation:
+            "./configure verifica dependências e gera Makefile. make compila. sudo make install copia binários para o sistema. Esta ordem é obrigatória.",
+        },
+        {
+          module: "Pacotes",
+          question: "Qual a diferença entre apt remove e apt purge?",
+          options: [
+            "São idênticos",
+            "remove desinstala o pacote; purge remove o pacote E arquivos de configuração",
+            "purge é mais rápido que remove",
+            "remove funciona apenas em Ubuntu; purge em Debian",
+          ],
+          correct: 1,
+          explanation:
+            "apt remove mantém arquivos de configuração em /etc. apt purge remove o pacote e todos os arquivos de configuração. Use purge para reinstalar do zero ou limpar completamente.",
+        },
+        {
+          module: "Pacotes",
+          question: "No Arch Linux, qual comando atualiza todos os pacotes?",
+          options: [
+            "pacman -S --upgrade",
+            "pacman -Syu",
+            "pacman -U all",
+            "pacman --update",
+          ],
+          correct: 1,
+          explanation:
+            "pacman -Syu: -S = sync mode, -y = atualiza banco de dados, -u = upgrade de todos. Equivale a apt update && apt upgrade em um só comando.",
+        },
+        // Rede
+        {
+          module: "Rede",
+          question: "O que mostra o comando ss -tulnp?",
+          options: [
+            "Estatísticas de rede",
+            "Portas TCP/UDP em escuta com o processo responsável",
+            "Tabela de roteamento",
+            "Configuração DNS",
+          ],
+          correct: 1,
+          explanation:
+            "-t TCP, -u UDP, -l listening, -n numérico (sem resolver hostnames), -p processo responsável. Essencial para saber quais portas estão abertas e qual serviço as ocupa.",
+        },
+        {
+          module: "Rede",
+          question: "O que significa uma porta ouvindo em 0.0.0.0:80?",
+          options: [
+            "Porta desabilitada",
+            "Ouvindo apenas no loopback",
+            "Ouvindo em todas as interfaces de rede",
+            "Porta disponível apenas internamente",
+          ],
+          correct: 2,
+          explanation:
+            '0.0.0.0 significa "qualquer interface". O serviço aceita conexões em qualquer IP que a máquina tenha. Compare com 127.0.0.1:5432 — PostgreSQL acessível apenas localmente.',
+        },
+        {
+          module: "Rede",
+          question:
+            "Para qual finalidade serve o ssh -L 8080:localhost:5432 servidor?",
+          options: [
+            "Abre a porta 8080 no servidor",
+            "Cria um túnel: localhost:8080 local conecta ao PostgreSQL (5432) do servidor",
+            "Redireciona tráfego do servidor para o cliente",
+            "Verifica se a porta 5432 está aberta no servidor",
+          ],
+          correct: 1,
+          explanation:
+            "Port forwarding local: acessar localhost:8080 no seu computador conecta à porta 5432 do servidor via túnel SSH criptografado. Usado para acessar bancos de dados internos com segurança.",
+        },
+        // Scripting
+        {
+          module: "Scripting",
+          question:
+            'O que faz "set -euo pipefail" no início de um script bash?',
+          options: [
+            "Habilita modo de depuração com trace completo",
+            "Sai em erros (e), erro em variável indefinida (u), propaga erros em pipes (pipefail)",
+            "Exporta todas as variáveis automaticamente",
+            "Define o ambiente de execução como root",
+          ],
+          correct: 1,
+          explanation:
+            "set -e: encerra se comando falhar. set -u: trata variável não definida como erro. set -o pipefail: propaga erros em pipes. Juntos previnem erros silenciosos em scripts.",
+        },
+        {
+          module: "Scripting",
+          question:
+            "Para iterar sobre argumentos de função preservando espaços, o correto é:",
+          options: [
+            "for a in $*",
+            'for a in "$*"',
+            'for a in "$@"',
+            "for a in $@",
+          ],
+          correct: 2,
+          explanation:
+            '"$@" expande cada argumento separadamente, preservando espaços internos. "$*" junta tudo em uma string. Sem aspas, ambos sofrem word splitting. Sempre use "$@".',
+        },
+        {
+          module: "Scripting",
+          question:
+            "O shebang #!/usr/bin/env bash é preferível a #!/bin/bash porque:",
+          options: [
+            "É mais rápido de executar",
+            "Funciona mesmo quando bash está em locais diferentes (usa $PATH)",
+            "Habilita features extras do bash",
+            "É a forma padrão exigida pelo POSIX",
+          ],
+          correct: 1,
+          explanation:
+            "#!/usr/bin/env bash usa o bash encontrado no $PATH, tornando o script portável para sistemas onde bash pode estar em /usr/local/bin ou outros locais. /bin/bash é hardcoded.",
+        },
+        // Certificações
+        {
+          module: "Certificações",
+          question:
+            "Qual certificação Linux usa exame completamente prático (sem múltipla escolha)?",
+          options: ["LPIC-1", "CompTIA Linux+", "RHCSA", "LFCA"],
+          correct: 2,
+          explanation:
+            "RHCSA é 100% prático — você administra sistemas RHEL reais por 2-3 horas. Tarefas como configurar SELinux, criar usuários, montar LVM, configurar serviços. Não há alternativas para memorizar.",
+        },
+        {
+          module: "Certificações",
+          question:
+            "No roadmap DevOps, qual tecnologia vem imediatamente após dominar Linux?",
+          options: ["Kubernetes", "Terraform", "Docker (containers)", "AWS"],
+          correct: 2,
+          explanation:
+            "A progressão natural é: Linux → Shell Scripting → Docker → Kubernetes → Cloud → IaC. Docker é a base para entender containers antes de orquestração com Kubernetes.",
+        },
+        {
+          module: "Certificações",
+          question:
+            "Por que o Alpine Linux é popular como imagem base em containers Docker?",
+          options: [
+            "Tem suporte oficial da Docker Inc.",
+            "Imagem base de ~5MB, menor superfície de ataque",
+            "É a única distro certificada para containers",
+            "Tem melhor desempenho em CPUs ARM",
+          ],
+          correct: 1,
+          explanation:
+            "Alpine usa musl libc e busybox em vez de glibc e GNU coreutils, resultando em imagem de ~5MB vs ~72MB do Ubuntu. Menos software = menos vulnerabilidades. Padrão para imagens de produção.",
+        },
+      ];
+    </script>
+  </body>
+</html>

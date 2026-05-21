@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda a gerenciar redes no Linux via linha de comando: interfaces, IP, DNS, portas, firewall com ufw e ferramentas de diagnóstico."
+    />
+    <title>Módulo 08 — Redes no Linux | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="rede-linux">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 08</span>
+          <h1 class="module-page-title">Redes no Linux</h1>
+          <p class="module-intro">
+            Conceitos de IP, TCP/IP e DNS fazem parte da base de redes — aqui o
+            foco é como interagir com eles via linha de comando Linux. Aprenda a
+            inspecionar interfaces, diagnosticar conexões, controlar o firewall
+            e usar as ferramentas certas para cada situação.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 25 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="interfaces">
+          <div class="section-header">
+            <h2>Interfaces de rede no Linux</h2>
+            <button class="mark-studied" data-section="interfaces">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Uma <strong>interface de rede</strong> é a representação no kernel
+              de uma conexão física ou virtual. O comando principal para
+              inspecioná-las é <code>ip addr show</code> (ou <code>ip a</code>).
+            </p>
+            <ul>
+              <li>
+                <strong>lo</strong>: loopback, endereço 127.0.0.1. Interface
+                virtual para comunicação interna do sistema.
+              </li>
+              <li>
+                <strong>eth0 / enp3s0</strong>: Ethernet. A nomenclatura moderna
+                (<code>enp3s0</code>) é determinística — <em>en</em>ethernet,
+                <em>p3</em>PCI bus 3, <em>s0</em>slot 0. Não muda entre reboots.
+              </li>
+              <li>
+                <strong>wlan0 / wlp2s0</strong>: Wi-Fi. Mesma lógica de
+                nomenclatura.
+              </li>
+              <li>
+                <strong>docker0</strong>: bridge virtual criada pelo Docker para
+                comunicação entre containers e host.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>ip addr show                       # lista todas as interfaces
+ip addr show eth0                  # só a interface eth0
+ip link set eth0 up                # ativa interface
+ip link set eth0 down              # desativa interface
+
+# Gerenciadores de configuração de rede:
+# /etc/network/interfaces          — Debian puro
+# NetworkManager                   — Ubuntu Desktop (nmcli, nmtui)
+# /etc/netplan/                    — Ubuntu Server moderno (YAML → networkd/NM)</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              A nomenclatura antiga (<code>eth0</code>, <code>wlan0</code>)
+              dependia da ordem de detecção do kernel — podia mudar entre boots.
+              A nomenclatura moderna (<code>enp3s0</code>, <code>wlp2s0</code>)
+              é baseada em topologia de hardware e é previsível. No Ubuntu
+              Server, use <code>nmcli device status</code> para ver o estado de
+              todas as interfaces gerenciadas pelo NetworkManager.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="ip-routing">
+          <div class="section-header">
+            <h2>Endereçamento IP e roteamento</h2>
+            <button class="mark-studied" data-section="ip-routing">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O comando <code>ip</code> (do pacote <code>iproute2</code>) é a
+              ferramenta moderna para gerenciar endereços, rotas e interfaces.
+              Substituiu <code>ifconfig</code> e <code>route</code>, que estão
+              depreciados.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>ip addr show                       # endereços de todas as interfaces
+ip addr show eth0                  # só eth0
+ip route show                      # tabela de roteamento completa
+ip route get 8.8.8.8               # qual rota seria usada para este IP
+
+# Output típico de ip addr:
+# 2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500
+#     inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0
+#     inet6 fe80::1/64 scope link
+
+# Rota padrão (gateway)
+ip route show default
+# default via 192.168.1.1 dev eth0 proto dhcp</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — ip route get</span>
+            <p>
+              Pense em <code>ip route get 8.8.8.8</code> como perguntar ao GPS
+              "se eu fosse para este endereço, por qual estrada eu sairia?". O
+              kernel responde qual interface e qual gateway ele usaria — sem
+              enviar nenhum pacote. Perfeito para diagnosticar problemas de
+              roteamento sem alterar nada.
+            </p>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Ainda usar ifconfig</strong>: depreciado e ausente em
+                instalações mínimas. Use <code>ip addr</code>.
+              </li>
+              <li>
+                <strong>Adicionar rota sem gateway correto</strong>:
+                <code>ip route add 10.0.0.0/8 via 192.168.1.1</code> — verifique
+                que o gateway está acessível na interface antes.
+              </li>
+              <li>
+                <strong>Alterações com ip são voláteis</strong>: sobrevivem
+                apenas até o próximo reboot. Para permanência, edite a
+                configuração do gerenciador de rede (Netplan, NetworkManager).
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="dns-linux">
+          <div class="section-header">
+            <h2>DNS no Linux: /etc/resolv.conf e /etc/hosts</h2>
+            <button class="mark-studied" data-section="dns-linux">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>O Linux tem dois mecanismos principais de resolução de nomes:</p>
+            <ul>
+              <li>
+                <strong>/etc/hosts</strong>: resolução local estática.
+                Mapeamentos hostname→IP verificados antes do DNS. Prioridade
+                configurável em <code>/etc/nsswitch.conf</code> (entrada
+                <code>hosts: files dns</code>).
+              </li>
+              <li>
+                <strong>/etc/resolv.conf</strong>: lista os servidores DNS a
+                consultar quando /etc/hosts não tem a resposta.
+              </li>
+            </ul>
+            <p>
+              Em sistemas modernos com <code>systemd-resolved</code> (Ubuntu
+              18.04+), o /etc/resolv.conf pode ser um symlink gerenciado
+              automaticamente.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>cat /etc/resolv.conf               # servidores DNS configurados
+# nameserver 8.8.8.8
+# nameserver 1.1.1.1
+
+cat /etc/hosts                     # resolução local (antes do DNS)
+# 127.0.0.1   localhost
+# 127.0.1.1   minhaMaquina
+# 192.168.1.50 servidor-interno
+
+nslookup google.com                # consulta DNS simples
+dig google.com                     # consulta DNS detalhada
+dig +short google.com              # só o IP
+dig MX gmail.com                   # registros MX (email)
+dig NS google.com                  # servidores de nome
+host google.com                    # consulta simples e legível
+
+resolvectl status                  # systemd-resolved: status DNS (Ubuntu moderno)</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Uma técnica útil: adicionar entradas em
+              <code>/etc/hosts</code> para apontar domínios de desenvolvimento
+              para 127.0.0.1 durante o desenvolvimento local. Por exemplo:
+              <code>127.0.0.1 app.local</code>. Isso funciona porque /etc/hosts
+              tem prioridade sobre DNS por padrão. Use
+              <code>dig +short dominio</code> para verificar rapidamente qual IP
+              um domínio resolve.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="portas-sockets">
+          <div class="section-header">
+            <h2>Portas e sockets: quem está ouvindo</h2>
+            <button class="mark-studied" data-section="portas-sockets">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Para saber quais serviços estão aceitando conexões em quais
+              portas, use <code>ss</code> (socket statistics) — o substituto
+              moderno do depreciado <code>netstat</code>.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>ss -tuln                           # TCP/UDP em listen, sem resolver nomes
+# -t TCP, -u UDP, -l listening, -n numérico (não resolve hostnames)
+ss -tulnp                          # inclui o processo que está ouvindo (-p)
+
+netstat -tuln                      # equivalente antigo (depreciado, mas comum)
+
+lsof -i :80                        # qual processo usa a porta 80
+lsof -i tcp:443                    # porta 443 TCP
+
+# Output típico de ss -tulnp:
+# Netid  State  Recv-Q  Send-Q  Local Address:Port
+# tcp    LISTEN 0       128     0.0.0.0:80          users:(("nginx",pid=1234,...))
+# tcp    LISTEN 0       128     0.0.0.0:443         users:(("nginx",pid=1234,...))
+# tcp    LISTEN 0       128     127.0.0.1:5432      users:(("postgres",pid=789,...))</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — 0.0.0.0 vs 127.0.0.1</span>
+            <p>
+              Uma porta ouvindo em <code>0.0.0.0:80</code> é como uma loja com
+              porta para a rua — aceita conexões de qualquer IP que chegue até a
+              máquina. Uma porta em <code>127.0.0.1:5432</code> é uma sala
+              interna sem janela para fora — só acessível de dentro da própria
+              máquina. PostgreSQL ouvindo só no loopback é uma decisão de
+              segurança correta para bancos que não devem ser expostos.
+            </p>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Usar netstat sem instalar net-tools</strong>: em
+                instalações mínimas, netstat não está presente. Use
+                <code>ss</code> — vem com iproute2, sempre disponível.
+              </li>
+              <li>
+                <strong>Não usar -p</strong>: sem <code>-p</code>, você vê a
+                porta mas não sabe qual processo. Adicione sempre para
+                diagnóstico.
+              </li>
+              <li>
+                <strong>Confundir LISTEN com ESTABLISHED</strong>: LISTEN =
+                esperando conexões. ESTABLISHED = conexão ativa.
+                <code>ss -tunp</code> (sem -l) mostra conexões estabelecidas.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="firewall">
+          <div class="section-header">
+            <h2>Firewall básico com ufw e iptables</h2>
+            <button class="mark-studied" data-section="firewall">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O Linux tem um firewall embutido no kernel
+              (<strong>Netfilter</strong>). As ferramentas de userspace para
+              configurá-lo evoluíram:
+            </p>
+            <ul>
+              <li>
+                <strong>iptables</strong>: interface clássica, muito poderosa,
+                sintaxe complexa.
+              </li>
+              <li>
+                <strong>nftables</strong>: successor moderno do iptables, mais
+                eficiente.
+              </li>
+              <li>
+                <strong>ufw</strong> (Uncomplicated Firewall): abstração
+                amigável sobre iptables/nftables, padrão no Ubuntu. Ideal para
+                uso geral.
+              </li>
+              <li>
+                <strong>firewalld</strong>: padrão no Fedora/RHEL, suporta zonas
+                de rede.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># UFW (Uncomplicated Firewall) — padrão Ubuntu
+sudo ufw enable
+sudo ufw status verbose
+sudo ufw allow 22/tcp              # SSH
+sudo ufw allow 80/tcp              # HTTP
+sudo ufw allow 443/tcp             # HTTPS
+sudo ufw allow from 192.168.1.0/24 # toda uma rede local
+sudo ufw deny 8080                 # bloqueia porta 8080
+sudo ufw delete allow 80/tcp       # remove regra
+sudo ufw reset                     # reseta todas as regras
+
+# iptables (mais poderoso, mas complexo)
+sudo iptables -L -n -v             # lista regras atuais
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT   # aceita HTTP
+sudo iptables -A INPUT -j DROP     # nega todo o resto</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <ul>
+              <li>
+                <strong>Habilitar ufw sem liberar SSH</strong>:
+                <code>sudo ufw enable</code> antes de
+                <code>ufw allow 22/tcp</code> pode te bloquear do servidor.
+                Sempre libere SSH primeiro.
+              </li>
+              <li>
+                <strong>Regras iptables sem persistência</strong>: iptables não
+                persiste entre reboots sem <code>iptables-persistent</code> ou
+                equivalente. ufw persiste automaticamente.
+              </li>
+              <li>
+                <strong>Bloquear INPUT sem regra ESTABLISHED</strong>: ao criar
+                regras restritivas com iptables, adicione
+                <code>-m state --state ESTABLISHED,RELATED -j ACCEPT</code> para
+                não quebrar conexões existentes.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="ferramentas">
+          <div class="section-header">
+            <h2>Ferramentas de diagnóstico e monitoramento</h2>
+            <button class="mark-studied" data-section="ferramentas">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um conjunto de ferramentas essenciais para diagnosticar problemas
+              de rede, testar conectividade, transferir arquivos e criar túneis
+              seguros.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>ping -c 4 google.com               # testa conectividade (ICMP)
+ping6 ::1                          # ping IPv6
+
+traceroute google.com              # rastreia rota hop a hop
+mtr google.com                     # ping + traceroute contínuo (melhor que ambos)
+
+curl -I https://example.com        # cabeçalhos HTTP (HEAD request)
+curl -v https://example.com        # verbose — mostra handshake TLS, headers
+wget https://example.com/arquivo   # baixa arquivo
+
+ssh usuario@servidor               # login remoto
+ssh -p 2222 usuario@servidor       # porta não-padrão
+ssh -L 8080:localhost:80 servidor  # túnel SSH: local:8080 → servidor:80
+
+scp arquivo.txt usuario@servidor:/home/usuario/   # copia via SSH
+rsync -avz pasta/ usuario@servidor:/backup/       # sincroniza (delta, eficiente)
+
+nmap -sS 192.168.1.1               # scan TCP SYN (requer root)
+nmap -p 80,443 exemplo.com         # verifica portas específicas</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Túnel SSH</span>
+            <p>
+              Um túnel SSH (<code>ssh -L</code>) é como um cano secreto entre
+              sua máquina e o servidor. Tudo que entra em
+              <code>localhost:8080</code> sai na porta 80 do servidor,
+              completamente criptografado. Muito usado para acessar PostgreSQL,
+              Redis ou painéis admin que ouvem só no loopback do servidor — sem
+              precisar expor essas portas para a internet.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>ip a</code> / <code>ip route</code>: interfaces e rotas
+              </li>
+              <li>
+                <code>ss -tulnp</code>: portas abertas e processos responsáveis
+              </li>
+              <li><code>dig +short dominio</code>: resolução DNS rápida</li>
+              <li><code>ufw allow/deny porta</code>: firewall simplificado</li>
+              <li><code>ssh -L</code>: túnel seguro para serviços internos</li>
+              <li>
+                <code>mtr</code>: melhor diagnóstico de rota (substitui ping +
+                traceroute)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 08</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="logs.html" class="module-nav-link prev">← Módulo Anterior</a>
+          <a href="disco.html" class="module-nav-link next">Próximo Módulo →</a>
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda análise de disco no Linux com df, du e lsblk: espaço, partições, gargalos e troubleshooting de armazenamento."
+    />
+    <title>Módulo 09 — Disco | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="disco">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html#modulos" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 09</span>
+          <h1 class="module-page-title">Disco</h1>
+          <p class="module-intro">
+            Espaço acabou. O que está cheio? Qual partição? Qual diretório? Qual
+            dispositivo? Este módulo te dá o trio mais útil para responder isso
+            rápido: <code>df</code>, <code>du</code> e <code>lsblk</code>.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 16 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <section class="content-section" id="df-espaco">
+          <div class="section-header">
+            <h2>df: visão por filesystem</h2>
+            <button class="mark-studied" data-section="df-espaco">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>df -h
+df -h /var
+df -i
+df -T</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <code>df</code> responde: quanto espaço e quantos inodes restam em
+              cada filesystem montado. É a primeira ferramenta quando o sistema
+              reclama de "No space left on device".
+            </p>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erro comum</span>
+            <p>
+              Assumir que "sem espaço" sempre é falta de bytes. Às vezes o
+              problema é falta de <strong>inodes</strong>, especialmente quando
+              há milhões de arquivos pequenos.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="du-diretorios">
+          <div class="section-header">
+            <h2>du: quem está consumindo</h2>
+            <button class="mark-studied" data-section="du-diretorios">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>du -sh /var/*
+du -sh /home/*
+du -xh / | sort -h | tail
+du -sh .</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <code>du</code> te leva do sintoma ao culpado. Se o
+              <code>df</code> mostrou a partição cheia, o <code>du</code> mostra
+              quais diretórios e arquivos estão ocupando mais espaço dentro
+              dela.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Mini troubleshooting</span>
+            <ul>
+              <li><code>df -h</code> para localizar a partição crítica.</li>
+              <li>
+                <code>du -sh /caminho/*</code> para afunilar os maiores
+                diretórios.
+              </li>
+              <li>Repita até achar o ponto exato de crescimento.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="content-section" id="lsblk-particoes">
+          <div class="section-header">
+            <h2>lsblk: mapa de discos e partições</h2>
+            <button class="mark-studied" data-section="lsblk-particoes">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Comandos reais</span>
+            <pre><code>lsblk
+lsblk -f
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINTS</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <code>lsblk</code> mostra a topologia do armazenamento: disco
+              físico, partições, tipos de filesystem e pontos de montagem. Ele
+              responde "onde isso está montado?" antes de você tomar qualquer
+              ação arriscada.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="cenarios-comuns">
+          <div class="section-header">
+            <h2>Cenários comuns de incidente</h2>
+            <button class="mark-studied" data-section="cenarios-comuns">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Os vilões clássicos são: logs crescendo sem rotação, diretório
+              temporário lotado, dumps esquecidos, containers acumulando camadas
+              e backups mal geridos.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Sequência real</span>
+            <pre><code>df -h
+du -sh /var/*
+du -sh /var/log/*
+lsblk -f
+journalctl --disk-usage</code></pre>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erro comum</span>
+            <p>
+              Apagar arquivos aleatoriamente sem entender se eles estão abertos
+              por um processo ou se pertencem a uma aplicação crítica. Primeiro
+              identifique, depois valide impacto.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="boas-praticas">
+          <div class="section-header">
+            <h2>Boas práticas</h2>
+            <button class="mark-studied" data-section="boas-praticas">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Checklist</span>
+            <ul>
+              <li>Monitore espaço e inodes, não só CPU e memória.</li>
+              <li>Saiba onde logs, backups e artefatos temporários crescem.</li>
+              <li>
+                Antes de apagar, confirme dono, finalidade e se há processo
+                usando.
+              </li>
+              <li>Entenda qual device e partição sustentam cada mountpoint.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="flashcards-section">
+          <h2>Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <section class="quiz-section">
+          <h2>Quiz</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <nav class="module-nav">
+          <a href="rede-linux.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="troubleshooting.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

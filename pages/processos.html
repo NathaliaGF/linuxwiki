@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Entenda processos no Linux: PID, PPID, fork(), exec(), estados, sinais SIGTERM e SIGKILL, jobs em background e o sistema de arquivos /proc."
+    />
+    <title>Módulo 04 — Processos | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="processos">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 04</span>
+          <h1 class="module-page-title">Processos</h1>
+          <p class="module-intro">
+            Entenda o que acontece quando você roda um programa: como o kernel
+            cria, gerencia e encerra processos — incluindo sinais, jobs em
+            background e a anatomia de um processo vivo no /proc.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 20 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="o-que-e-processo">
+          <div class="section-header">
+            <h2>O que é um processo</h2>
+            <button class="mark-studied" data-section="o-que-e-processo">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um <strong>processo</strong> é um programa em execução. Não é o
+              arquivo do programa em disco — é a <em>instância</em> rodando na
+              memória, com sua área de memória alocada, descritores de arquivos
+              abertos, estado atual e contexto de execução.
+            </p>
+            <p>
+              Pense assim: o arquivo <code>/usr/bin/python3</code> é o programa.
+              Quando você roda <code>python3 app.py</code>, o kernel cria um
+              processo — uma entidade viva com recursos próprios.
+            </p>
+            <p>
+              Cada processo tem um <strong>PID (Process ID)</strong> — número
+              único atribuído pelo kernel. O <strong>PID 1</strong> é sempre o
+              processo <code>init</code> (ou <code>systemd</code> em distros
+              modernas) — o pai de todos os processos do sistema.
+            </p>
+            <p>
+              <strong>PPID</strong> é o PID do processo pai. Todo processo
+              (exceto o PID 1) tem um pai. Se o pai morrer antes do filho, o
+              filho é "adotado" pelo PID 1 — torna-se um
+              <em>processo órfão</em>.
+            </p>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Receita vs Cozinheiro</span>
+            <p>
+              O programa (arquivo em disco) é como uma receita de culinária. O
+              processo é o cozinheiro executando a receita — com ingredientes na
+              bancada (memória alocada), utensílios em uso (descritores de
+              arquivo) e em um passo específico da receita (estado de execução).
+              Você pode ter vários cozinheiros executando a mesma receita ao
+              mesmo tempo — são processos diferentes, com PIDs diferentes, mas
+              baseados no mesmo programa.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>$ ps aux | head -5
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1 168548 11208 ?        Ss   Mai19   0:03 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    Mai19   0:00 [kthreadd]
+usuario   1234  0.3  1.2 987654 51200 pts/0    Sl   10:30   0:05 python3 app.py
+usuario   1235  0.0  0.0  21320  4096 pts/0    R+   10:45   0:00 ps aux
+
+$ pstree -p | head
+systemd(1)─┬─agetty(850)
+           ├─sshd(1100)─┬─sshd(1234)───bash(1235)───pstree(1240)
+           └─...</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>Processo = programa em execução na memória, com PID único</li>
+              <li>PID 1 = systemd (ou init) — o pai de todos os processos</li>
+              <li>PPID = PID do processo pai — todo processo tem um</li>
+              <li>
+                Processo órfão: pai morreu antes do filho — adotado pelo PID 1
+              </li>
+              <li>
+                <code>ps aux</code> lista todos os processos;
+                <code>pstree</code> mostra a hierarquia
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="pid-ppid">
+          <div class="section-header">
+            <h2>PID, PPID e a árvore de processos</h2>
+            <button class="mark-studied" data-section="pid-ppid">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O kernel mantém uma <strong>tabela de processos</strong> — uma
+              estrutura interna que registra todos os processos ativos. Cada
+              entrada na tabela contém: PID, PPID, estado, uso de CPU/memória,
+              arquivos abertos, e muito mais.
+            </p>
+            <p>
+              O <strong>PID</strong> é gerado sequencialmente pelo kernel.
+              Quando atinge o máximo (geralmente 32768 em sistemas de 32-bit, 4
+              milhões em 64-bit), o kernel reutiliza os menores disponíveis.
+              Você pode ver e alterar o limite em
+              <code>/proc/sys/kernel/pid_max</code>.
+            </p>
+            <p>
+              A <strong>árvore de processos</strong> reflete quem criou quem. No
+              topo, o PID 1. Embaixo, todos os serviços e processos de usuário.
+              Fechar um terminal mata todos os processos filhos daquele
+              terminal.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver PID e PPID de processos específicos
+$ ps -o pid,ppid,comm -p $$
+  PID  PPID COMMAND
+ 1235  1100 bash
+
+# $$ é uma variável especial: PID do shell atual
+
+# Mostrar árvore com PIDs
+$ pstree -p | grep bash
+        └─sshd(1234)───bash(1235)───vim(1290)
+
+# Ver limite de PIDs
+$ cat /proc/sys/kernel/pid_max
+4194304
+
+# Quantos processos existem agora?
+$ ps aux | wc -l
+187</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>$$</code> = PID do shell atual; <code>$PPID</code> = PID
+                do pai do shell
+              </li>
+              <li>
+                <code>ps aux</code> — lista completa;
+                <code>ps -o pid,ppid,comm</code> — colunas específicas
+              </li>
+              <li><code>pstree -p</code> — visualiza a hierarquia com PIDs</li>
+              <li>
+                Limite de PIDs fica em <code>/proc/sys/kernel/pid_max</code>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="fork-exec">
+          <div class="section-header">
+            <h2>fork() e exec(): como processos nascem</h2>
+            <button class="mark-studied" data-section="fork-exec">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>fork()</strong> é a chamada de sistema que cria um novo
+              processo. Ela faz uma cópia quase exata do processo atual —
+              memória, descritores de arquivo, variáveis. O processo original é
+              o pai; a cópia é o filho. Ambos continuam executando a partir do
+              mesmo ponto.
+            </p>
+            <p>
+              Como saber quem é pai e quem é filho? <code>fork()</code> retorna
+              valores diferentes: no pai, retorna o
+              <strong>PID do filho</strong> (número > 0). No filho, retorna
+              <strong>0</strong>. Em caso de erro, retorna -1.
+            </p>
+            <p>
+              <strong>exec()</strong> substitui o processo atual por um novo
+              programa. Não cria um novo processo — transforma o processo em
+              execução em outro programa. O PID permanece o mesmo.
+            </p>
+            <p>
+              A combinação <strong>fork() + exec()</strong> é como a maioria dos
+              novos processos nasce no Unix: o shell faz <code>fork()</code> de
+              si mesmo, e o filho imediatamente faz <code>exec()</code> do
+              programa que você quer rodar.
+            </p>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Célula dividindo-se</span>
+            <p>
+              fork() é como uma célula se dividindo: a célula original (pai) e a
+              nova célula (filho) são cópias idênticas. exec() é como a nova
+              célula se transformar em um tipo diferente — um neurônio em vez de
+              outra célula genérica. No Unix, todo processo nasce por divisão
+              (fork) e depois opcionalmente se transforma (exec) no programa que
+              deve executar.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># O que acontece quando você digita: ls -la
+# no bash:
+
+# 1. bash chama fork()
+#    - Processo pai (bash): fork() retorna PID_filho (ex: 1291)
+#    - Processo filho (cópia do bash): fork() retorna 0
+
+# 2. No filho, o código é aproximadamente:
+#    if (fork() == 0) {
+#        execve("/usr/bin/ls", ["ls", "-la"], env);
+#    }
+
+# 3. exec() substitui o filho (bash) por /usr/bin/ls
+#    O PID continua o mesmo — mas o programa mudou
+
+# 4. ls executa, imprime, termina
+# 5. bash (pai) recebe o exit code via wait()
+
+# strace mostra as syscalls reais:
+$ strace -e trace=fork,exec bash -c "ls" 2>&1 | head
+execve("/usr/bin/bash", ["bash", "-c", "ls"], ...) = 0
+...
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|...) = 1291
+...
+execve("/usr/bin/ls", ["ls"], ...) = 0</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>"fork() cria um thread"</strong> — não. fork() cria um
+              processo completo, com espaço de memória independente. Threads
+              compartilham memória; processos não (por default). Para threads,
+              use pthread_create() ou as abstrações da sua linguagem.
+            </p>
+            <p>
+              <strong>"exec() cria um processo novo"</strong> — não. exec()
+              substitui o processo atual. O PID é o mesmo antes e depois do
+              exec(). O que muda é o código e a memória em execução.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                fork(): cria cópia do processo. Retorna PID filho no pai, 0 no
+                filho
+              </li>
+              <li>
+                exec(): substitui o processo atual por outro programa (mesmo
+                PID)
+              </li>
+              <li>
+                fork() + exec() = como todo programa é iniciado a partir do
+                shell
+              </li>
+              <li>
+                Processo filho herda descritores de arquivo, variáveis e sinais
+                do pai
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="estados">
+          <div class="section-header">
+            <h2>Estados do processo</h2>
+            <button class="mark-studied" data-section="estados">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Todo processo está sempre em um estado. O estado aparece na coluna
+              <strong>STAT</strong> do <code>ps aux</code>. Saber ler esses
+              estados é fundamental para diagnosticar problemas de performance e
+              sistemas travados.
+            </p>
+            <p>
+              <strong>R (Running)</strong> — está usando a CPU ou está pronto
+              para usar (na fila do scheduler). Processos em R realmente
+              consomem CPU.
+            </p>
+            <p>
+              <strong>S (Sleeping — Interruptible)</strong> — aguardando um
+              evento (I/O de rede, sinal, temporizador). Pode ser acordado a
+              qualquer momento por um sinal. É o estado mais comum de processos
+              ociosos.
+            </p>
+            <p>
+              <strong>D (Disk sleep — Uninterruptible)</strong> — aguardando I/O
+              de dispositivo (disco, NFS).
+              <strong>NÃO pode ser morto com SIGKILL</strong>. O kernel não
+              entrega sinais para processos em estado D. Um processo travado
+              aqui geralmente indica problema de hardware ou NFS pendurado.
+            </p>
+            <p>
+              <strong>Z (Zombie)</strong> — processo terminou, mas o pai não
+              coletou o exit code via <code>wait()</code>. Não consome CPU nem
+              memória real, mas ocupa uma entrada na tabela de processos. Muitos
+              zombies podem esgotar os PIDs disponíveis.
+            </p>
+            <p>
+              <strong>T (Stopped)</strong> — parado por sinal SIGSTOP ou SIGTSTP
+              (Ctrl+Z), ou por um debugger. Não consome CPU. Pode ser retomado
+              com SIGCONT.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver estados de todos os processos
+$ ps aux | awk '{print $8}' | sort | uniq -c | sort -rn
+    142 S       # maioria dormindo (esperando eventos)
+     18 Ss      # daemon sleeping (líder de sessão)
+      6 Sl      # sleeping, multi-thread
+      3 R+       # rodando no foreground
+      1 Zs      # ZOMBIE — alguém não chamou wait()
+
+# Ver detalhes de um processo específico
+$ ps -o pid,stat,comm -p 1234
+  PID STAT COMMAND
+ 1234 Sl   python3
+
+# Letras adicionais do STAT:
+# s = líder de sessão
+# l = multi-thread
+# + = no foreground (grupo de processo em foreground)
+# < = prioridade alta (nice negativo)
+# N = prioridade baixa (nice positivo)
+
+# Identificar zombies
+$ ps aux | grep Z
+usuario  5678  0.0  0.0      0     0 pts/0    Z+   11:20   0:00 [script] &lt;defunct&gt;</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>"Posso matar um processo D com kill -9"</strong> — não.
+              Estado D (uninterruptible sleep) é imune a sinais, incluindo
+              SIGKILL. O kernel retém os sinais até o processo sair do estado D.
+              Se ele nunca sair, a única solução é reiniciar o sistema.
+            </p>
+            <p>
+              <strong>"Zombie consome muita memória"</strong> — falso. Zombie
+              não tem memória alocada (já foi liberada ao terminar). O problema
+              é que ele ocupa uma entrada na tabela de processos e um PID.
+              Muitos zombies indicam bug no processo pai (que não chama wait()).
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <strong>R</strong> = rodando ou pronto para rodar (consome CPU)
+              </li>
+              <li>
+                <strong>S</strong> = dormindo, pode ser acordado por sinal
+              </li>
+              <li>
+                <strong>D</strong> = aguardando I/O — imune a sinais, incluindo
+                SIGKILL
+              </li>
+              <li>
+                <strong>Z</strong> = zombie — terminou, pai não fez wait()
+              </li>
+              <li><strong>T</strong> = parado (Ctrl+Z ou debugger)</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="sinais">
+          <div class="section-header">
+            <h2>Sinais: SIGTERM, SIGKILL e outros</h2>
+            <button class="mark-studied" data-section="sinais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Sinais são notificações assíncronas enviadas a processos pelo
+              kernel ou por outros processos. Cada sinal tem um número e um
+              nome. O processo pode <em>tratar</em> (executar código
+              customizado), <em>ignorar</em> ou deixar o
+              <em>comportamento padrão</em> acontecer — exceto SIGKILL e
+              SIGSTOP, que não podem ser capturados.
+            </p>
+            <p>
+              <strong>SIGTERM (15)</strong> — pede que o processo termine de
+              forma limpa. O processo recebe o sinal, pode salvar dados, fechar
+              conexões e então sair.
+              <strong>Sempre tente SIGTERM primeiro.</strong>
+            </p>
+            <p>
+              <strong>SIGKILL (9)</strong> — mata imediatamente, sem aviso. O
+              kernel encerra o processo diretamente — sem chance de limpar
+              recursos, fechar arquivos ou salvar estado. Não pode ser ignorado
+              ou bloqueado. Use como último recurso.
+            </p>
+            <p>
+              <strong>SIGHUP (1)</strong> — originalmente "hang up" (modem
+              desconectou). Hoje muitos daemons o usam para
+              <em>recarregar configuração</em> sem reiniciar:
+              <code>kill -HUP $(pidof nginx)</code>.
+            </p>
+            <p>
+              <strong>SIGINT (2)</strong> — gerado pelo <kbd>Ctrl+C</kbd> no
+              terminal. Interrompe o processo.
+            </p>
+            <p>
+              <strong>SIGSTOP (19)</strong> — pausa o processo completamente.
+              Não pode ser ignorado. <kbd>Ctrl+Z</kbd> manda SIGTSTP (parecido,
+              mas pode ser ignorado pelo processo).
+            </p>
+            <p>
+              <strong>SIGCONT (18)</strong> — continua um processo parado por
+              SIGSTOP ou SIGTSTP.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Listar todos os sinais disponíveis
+$ kill -l | head -4
+ 1) SIGHUP    2) SIGINT    3) SIGQUIT   4) SIGILL
+ 5) SIGTRAP   6) SIGABRT   7) SIGBUS    8) SIGFPE
+
+# Enviar SIGTERM (forma cortês — padrão do kill)
+$ kill 1234
+$ kill -15 1234   # equivalente
+$ kill -TERM 1234 # equivalente
+
+# SIGKILL — apenas se SIGTERM não funcionou após espera
+$ kill -9 1234
+$ kill -KILL 1234  # equivalente
+
+# Recarregar configuração do nginx sem downtime
+$ sudo kill -HUP $(pidof nginx)
+
+# Enviar sinal para todos os processos de um nome
+$ killall -TERM python3
+$ pkill -TERM python3  # alternativa, aceita regex
+
+# Ver qual sinal matou o último processo
+$ echo $?
+# 130 = terminado por SIGINT (128 + 2)
+# 137 = terminado por SIGKILL (128 + 9)
+# 143 = terminado por SIGTERM (128 + 15)</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Usar kill -9 como primeira tentativa</strong> — é um sinal
+              de iniciante. SIGKILL não dá chance ao processo de limpar
+              recursos, fechar conexões de banco de dados, ou salvar estado.
+              Sempre use <code>kill PID</code> (SIGTERM) e aguarde alguns
+              segundos antes de escalar para -9.
+            </p>
+            <p>
+              <strong>Confundir kill e killall</strong> —
+              <code>kill</code> envia sinal para um PID específico.
+              <code>killall nome</code> mata por nome de processo.
+              <code>pkill padrão</code> aceita expressões regulares. Usar
+              killall -9 em um nome genérico pode matar mais processos do que o
+              esperado.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                SIGTERM (15): pede saída limpa — pode ser capturado.
+                <strong>Use primeiro.</strong>
+              </li>
+              <li>
+                SIGKILL (9): mata imediatamente — não pode ser ignorado. Use
+                como último recurso.
+              </li>
+              <li>SIGHUP (1): recarregar configuração de daemons</li>
+              <li>SIGINT (2): Ctrl+C — interrompe processo</li>
+              <li>SIGSTOP/SIGCONT: pausa e retoma processo</li>
+              <li>Exit code 128+N indica término por sinal N</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 6 -->
+        <section class="content-section" id="jobs">
+          <div class="section-header">
+            <h2>Jobs: foreground, background e nohup</h2>
+            <button class="mark-studied" data-section="jobs">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um <strong>job</strong> é um processo (ou grupo de processos)
+              gerenciado pelo shell. O shell controla se o job está em
+              <em>foreground</em> (primeiro plano) ou
+              <em>background</em> (segundo plano).
+            </p>
+            <p>
+              <strong>Foreground</strong> — processo vinculado ao terminal. O
+              shell fica travado esperando o processo terminar — você não pode
+              digitar outros comandos. O terminal inteiro está "ocupado".
+            </p>
+            <p>
+              <strong>Background</strong> — processo rodando sem bloquear o
+              terminal. Use <code>&amp;</code> no final do comando para iniciar
+              em background. Use <code>jobs</code> para ver a lista,
+              <code>fg %1</code> para trazer o job 1 ao foreground,
+              <code>bg %1</code> para mandar um job parado ao background.
+            </p>
+            <p>
+              <strong>nohup</strong> ("no hang up") — mantém o processo rodando
+              mesmo após fechar o terminal. Sem nohup, fechar o terminal envia
+              SIGHUP para todos os processos filhos, matando-os.
+              <code>nohup ./script.sh &gt; output.log 2&gt;&amp;1 &amp;</code>
+            </p>
+            <p>
+              <strong>disown</strong> — remove o job da lista do shell. Fechar o
+              terminal não enviará SIGHUP para ele. Útil quando você esqueceu de
+              usar nohup e já iniciou o processo.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Iniciar em background
+$ ./backup.sh &amp;
+[1] 2345          # [número_job] PID
+
+# Ver jobs do shell atual
+$ jobs
+[1]+  Running   ./backup.sh &amp;
+[2]-  Stopped   vim arquivo.txt
+
+# Trazer job 1 ao foreground
+$ fg %1
+
+# Mandar para background (se estava parado com Ctrl+Z)
+$ bg %1
+
+# Sequência completa: pausar e mandar para background
+$ python3 servidor.py
+^Z                    # Ctrl+Z — pausa, envia SIGTSTP
+[1]+  Stopped   python3 servidor.py
+$ bg %1               # continua em background
+[1]+ python3 servidor.py &amp;
+
+# nohup — processo sobrevive ao fechar terminal
+$ nohup ./processo_longo.sh &gt; output.log 2&gt;&amp;1 &amp;
+[1] 3456
+nohup: ignorando entrada e redirecionando stderr para stdout
+
+# disown — remover da lista do shell sem matar
+$ ./script.sh &amp;
+[1] 4567
+$ disown %1           # agora fechar terminal não o mata
+
+# Ver processo rodando "solto" (sem terminal)
+$ ps aux | grep script.sh
+usuario   4567  0.1  0.0  ...  ?  S  11:30  script.sh</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Para processos de longa duração em servidores, prefira ferramentas
+              dedicadas a nohup: <code>screen</code> ou
+              <code>tmux</code> (multiplexadores de terminal que persistem
+              sessões completas), ou ainda services do systemd (<code
+                >systemctl start meu-servico</code
+              >) que gerenciam reinicialização automática, logs e dependências.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li><code>comando &amp;</code> — inicia em background</li>
+              <li>
+                <kbd>Ctrl+Z</kbd> — pausa job atual; <code>bg</code> continua em
+                background
+              </li>
+              <li>
+                <code>jobs</code> — lista jobs do shell; <code>fg %N</code> /
+                <code>bg %N</code> para controlá-los
+              </li>
+              <li>
+                <code>nohup</code> — processo sobrevive ao fechar terminal
+              </li>
+              <li>
+                <code>disown</code> — desvincula job do shell (esqueceu o nohup)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 7 -->
+        <section class="content-section" id="proc-filesystem">
+          <div class="section-header">
+            <h2>O /proc/[PID]: anatomia de um processo vivo</h2>
+            <button class="mark-studied" data-section="proc-filesystem">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O diretório <code>/proc</code> é um
+              <strong>pseudo-sistema de arquivos</strong> — não existe no disco.
+              O kernel expõe informações internas sobre cada processo como se
+              fossem arquivos. Para cada processo com PID N, existe
+              <code>/proc/N/</code> com dezenas de arquivos.
+            </p>
+            <p><strong>Arquivos importantes em /proc/[PID]/:</strong></p>
+            <ul>
+              <li>
+                <code>cmdline</code> — o comando completo que iniciou o processo
+                (argv)
+              </li>
+              <li>
+                <code>cwd</code> — symlink para o diretório de trabalho atual
+              </li>
+              <li><code>exe</code> — symlink para o executável do processo</li>
+              <li>
+                <code>environ</code> — variáveis de ambiente (separadas por null
+                byte)
+              </li>
+              <li>
+                <code>fd/</code> — diretório com symlinks para cada file
+                descriptor aberto
+              </li>
+              <li>
+                <code>maps</code> — regiões de memória mapeadas (código, heap,
+                stack, libs)
+              </li>
+              <li>
+                <code>status</code> — estado, PID, PPID, uso de memória em
+                formato legível
+              </li>
+              <li><code>net/</code> — informações de rede do processo</li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code>$ ls /proc/1234/
+cmdline  cwd  environ  exe  fd  fdinfo  maps  mem  net  ns  root  stat  status
+
+$ cat /proc/1234/status | head -8
+Name:   python3
+State:  S (sleeping)
+Tgid:   1234
+Pid:    1234
+PPid:   1235
+Uid:    1000    1000    1000    1000
+Gid:    1000    1000    1000    1000
+VmRSS:  51200 kB
+
+# Ver qual executável é o processo
+$ ls -la /proc/1234/exe
+lrwxrwxrwx ... /proc/1234/exe -&gt; /usr/bin/python3
+
+# Ver arquivos abertos pelo processo (file descriptors)
+$ ls -la /proc/1234/fd/
+lrwxrwxrwx ... 0 -&gt; /dev/pts/0    # stdin
+lrwxrwxrwx ... 1 -&gt; /dev/pts/0    # stdout
+lrwxrwxrwx ... 2 -&gt; /dev/pts/0    # stderr
+lrwxrwxrwx ... 3 -&gt; /var/log/app.log  # arquivo aberto
+
+# Ver argumentos do processo (separados por null)
+$ cat /proc/1234/cmdline | tr '\0' ' '
+python3 app.py --port 8080
+
+# lsof é uma abstração sobre /proc/[PID]/fd
+$ lsof -p 1234 | head -5</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              <code>/proc</code> também expõe informações do sistema inteiro:
+              <code>/proc/cpuinfo</code> (detalhes da CPU),
+              <code>/proc/meminfo</code> (uso de memória),
+              <code>/proc/loadavg</code> (carga do sistema),
+              <code>/proc/uptime</code> (tempo ligado). Ferramentas como
+              <code>top</code>, <code>htop</code> e <code>free</code> leem
+              exatamente esses arquivos por baixo dos panos.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>/proc/[PID]/</code> expõe estado do processo como arquivos
+                virtuais
+              </li>
+              <li>
+                <code>status</code> = estado, memória, UID/GID;
+                <code>cmdline</code> = comando completo
+              </li>
+              <li>
+                <code>fd/</code> = todos os file descriptors abertos (arquivos,
+                sockets, pipes)
+              </li>
+              <li>
+                <code>exe</code> e <code>cwd</code> são symlinks para o
+                executável e diretório atual
+              </li>
+              <li>
+                <code>lsof -p PID</code> é uma abstração amigável sobre
+                <code>/proc/[PID]/fd/</code>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 04</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="permissoes.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="shell.html" class="module-nav-link next">Próximo Módulo →</a>
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

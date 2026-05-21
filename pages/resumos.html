@@ -1,0 +1,1192 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cheat Sheets Linux — referência rápida de comandos para filesystem, permissões, processos, rede, pacotes e usuários."
+    />
+    <title>Cheat Sheets Linux | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="resumos">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-print btn-ghost" onclick="window.print()">
+            🖨️ Imprimir
+          </button>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+        <div class="module-header">
+          <span class="module-number-badge">Referência</span>
+          <h1 class="module-page-title">Cheat Sheets Linux</h1>
+          <p class="module-intro">
+            Tabelas compactas de referência rápida. Use o botão Imprimir para
+            uma versão em papel — CSS de impressão incluso.
+          </p>
+        </div>
+
+        <!-- ── NAVEGAÇÃO ── -->
+        <div class="cheatsheet-nav">
+          <a href="#nav-filesystem" class="badge badge-blue">Filesystem</a>
+          <a href="#nav-permissoes" class="badge badge-blue">Permissões</a>
+          <a href="#nav-processos" class="badge badge-blue">Processos</a>
+          <a href="#nav-shell" class="badge badge-blue">Shell</a>
+          <a href="#nav-usuarios" class="badge badge-blue">Usuários</a>
+          <a href="#nav-pacotes" class="badge badge-blue">Pacotes</a>
+          <a href="#nav-rede" class="badge badge-blue">Rede</a>
+          <a href="#nav-scripting" class="badge badge-blue">Scripting</a>
+          <a href="#nav-sinais" class="badge badge-blue">Sinais</a>
+          <a href="#nav-octal" class="badge badge-blue">Octal</a>
+        </div>
+
+        <!-- ── FILESYSTEM ── -->
+        <section class="cheatsheet-section" id="nav-filesystem">
+          <h2>📁 Navegação e Filesystem</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ls -la</td>
+                <td>Lista com permissões, tamanho, dono (inclui ocultos)</td>
+              </tr>
+              <tr>
+                <td>ls -lh</td>
+                <td>Lista com tamanhos legíveis (K, M, G)</td>
+              </tr>
+              <tr>
+                <td>ls -lt</td>
+                <td>Lista ordenada por data de modificação</td>
+              </tr>
+              <tr>
+                <td>cd ~</td>
+                <td>Vai para o diretório home</td>
+              </tr>
+              <tr>
+                <td>cd -</td>
+                <td>Volta para o diretório anterior</td>
+              </tr>
+              <tr>
+                <td>pwd</td>
+                <td>Mostra o diretório atual (print working directory)</td>
+              </tr>
+              <tr>
+                <td>mkdir -p a/b/c</td>
+                <td>Cria diretório e todos os pais necessários</td>
+              </tr>
+              <tr>
+                <td>rm -rf dir/</td>
+                <td>
+                  Remove diretório e conteúdo recursivamente (sem confirmação)
+                </td>
+              </tr>
+              <tr>
+                <td>cp -r orig/ dest/</td>
+                <td>Copia diretório recursivamente</td>
+              </tr>
+              <tr>
+                <td>mv arq novo_nome</td>
+                <td>Move ou renomeia arquivo/diretório</td>
+              </tr>
+              <tr>
+                <td>find / -name "*.log"</td>
+                <td>Busca arquivos por nome recursivamente</td>
+              </tr>
+              <tr>
+                <td>find . -type f -size +50M</td>
+                <td>Arquivos maiores que 50MB no diretório atual</td>
+              </tr>
+              <tr>
+                <td>find . -mtime -7</td>
+                <td>Arquivos modificados nos últimos 7 dias</td>
+              </tr>
+              <tr>
+                <td>find . -user joao</td>
+                <td>Arquivos pertencentes ao usuário joao</td>
+              </tr>
+              <tr>
+                <td>stat arquivo.txt</td>
+                <td>Mostra inode, permissões, timestamps, tamanho</td>
+              </tr>
+              <tr>
+                <td>file arquivo</td>
+                <td>Detecta tipo real do arquivo (ignora extensão)</td>
+              </tr>
+              <tr>
+                <td>du -sh pasta/</td>
+                <td>Uso de disco da pasta (human-readable)</td>
+              </tr>
+              <tr>
+                <td>du -sh /* 2>/dev/null | sort -rh</td>
+                <td>Maiores consumidores na raiz</td>
+              </tr>
+              <tr>
+                <td>df -h</td>
+                <td>Uso de disco por partição montada</td>
+              </tr>
+              <tr>
+                <td>ln -s /orig /link</td>
+                <td>Cria symbolic link</td>
+              </tr>
+              <tr>
+                <td>readlink -f link</td>
+                <td>Resolve caminho real de um symlink</td>
+              </tr>
+              <tr>
+                <td>lsof | grep arquivo</td>
+                <td>Verifica se arquivo está em uso por algum processo</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="cheatsheet-subtitle">Diretórios importantes</h3>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Diretório</th>
+                <th>Conteúdo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>/etc</td>
+                <td>Arquivos de configuração do sistema</td>
+              </tr>
+              <tr>
+                <td>/var/log</td>
+                <td>Logs do sistema e dos serviços</td>
+              </tr>
+              <tr>
+                <td>/tmp</td>
+                <td>Arquivos temporários (limpos no boot ou periodicamente)</td>
+              </tr>
+              <tr>
+                <td>/proc</td>
+                <td>Sistema virtual: informações de processos e kernel</td>
+              </tr>
+              <tr>
+                <td>/dev</td>
+                <td>Arquivos de dispositivo (discos, terminais, null, zero)</td>
+              </tr>
+              <tr>
+                <td>/usr/bin</td>
+                <td>Executáveis dos programas instalados</td>
+              </tr>
+              <tr>
+                <td>/usr/lib</td>
+                <td>Bibliotecas compartilhadas (.so)</td>
+              </tr>
+              <tr>
+                <td>/home/user</td>
+                <td>Diretório home dos usuários</td>
+              </tr>
+              <tr>
+                <td>/root</td>
+                <td>Home do usuário root</td>
+              </tr>
+              <tr>
+                <td>/opt</td>
+                <td>Software instalado manualmente (não pelo gerenciador)</td>
+              </tr>
+              <tr>
+                <td>/mnt, /media</td>
+                <td>Pontos de montagem para dispositivos externos</td>
+              </tr>
+              <tr>
+                <td>/dev/null</td>
+                <td>Buraco negro — descarta qualquer dado escrito</td>
+              </tr>
+              <tr>
+                <td>/dev/zero</td>
+                <td>Fonte infinita de bytes zero</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── PERMISSÕES ── -->
+        <section class="cheatsheet-section" id="nav-permissoes">
+          <h2>🔐 Permissões</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>chmod 755 arq</td>
+                <td>rwxr-xr-x — executável público</td>
+              </tr>
+              <tr>
+                <td>chmod 644 arq</td>
+                <td>rw-r--r-- — arquivo padrão (texto, config)</td>
+              </tr>
+              <tr>
+                <td>chmod 700 arq</td>
+                <td>rwx------ — privado do dono</td>
+              </tr>
+              <tr>
+                <td>chmod 600 arq</td>
+                <td>rw------- — chave SSH privada, etc</td>
+              </tr>
+              <tr>
+                <td>chmod 777 arq</td>
+                <td>rwxrwxrwx — todos podem tudo (evite!)</td>
+              </tr>
+              <tr>
+                <td>chmod u+x arq</td>
+                <td>Adiciona execute para o dono</td>
+              </tr>
+              <tr>
+                <td>chmod g-w arq</td>
+                <td>Remove escrita do grupo</td>
+              </tr>
+              <tr>
+                <td>chmod o= arq</td>
+                <td>Remove todas as permissões de others</td>
+              </tr>
+              <tr>
+                <td>chmod a+r arq</td>
+                <td>Adiciona leitura para todos (ugo)</td>
+              </tr>
+              <tr>
+                <td>chmod -R 755 dir/</td>
+                <td>Aplica recursivamente em todo o diretório</td>
+              </tr>
+              <tr>
+                <td>chown joao arq</td>
+                <td>Muda o dono para joao</td>
+              </tr>
+              <tr>
+                <td>chown joao:devs arq</td>
+                <td>Muda dono e grupo</td>
+              </tr>
+              <tr>
+                <td>chown -R joao:devs dir/</td>
+                <td>Muda dono e grupo recursivamente</td>
+              </tr>
+              <tr>
+                <td>chgrp devs arq</td>
+                <td>Muda apenas o grupo</td>
+              </tr>
+              <tr>
+                <td>chmod u+s arq</td>
+                <td>Ativa SUID (executa com permissões do dono)</td>
+              </tr>
+              <tr>
+                <td>chmod g+s dir/</td>
+                <td>Ativa SGID no diretório (herança de grupo)</td>
+              </tr>
+              <tr>
+                <td>chmod +t dir/</td>
+                <td>Ativa sticky bit (só dono deleta)</td>
+              </tr>
+              <tr>
+                <td>umask</td>
+                <td>Mostra máscara de permissão padrão</td>
+              </tr>
+              <tr>
+                <td>umask 022</td>
+                <td>Define umask: arquivos→644, dirs→755</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="cheatsheet-subtitle" id="nav-octal">
+            Tabela octal de permissões
+          </h3>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Octal</th>
+                <th>Binário</th>
+                <th>Permissão</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>000</td>
+                <td>---</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>001</td>
+                <td>--x</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>010</td>
+                <td>-w-</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>011</td>
+                <td>-wx</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>100</td>
+                <td>r--</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>101</td>
+                <td>r-x</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>110</td>
+                <td>rw-</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>111</td>
+                <td>rwx</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── PROCESSOS ── -->
+        <section class="cheatsheet-section" id="nav-processos">
+          <h2>⚙️ Processos e Jobs</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ps aux</td>
+                <td>Lista todos os processos com CPU e memória</td>
+              </tr>
+              <tr>
+                <td>ps aux --sort=-%cpu | head</td>
+                <td>Top processos por CPU</td>
+              </tr>
+              <tr>
+                <td>ps aux --sort=-%mem | head</td>
+                <td>Top processos por memória</td>
+              </tr>
+              <tr>
+                <td>top</td>
+                <td>
+                  Monitor interativo de processos (q=sair, P=sort CPU, M=sort
+                  mem)
+                </td>
+              </tr>
+              <tr>
+                <td>htop</td>
+                <td>Monitor colorido (mais amigável que top)</td>
+              </tr>
+              <tr>
+                <td>pstree -p</td>
+                <td>Árvore de processos com PIDs</td>
+              </tr>
+              <tr>
+                <td>kill PID</td>
+                <td>Envia SIGTERM (15) — pede encerramento limpo</td>
+              </tr>
+              <tr>
+                <td>kill -9 PID</td>
+                <td>SIGKILL — mata imediatamente (último recurso)</td>
+              </tr>
+              <tr>
+                <td>kill -l</td>
+                <td>Lista todos os sinais disponíveis</td>
+              </tr>
+              <tr>
+                <td>killall nginx</td>
+                <td>Mata todos os processos com esse nome</td>
+              </tr>
+              <tr>
+                <td>pkill -f "script.py"</td>
+                <td>Mata processos cujo comando completo contém o padrão</td>
+              </tr>
+              <tr>
+                <td>jobs</td>
+                <td>Lista jobs do shell atual</td>
+              </tr>
+              <tr>
+                <td>comando &amp;</td>
+                <td>Inicia em background</td>
+              </tr>
+              <tr>
+                <td>Ctrl+Z</td>
+                <td>Para (pausa) processo em foreground</td>
+              </tr>
+              <tr>
+                <td>bg %1</td>
+                <td>Manda job 1 para background</td>
+              </tr>
+              <tr>
+                <td>fg %1</td>
+                <td>Traz job 1 para foreground</td>
+              </tr>
+              <tr>
+                <td>nohup cmd &gt; log &amp;</td>
+                <td>Roda sem ser morto quando terminal fechar</td>
+              </tr>
+              <tr>
+                <td>disown %1</td>
+                <td>Remove job da lista do shell</td>
+              </tr>
+              <tr>
+                <td>cat /proc/PID/status</td>
+                <td>Status detalhado do processo</td>
+              </tr>
+              <tr>
+                <td>ls /proc/PID/fd/</td>
+                <td>Arquivos abertos pelo processo</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="cheatsheet-subtitle" id="nav-sinais">Sinais principais</h3>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Sinal</th>
+                <th>Número</th>
+                <th>Significado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SIGTERM</td>
+                <td>15</td>
+                <td>
+                  Pedido de encerramento (padrão de kill) — pode ser capturado
+                </td>
+              </tr>
+              <tr>
+                <td>SIGKILL</td>
+                <td>9</td>
+                <td>
+                  Encerramento forçado — NÃO pode ser capturado ou ignorado
+                </td>
+              </tr>
+              <tr>
+                <td>SIGHUP</td>
+                <td>1</td>
+                <td>Terminal fechou / recarregar configuração (em daemons)</td>
+              </tr>
+              <tr>
+                <td>SIGINT</td>
+                <td>2</td>
+                <td>Ctrl+C — interrupção do teclado</td>
+              </tr>
+              <tr>
+                <td>SIGQUIT</td>
+                <td>3</td>
+                <td>Ctrl+\ — encerra com core dump</td>
+              </tr>
+              <tr>
+                <td>SIGSTOP</td>
+                <td>19</td>
+                <td>Pausa processo — NÃO pode ser capturado</td>
+              </tr>
+              <tr>
+                <td>SIGTSTP</td>
+                <td>20</td>
+                <td>Ctrl+Z — pausa (pode ser capturado)</td>
+              </tr>
+              <tr>
+                <td>SIGCONT</td>
+                <td>18</td>
+                <td>Continua processo parado</td>
+              </tr>
+              <tr>
+                <td>SIGUSR1/2</td>
+                <td>10/12</td>
+                <td>Sinais definidos pelo usuário (depende do programa)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── SHELL ── -->
+        <section class="cheatsheet-section" id="nav-shell">
+          <h2>&gt;_ Shell e Linha de Comando</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando / Símbolo</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>cmd1 | cmd2</td>
+                <td>Conecta stdout de cmd1 ao stdin de cmd2</td>
+              </tr>
+              <tr>
+                <td>cmd &gt; arq</td>
+                <td>Redireciona stdout para arquivo (sobrescreve)</td>
+              </tr>
+              <tr>
+                <td>cmd &gt;&gt; arq</td>
+                <td>Redireciona stdout para arquivo (append)</td>
+              </tr>
+              <tr>
+                <td>cmd 2&gt; arq</td>
+                <td>Redireciona stderr para arquivo</td>
+              </tr>
+              <tr>
+                <td>cmd 2&gt;&amp;1</td>
+                <td>Redireciona stderr para onde stdout está</td>
+              </tr>
+              <tr>
+                <td>cmd &amp;&gt; arq</td>
+                <td>Redireciona stdout e stderr para arquivo</td>
+              </tr>
+              <tr>
+                <td>cmd &gt; /dev/null 2&gt;&amp;1</td>
+                <td>Silencia completamente stdout e stderr</td>
+              </tr>
+              <tr>
+                <td>cmd &lt; arq</td>
+                <td>Redireciona arquivo para stdin do comando</td>
+              </tr>
+              <tr>
+                <td>echo $VAR</td>
+                <td>Exibe valor da variável</td>
+              </tr>
+              <tr>
+                <td>export VAR=val</td>
+                <td>Define variável de ambiente (herdada por filhos)</td>
+              </tr>
+              <tr>
+                <td>unset VAR</td>
+                <td>Remove variável do ambiente</td>
+              </tr>
+              <tr>
+                <td>history</td>
+                <td>Histórico de comandos</td>
+              </tr>
+              <tr>
+                <td>!!</td>
+                <td>Re-executa o último comando</td>
+              </tr>
+              <tr>
+                <td>!42</td>
+                <td>Re-executa o comando número 42 do histórico</td>
+              </tr>
+              <tr>
+                <td>Ctrl+R</td>
+                <td>Busca reversa no histórico</td>
+              </tr>
+              <tr>
+                <td>alias ll='ls -la'</td>
+                <td>Cria atalho de comando</td>
+              </tr>
+              <tr>
+                <td>which python3</td>
+                <td>Mostra caminho do executável no $PATH</td>
+              </tr>
+              <tr>
+                <td>type comando</td>
+                <td>Diz se é builtin, alias ou executável</td>
+              </tr>
+              <tr>
+                <td>source ~/.bashrc</td>
+                <td>Recarrega configuração do bash sem abrir novo terminal</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="cheatsheet-subtitle">Variáveis de ambiente importantes</h3>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Variável</th>
+                <th>Conteúdo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>$PATH</td>
+                <td>Diretórios onde o shell busca executáveis</td>
+              </tr>
+              <tr>
+                <td>$HOME</td>
+                <td>Diretório home do usuário (~)</td>
+              </tr>
+              <tr>
+                <td>$USER</td>
+                <td>Nome do usuário atual</td>
+              </tr>
+              <tr>
+                <td>$SHELL</td>
+                <td>Caminho do shell atual</td>
+              </tr>
+              <tr>
+                <td>$PWD</td>
+                <td>Diretório atual</td>
+              </tr>
+              <tr>
+                <td>$EDITOR</td>
+                <td>Editor padrão (vim, nano, etc)</td>
+              </tr>
+              <tr>
+                <td>$?</td>
+                <td>Exit code do último comando (0=sucesso)</td>
+              </tr>
+              <tr>
+                <td>$$</td>
+                <td>PID do shell atual</td>
+              </tr>
+              <tr>
+                <td>$!</td>
+                <td>PID do último processo em background</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="cheatsheet-subtitle">Ferramentas de texto</h3>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>grep padrão arq</td>
+                <td>Busca linhas que contêm o padrão</td>
+              </tr>
+              <tr>
+                <td>grep -r padrão dir/</td>
+                <td>Busca recursiva em diretório</td>
+              </tr>
+              <tr>
+                <td>grep -i padrão</td>
+                <td>Case-insensitive</td>
+              </tr>
+              <tr>
+                <td>grep -v padrão</td>
+                <td>Inverte — mostra linhas que NÃO contêm</td>
+              </tr>
+              <tr>
+                <td>grep -n padrão</td>
+                <td>Mostra número de linha</td>
+              </tr>
+              <tr>
+                <td>awk '{print $2}' arq</td>
+                <td>Imprime segundo campo (separado por espaço)</td>
+              </tr>
+              <tr>
+                <td>awk -F',' '{print $1}' arq</td>
+                <td>Primeiro campo separado por vírgula</td>
+              </tr>
+              <tr>
+                <td>sed 's/old/new/g' arq</td>
+                <td>Substitui todas as ocorrências de old por new</td>
+              </tr>
+              <tr>
+                <td>sed -i 's/old/new/g' arq</td>
+                <td>Edita in-place (modifica o arquivo)</td>
+              </tr>
+              <tr>
+                <td>cut -d',' -f2</td>
+                <td>Extrai segundo campo de CSV</td>
+              </tr>
+              <tr>
+                <td>sort arq</td>
+                <td>Ordena linhas alfabeticamente</td>
+              </tr>
+              <tr>
+                <td>sort -n arq</td>
+                <td>Ordena numericamente</td>
+              </tr>
+              <tr>
+                <td>sort -rn arq</td>
+                <td>Ordena numericamente decrescente</td>
+              </tr>
+              <tr>
+                <td>uniq arq</td>
+                <td>Remove linhas duplicadas consecutivas</td>
+              </tr>
+              <tr>
+                <td>uniq -c arq</td>
+                <td>Conta ocorrências de cada linha única</td>
+              </tr>
+              <tr>
+                <td>wc -l arq</td>
+                <td>Conta linhas</td>
+              </tr>
+              <tr>
+                <td>wc -w arq</td>
+                <td>Conta palavras</td>
+              </tr>
+              <tr>
+                <td>head -20 arq</td>
+                <td>Mostra as 20 primeiras linhas</td>
+              </tr>
+              <tr>
+                <td>tail -20 arq</td>
+                <td>Mostra as 20 últimas linhas</td>
+              </tr>
+              <tr>
+                <td>tail -f arq</td>
+                <td>Acompanha arquivo em tempo real</td>
+              </tr>
+              <tr>
+                <td>cat arq1 arq2</td>
+                <td>Concatena e imprime arquivos</td>
+              </tr>
+              <tr>
+                <td>tee arq</td>
+                <td>Lê stdin, escreve em stdout E em arquivo</td>
+              </tr>
+              <tr>
+                <td>xargs</td>
+                <td>Constrói comandos a partir do stdin</td>
+              </tr>
+              <tr>
+                <td>tr 'a-z' 'A-Z'</td>
+                <td>Translação de caracteres (minúsculo → maiúsculo)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── USUÁRIOS ── -->
+        <section class="cheatsheet-section" id="nav-usuarios">
+          <h2>👤 Usuários e Grupos</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>whoami</td>
+                <td>Mostra o usuário atual</td>
+              </tr>
+              <tr>
+                <td>id</td>
+                <td>UID, GID e grupos do usuário atual</td>
+              </tr>
+              <tr>
+                <td>id joao</td>
+                <td>UID, GID e grupos do usuário joao</td>
+              </tr>
+              <tr>
+                <td>groups</td>
+                <td>Lista grupos do usuário atual</td>
+              </tr>
+              <tr>
+                <td>sudo comando</td>
+                <td>Executa comando como root (1 comando)</td>
+              </tr>
+              <tr>
+                <td>sudo -i</td>
+                <td>Shell root interativo</td>
+              </tr>
+              <tr>
+                <td>sudo -u joao cmd</td>
+                <td>Executa como outro usuário</td>
+              </tr>
+              <tr>
+                <td>sudo !!</td>
+                <td>Re-executa último comando como root</td>
+              </tr>
+              <tr>
+                <td>su - joao</td>
+                <td>Abre shell como joao (login completo)</td>
+              </tr>
+              <tr>
+                <td>useradd -m -s /bin/bash joao</td>
+                <td>Cria usuário com home e bash</td>
+              </tr>
+              <tr>
+                <td>passwd joao</td>
+                <td>Define/altera senha do usuário</td>
+              </tr>
+              <tr>
+                <td>usermod -aG docker joao</td>
+                <td>Adiciona joao ao grupo docker (mantém outros)</td>
+              </tr>
+              <tr>
+                <td>usermod -s /bin/bash joao</td>
+                <td>Muda o shell do usuário</td>
+              </tr>
+              <tr>
+                <td>userdel -r joao</td>
+                <td>Deleta usuário e seu diretório home</td>
+              </tr>
+              <tr>
+                <td>groupadd devs</td>
+                <td>Cria novo grupo</td>
+              </tr>
+              <tr>
+                <td>groupdel devs</td>
+                <td>Deleta grupo</td>
+              </tr>
+              <tr>
+                <td>last</td>
+                <td>Histórico de logins</td>
+              </tr>
+              <tr>
+                <td>lastb</td>
+                <td>Tentativas de login falhas</td>
+              </tr>
+              <tr>
+                <td>who</td>
+                <td>Quem está logado agora</td>
+              </tr>
+              <tr>
+                <td>w</td>
+                <td>Quem está logado e o que está fazendo</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── PACOTES ── -->
+        <section class="cheatsheet-section" id="nav-pacotes">
+          <h2>📦 Gerenciadores de Pacotes</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>APT (Debian/Ubuntu)</th>
+                <th>DNF (Fedora/RHEL)</th>
+                <th>Pacman (Arch)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>apt update</td>
+                <td>dnf check-update</td>
+                <td>pacman -Sy</td>
+              </tr>
+              <tr>
+                <td>apt upgrade</td>
+                <td>dnf upgrade</td>
+                <td>pacman -Syu</td>
+              </tr>
+              <tr>
+                <td>apt install pacote</td>
+                <td>dnf install pacote</td>
+                <td>pacman -S pacote</td>
+              </tr>
+              <tr>
+                <td>apt remove pacote</td>
+                <td>dnf remove pacote</td>
+                <td>pacman -R pacote</td>
+              </tr>
+              <tr>
+                <td>apt purge pacote</td>
+                <td>dnf remove + manual</td>
+                <td>pacman -Rns pacote</td>
+              </tr>
+              <tr>
+                <td>apt autoremove</td>
+                <td>dnf autoremove</td>
+                <td>pacman -Qdtq | pacman -Rs -</td>
+              </tr>
+              <tr>
+                <td>apt search texto</td>
+                <td>dnf search texto</td>
+                <td>pacman -Ss texto</td>
+              </tr>
+              <tr>
+                <td>apt show pacote</td>
+                <td>dnf info pacote</td>
+                <td>pacman -Si pacote</td>
+              </tr>
+              <tr>
+                <td>dpkg -l | grep nginx</td>
+                <td>rpm -qa | grep nginx</td>
+                <td>pacman -Qs nginx</td>
+              </tr>
+              <tr>
+                <td>dpkg -L nginx</td>
+                <td>rpm -ql nginx</td>
+                <td>pacman -Ql nginx</td>
+              </tr>
+              <tr>
+                <td>dpkg -S /usr/bin/python3</td>
+                <td>rpm -qf /usr/bin/python3</td>
+                <td>pacman -Qo /usr/bin/python3</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── REDE ── -->
+        <section class="cheatsheet-section" id="nav-rede">
+          <h2>🌐 Rede</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ip addr show</td>
+                <td>Lista interfaces e endereços IP</td>
+              </tr>
+              <tr>
+                <td>ip addr show eth0</td>
+                <td>Interface específica</td>
+              </tr>
+              <tr>
+                <td>ip route show</td>
+                <td>Tabela de roteamento</td>
+              </tr>
+              <tr>
+                <td>ip route get 8.8.8.8</td>
+                <td>Qual rota usaria para este IP</td>
+              </tr>
+              <tr>
+                <td>ss -tulnp</td>
+                <td>Portas TCP/UDP abertas com processo (recomendado)</td>
+              </tr>
+              <tr>
+                <td>netstat -tulnp</td>
+                <td>Equivalente (depreciado, mas comum)</td>
+              </tr>
+              <tr>
+                <td>lsof -i :80</td>
+                <td>Qual processo usa a porta 80</td>
+              </tr>
+              <tr>
+                <td>ping -c4 google.com</td>
+                <td>Testa conectividade (4 pacotes)</td>
+              </tr>
+              <tr>
+                <td>traceroute google.com</td>
+                <td>Rastreia rota até destino</td>
+              </tr>
+              <tr>
+                <td>mtr google.com</td>
+                <td>ping + traceroute contínuo</td>
+              </tr>
+              <tr>
+                <td>nslookup domain</td>
+                <td>Consulta DNS simples</td>
+              </tr>
+              <tr>
+                <td>dig domain</td>
+                <td>Consulta DNS detalhada</td>
+              </tr>
+              <tr>
+                <td>dig +short domain</td>
+                <td>Apenas o IP</td>
+              </tr>
+              <tr>
+                <td>curl -I https://site</td>
+                <td>Só os cabeçalhos HTTP</td>
+              </tr>
+              <tr>
+                <td>curl -v https://site</td>
+                <td>Verbose — vê toda a transação</td>
+              </tr>
+              <tr>
+                <td>wget URL</td>
+                <td>Baixa arquivo</td>
+              </tr>
+              <tr>
+                <td>ssh user@host</td>
+                <td>Login SSH</td>
+              </tr>
+              <tr>
+                <td>ssh -p 2222 user@host</td>
+                <td>SSH em porta não-padrão</td>
+              </tr>
+              <tr>
+                <td>ssh -L 8080:localhost:80 host</td>
+                <td>Túnel SSH (port forward local)</td>
+              </tr>
+              <tr>
+                <td>scp arq user@host:/dest</td>
+                <td>Copia arquivo via SSH</td>
+              </tr>
+              <tr>
+                <td>rsync -avz src/ user@host:/dest/</td>
+                <td>Sincroniza (somente diferenças)</td>
+              </tr>
+              <tr>
+                <td>ufw allow 22/tcp</td>
+                <td>Abre porta 22 TCP no firewall</td>
+              </tr>
+              <tr>
+                <td>ufw status verbose</td>
+                <td>Mostra regras do firewall</td>
+              </tr>
+              <tr>
+                <td>ufw deny from IP</td>
+                <td>Bloqueia IP específico</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── SCRIPTING ── -->
+        <section class="cheatsheet-section" id="nav-scripting">
+          <h2>📜 Shell Scripting</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Elemento</th>
+                <th>Significado / Exemplo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#!/bin/bash</td>
+                <td>Shebang — define o interpretador</td>
+              </tr>
+              <tr>
+                <td>set -euo pipefail</td>
+                <td>
+                  Sai em erros, erro em var indefinida, propaga erros em pipe
+                </td>
+              </tr>
+              <tr>
+                <td>VAR="valor"</td>
+                <td>Define variável local</td>
+              </tr>
+              <tr>
+                <td>export VAR="valor"</td>
+                <td>Define variável exportada para processos filhos</td>
+              </tr>
+              <tr>
+                <td>${VAR:-padrão}</td>
+                <td>Usa "padrão" se VAR não definida</td>
+              </tr>
+              <tr>
+                <td>${#VAR}</td>
+                <td>Comprimento da string</td>
+              </tr>
+              <tr>
+                <td>$(comando)</td>
+                <td>Substituição de comando — captura output</td>
+              </tr>
+              <tr>
+                <td>$1, $2, ...$9</td>
+                <td>Argumentos posicionais do script</td>
+              </tr>
+              <tr>
+                <td>$@</td>
+                <td>Todos os argumentos (preserva espaços com aspas)</td>
+              </tr>
+              <tr>
+                <td>$#</td>
+                <td>Número de argumentos</td>
+              </tr>
+              <tr>
+                <td>$?</td>
+                <td>Exit code do último comando</td>
+              </tr>
+              <tr>
+                <td>if [[ -f arq ]]; then</td>
+                <td>Condicional: arquivo existe</td>
+              </tr>
+              <tr>
+                <td>if [[ -d dir ]]; then</td>
+                <td>Condicional: diretório existe</td>
+              </tr>
+              <tr>
+                <td>if [[ -z "$VAR" ]]; then</td>
+                <td>Condicional: string vazia</td>
+              </tr>
+              <tr>
+                <td>if [[ $n -gt 5 ]]; then</td>
+                <td>Condicional: n maior que 5</td>
+              </tr>
+              <tr>
+                <td>for f in *.txt; do</td>
+                <td>Loop sobre arquivos</td>
+              </tr>
+              <tr>
+                <td>for i in {1..10}; do</td>
+                <td>Loop de 1 a 10</td>
+              </tr>
+              <tr>
+                <td>while read -r linha; do</td>
+                <td>Lê arquivo linha por linha</td>
+              </tr>
+              <tr>
+                <td>minha_func() { ... }</td>
+                <td>Define função</td>
+              </tr>
+              <tr>
+                <td>local var="val"</td>
+                <td>Variável com escopo local à função</td>
+              </tr>
+              <tr>
+                <td>trap 'cmd' ERR</td>
+                <td>Executa cmd quando qualquer erro ocorre</td>
+              </tr>
+              <tr>
+                <td>trap 'cmd' EXIT</td>
+                <td>Executa cmd quando o script termina</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="print-note">
+          <button class="btn-primary btn-print" onclick="window.print()">
+            🖨️ Imprimir / Salvar como PDF
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Central de Revisão LinuxWiki — fila SM-2 consolidada, temas fracos e histórico de estudo."
+    />
+    <title>Central de Revisão | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="revisao">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+        <div class="module-header">
+          <span class="module-number-badge">Ferramenta</span>
+          <h1 class="module-page-title">Central de Revisão</h1>
+          <p class="module-intro">
+            Flashcards com revisão vencida, temas fracos baseados nos seus
+            quizzes e histórico de estudo — tudo em um lugar.
+          </p>
+        </div>
+
+        <!-- Fila SM-2 -->
+        <section class="section-stack">
+          <div class="section-header section-title-row">
+            <h2 class="tool-section-title">🃏 Flashcards para revisar hoje</h2>
+          </div>
+          <div class="card card-info with-bottom-gap">
+            <div class="card-label">ℹ️ Repetição espaçada (SM-2)</div>
+            <p>
+              Você tem
+              <strong id="due-cards-count" class="metric-accent">0</strong>
+              flashcards com revisão vencida hoje.
+            </p>
+            <p class="section-body-note">
+              O algoritmo SM-2 agenda a próxima revisão com base no seu
+              desempenho: se você sabia bem, o intervalo aumenta; se errou,
+              volta para o início. Revisões curtas e frequentes fixam mais que
+              longas sessões esporádicas.
+            </p>
+          </div>
+
+          <div
+            id="due-modules-list"
+            class="progress-section with-bottom-gap-lg"
+          >
+            <p class="history-empty">Carregando fila de revisão...</p>
+          </div>
+
+          <div class="study-module-grid">
+            <a href="filosofia.html" class="tool-card">
+              <div class="tool-card-icon">🐧</div>
+              <div class="tool-card-title">Módulo 01 — Filosofia</div>
+              <div class="tool-card-desc">
+                Revisar flashcards de kernel, distros e open-source.
+              </div>
+            </a>
+            <a href="filesystem.html" class="tool-card">
+              <div class="tool-card-icon">📁</div>
+              <div class="tool-card-title">Módulo 02 — Filesystem</div>
+              <div class="tool-card-desc">
+                Revisar inodes, /proc, hard links e árvore de diretórios.
+              </div>
+            </a>
+            <a href="permissoes.html" class="tool-card">
+              <div class="tool-card-icon">🔐</div>
+              <div class="tool-card-title">Módulo 03 — Permissões</div>
+              <div class="tool-card-desc">
+                Revisar rwx, octal, SUID e sticky bit.
+              </div>
+            </a>
+            <a href="processos.html" class="tool-card">
+              <div class="tool-card-icon">⚙️</div>
+              <div class="tool-card-title">Módulo 04 — Processos</div>
+              <div class="tool-card-desc">
+                Revisar estados, sinais e fork/exec.
+              </div>
+            </a>
+            <a href="shell.html" class="tool-card">
+              <div class="tool-card-icon">&gt;_</div>
+              <div class="tool-card-title">Módulo 05 — Shell</div>
+              <div class="tool-card-desc">
+                Revisar pipes, redirecionamentos e $PATH.
+              </div>
+            </a>
+            <a href="systemctl.html" class="tool-card">
+              <div class="tool-card-icon">🧩</div>
+              <div class="tool-card-title">Módulo 06 — systemctl</div>
+              <div class="tool-card-desc">
+                Revisar units, enable, restart e leitura de status.
+              </div>
+            </a>
+            <a href="logs.html" class="tool-card">
+              <div class="tool-card-icon">📝</div>
+              <div class="tool-card-title">Módulo 07 — Logs</div>
+              <div class="tool-card-desc">
+                Revisar journalctl, /var/log e filtros úteis.
+              </div>
+            </a>
+            <a href="rede-linux.html" class="tool-card">
+              <div class="tool-card-icon">🌐</div>
+              <div class="tool-card-title">Módulo 08 — Rede</div>
+              <div class="tool-card-desc">
+                Revisar ip a, ss, ping, traceroute e dig.
+              </div>
+            </a>
+            <a href="disco.html" class="tool-card">
+              <div class="tool-card-icon">💽</div>
+              <div class="tool-card-title">Módulo 09 — Disco</div>
+              <div class="tool-card-desc">
+                Revisar df, du, lsblk e gargalos de storage.
+              </div>
+            </a>
+            <a href="troubleshooting.html" class="tool-card">
+              <div class="tool-card-icon">🚑</div>
+              <div class="tool-card-title">Módulo 10 — Troubleshooting</div>
+              <div class="tool-card-desc">
+                Revisar método, evidência, rollback e validação.
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Temas fracos -->
+        <section class="section-stack">
+          <div class="section-header section-title-row">
+            <h2 class="tool-section-title">📊 Temas que precisam de atenção</h2>
+          </div>
+          <div class="card card-warning with-bottom-gap">
+            <div class="card-label">⚠️ Baseado nos seus quizzes</div>
+            <p>
+              Módulos onde você teve menor aproveitamento nos quizzes. Complete
+              mais quizzes para uma análise mais precisa.
+            </p>
+          </div>
+          <div id="weak-topics">
+            <p class="history-empty">
+              Complete os quizzes dos módulos para identificar seus pontos
+              fracos.
+            </p>
+          </div>
+        </section>
+
+        <!-- Histórico -->
+        <section class="section-stack">
+          <div class="section-header section-title-row">
+            <h2 class="tool-section-title">📅 Histórico de estudos</h2>
+          </div>
+          <div class="progress-section">
+            <div id="study-history-list"></div>
+          </div>
+        </section>
+
+        <!-- Método de revisão -->
+        <section>
+          <h2 class="tool-section-title with-bottom-gap">
+            💡 Como usar a revisão espaçada
+          </h2>
+          <div class="card card-explanation">
+            <div class="card-label">📖 Algoritmo SM-2</div>
+            <p>
+              O SM-2 é o algoritmo base do Anki e de sistemas de flashcard
+              sérios. A ideia é simples: você revisa um conceito
+              <strong>exatamente antes de esquecê-lo</strong>.
+            </p>
+            <p>Quando você responde um flashcard:</p>
+            <ul>
+              <li><strong>Não sei:</strong> intervalo volta para 1 dia</li>
+              <li>
+                <strong>Sei mais ou menos:</strong> intervalo de 1 dia (não
+                aumenta)
+              </li>
+              <li>
+                <strong>Sei bem:</strong> intervalo dobra (1 → 6 → 14 → 30 → 60
+                dias...)
+              </li>
+            </ul>
+            <p class="section-body-note">
+              O resultado: conceitos que você domina aparecem raramente;
+              conceitos fracos aparecem com frequência. Você gasta tempo onde
+              precisa, não revisando o que já sabe.
+            </p>
+          </div>
+          <div class="card card-summary with-top-gap">
+            <div class="card-label">⚡ Hábito recomendado</div>
+            <ul>
+              <li>
+                Faça os flashcards com revisão vencida todo dia — leva 5-10
+                minutos
+              </li>
+              <li>Estude um módulo novo por semana, não tudo de uma vez</li>
+              <li>Após cada módulo, faça o quiz imediatamente</li>
+              <li>
+                Errou no quiz? Volte à seção específica, não ao módulo inteiro
+              </li>
+              <li>
+                Use o Simulado Geral como "prova" após cobrir todos os módulos
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

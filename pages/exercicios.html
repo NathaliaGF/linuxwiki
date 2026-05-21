@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Exercícios Práticos LinuxWiki — cenários reais com problema, solução e explicação."
+    />
+    <title>Exercícios Práticos | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="exercicios">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+        <div class="module-header">
+          <span class="module-number-badge">Ferramenta</span>
+          <h1 class="module-page-title">Exercícios Práticos</h1>
+          <p class="module-intro">
+            Cenários reais que você vai encontrar como sysadmin ou
+            desenvolvedor. Para cada problema: tente resolver antes de ver a
+            solução.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">🛠️ 20 exercícios</span>
+            <span class="module-meta-item">📊 5 categorias</span>
+          </div>
+        </div>
+
+        <div class="card card-info card-spacious">
+          <div class="card-label">ℹ️ Como usar</div>
+          <p>
+            Leia o cenário e tente resolver antes de expandir a solução. Anote o
+            comando que você tentaria usar. Depois compare com a solução e leia
+            a explicação — entender o <em>porquê</em> importa mais que memorizar
+            o comando.
+          </p>
+        </div>
+
+        <!-- ── PERMISSÕES ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">🔐 Permissões</h2>
+
+          <div class="exercise-item" id="ex-1">
+            <div class="exercise-header">
+              <div class="exercise-num">1</div>
+              <div class="exercise-question">
+                Um script <code>backup.sh</code> existe e está correto, mas ao
+                tentar executá-lo com <code>./backup.sh</code> você recebe:
+                <code>-bash: ./backup.sh: Permission denied</code>. O que fazer?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code>ls -la backup.sh
+# -rw-r--r-- 1 usuario usuario 245 Mai 20 backup.sh
+
+chmod +x backup.sh
+# ou: chmod 755 backup.sh (se quiser que outros também executem)
+# ou: chmod u+x backup.sh (somente o dono)
+
+./backup.sh</code></pre>
+              <p>
+                O arquivo existe (sem erro de "not found") mas não tem bit de
+                execução. <code>ls -la</code> confirma: <code>rw-r--r--</code> —
+                nenhum 'x'. <code>chmod +x</code> adiciona execute para todos.
+                Se o arquivo foi criado por um editor de texto, é esperado não
+                ter permissão de execução — editores criam arquivos com 644.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-2">
+            <div class="exercise-header">
+              <div class="exercise-num">2</div>
+              <div class="exercise-question">
+                Você precisa dar permissão de <strong>leitura</strong> a um
+                arquivo <code>relatorio.pdf</code> para o grupo
+                <code>analistas</code> sem mudar o dono e sem dar permissão para
+                outros.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Verificar situação atual
+ls -la relatorio.pdf
+# -rw------- 1 joao joao 45200 Mai 20 relatorio.pdf
+
+# Mudar o grupo do arquivo
+chown joao:analistas relatorio.pdf
+
+# Adicionar leitura para o grupo
+chmod g+r relatorio.pdf
+
+# Verificar resultado
+ls -la relatorio.pdf
+# -rw-r----- 1 joao analistas 45200 Mai 20 relatorio.pdf</code></pre>
+              <p>
+                Dois passos: mudar o grupo do arquivo para
+                <code>analistas</code> com <code>chown</code>, depois adicionar
+                permissão de leitura ao grupo com <code>chmod g+r</code>. A
+                notação simbólica <code>g+r</code> adiciona sem alterar as
+                outras permissões.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-3">
+            <div class="exercise-header">
+              <div class="exercise-num">3</div>
+              <div class="exercise-question">
+                Você criou um diretório compartilhado
+                <code>/dados/equipe/</code> onde vários usuários do grupo
+                <code>devs</code> precisam criar arquivos. Mas os arquivos
+                criados por diferentes usuários ficam com grupos diferentes,
+                dificultando a colaboração. Como garantir que todo arquivo
+                criado nesse diretório herde o grupo <code>devs</code>?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Verificar situação atual
+ls -ld /dados/equipe/
+# drwxrwxr-x 2 root devs 4096 Mai 20 /dados/equipe/
+
+# Ativar o SGID bit no diretório
+chmod g+s /dados/equipe/
+
+# Verificar resultado
+ls -ld /dados/equipe/
+# drwxrwsr-x 2 root devs 4096 Mai 20 /dados/equipe/
+# Note o 's' no lugar do 'x' do grupo
+
+# Agora qualquer arquivo criado aqui herda o grupo 'devs'
+touch /dados/equipe/novo.txt
+ls -la /dados/equipe/novo.txt
+# -rw-rw-r-- 1 usuario devs 0 Mai 20 novo.txt</code></pre>
+              <p>
+                O SGID bit em diretório (<code>chmod g+s</code>) faz com que
+                arquivos criados dentro herdem o grupo do diretório, não o grupo
+                primário do usuário que criou. Fundamental para diretórios
+                colaborativos.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PROCESSOS ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">⚙️ Processos</h2>
+
+          <div class="exercise-item" id="ex-4">
+            <div class="exercise-header">
+              <div class="exercise-num">4</div>
+              <div class="exercise-question">
+                Um processo está consumindo 99% de CPU há horas. Como
+                identificar qual processo é e encerrá-lo de forma limpa?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Passo 1: identificar o processo
+top           # interativo: pressione P para ordenar por CPU
+# ou
+ps aux --sort=-%cpu | head -5
+# USER       PID %CPU %MEM    VSZ   RSS COMMAND
+# usuario   8472 99.2  2.1 345678 87654 python3 minerador.py
+
+# Passo 2: tentar encerrar limpo primeiro (SIGTERM)
+kill 8472
+
+# Aguardar alguns segundos...
+sleep 3
+ps aux | grep 8472
+
+# Passo 3: se ainda existir, encerrar forçado (SIGKILL)
+kill -9 8472
+
+# Alternativa: por nome (cuidado — mata todos os processos com esse nome)
+killall python3
+# ou mais seguro:
+pkill -f "minerador.py"</code></pre>
+              <p>
+                Sempre tente <code>kill PID</code> (SIGTERM) antes de
+                <code>kill -9</code> (SIGKILL). SIGTERM permite que o processo
+                faça cleanup. SIGKILL mata imediatamente sem chance de salvar
+                estado. <code>pkill -f</code> usa o comando completo, não só o
+                nome do executável.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-5">
+            <div class="exercise-header">
+              <div class="exercise-num">5</div>
+              <div class="exercise-question">
+                Você precisa rodar um script longo (<code>sync_dados.sh</code>)
+                que deve continuar funcionando mesmo após você fechar o terminal
+                SSH. Como fazer?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Opção 1: nohup (simples, saída vai para nohup.out)
+nohup ./sync_dados.sh > sync.log 2>&1 &
+echo "PID: $!"   # PID do processo em background
+
+# Opção 2: screen (permite reconectar ao terminal depois)
+screen -S sync
+./sync_dados.sh
+# Ctrl+A, D para desconectar sem matar
+# screen -r sync   # para reconectar depois
+
+# Opção 3: tmux (mais moderno que screen)
+tmux new -s sync
+./sync_dados.sh
+# Ctrl+B, D para desconectar
+# tmux attach -t sync   # para reconectar
+
+# Opção 4: systemd (para serviços persistentes)
+# Criar /etc/systemd/system/sync.service e usar systemctl</code></pre>
+              <p>
+                <code>nohup</code> previne SIGHUP quando o terminal fecha. O
+                <code>&</code> coloca em background. <code>screen</code> e
+                <code>tmux</code> são mais versáteis — permitem "desconectar" e
+                "reconectar" a sessões. Para processos que devem sobreviver a
+                reboots, use systemd.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-6">
+            <div class="exercise-header">
+              <div class="exercise-num">6</div>
+              <div class="exercise-question">
+                Você precisa ver em tempo real quais arquivos um processo
+                específico (PID 1234) está usando atualmente. Qual comando?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Ver file descriptors abertos
+ls -la /proc/1234/fd/
+# Mostra todos os arquivos abertos como symlinks
+
+# Mais legível:
+lsof -p 1234
+# COMMAND  PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+# python3 1234 usuario  cwd    DIR    8,1     4096  ... /home/usuario/app
+# python3 1234 usuario    0u   CHR  136,0      0t0    3 /dev/pts/0
+# python3 1234 usuario    1u   CHR  136,0      0t0    3 /dev/pts/0
+# python3 1234 usuario    2u   CHR  136,0      0t0    3 /dev/pts/0
+# python3 1234 usuario    3r   REG    8,1    45200  ... /home/usuario/dados.csv
+# python3 1234 usuario    4w   REG    8,1        0  ... /tmp/output.tmp
+
+# Apenas arquivos regulares (excluindo sockets, pipes)
+lsof -p 1234 | grep REG</code></pre>
+              <p>
+                <code>/proc/PID/fd/</code> lista os file descriptors como
+                symlinks — é a forma mais direta. <code>lsof -p</code> (list
+                open files) dá uma visão mais legível com tipos e modos de
+                abertura. <code>FD</code> 0,1,2 são stdin/stdout/stderr.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── FILESYSTEM ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">📁 Filesystem e Busca</h2>
+
+          <div class="exercise-item" id="ex-7">
+            <div class="exercise-header">
+              <div class="exercise-num">7</div>
+              <div class="exercise-question">
+                Você precisa encontrar todos os arquivos
+                <code>.log</code> maiores que 100MB em <code>/var</code> para
+                liberar espaço em disco.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Encontrar arquivos .log maiores que 100MB
+find /var -name "*.log" -size +100M -type f
+
+# Com tamanho e caminho ordenado por tamanho
+find /var -name "*.log" -size +100M -type f \
+  -exec du -sh {} \; | sort -rh
+
+# Alternativa: du para ver maiores diretórios primeiro
+du -sh /var/log/* | sort -rh | head -10
+
+# Ver uso total do disco
+df -h
+
+# Antes de deletar: verifique se o arquivo ainda está em uso
+lsof /var/log/nginx/access.log
+
+# Esvaziar arquivo sem deletar (para arquivos abertos por processos)
+> /var/log/nginx/access.log
+# ou: truncate -s 0 /var/log/nginx/access.log
+
+# Deletar logs antigos com segurança (mais de 30 dias)
+find /var/log -name "*.log" -mtime +30 -delete</code></pre>
+              <p>
+                Importante: se um processo está escrevendo no arquivo (<code
+                  >lsof</code
+                >
+                confirma), <strong>não delete</strong> — esvazie com
+                <code>&gt; arquivo</code> ou <code>truncate -s 0</code>. Deletar
+                um arquivo aberto libera o nome do diretório mas não o espaço
+                até o processo fechar o file descriptor.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-8">
+            <div class="exercise-header">
+              <div class="exercise-num">8</div>
+              <div class="exercise-question">
+                Você precisa encontrar todos os arquivos que pertencem ao
+                usuário <code>www-data</code> no sistema para auditoria de
+                segurança.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Por nome de usuário
+find / -user www-data -type f 2>/dev/null
+
+# Por UID (mais rápido — evita resolver nome)
+find / -uid 33 -type f 2>/dev/null
+
+# Limitar a locais relevantes (mais rápido)
+find /var /etc /home /tmp -user www-data 2>/dev/null
+
+# Arquivos com SUID de qualquer usuário (auditoria de segurança)
+find / -perm /4000 -type f 2>/dev/null
+
+# Arquivos sem dono (possível problema após deletar usuário)
+find / -nouser -type f 2>/dev/null
+
+# Redirecionar erros de "Permission denied"
+find / -user www-data 2>/dev/null | tee arquivos_www-data.txt</code></pre>
+              <p>
+                O <code>2>/dev/null</code> suprime mensagens de "Permission
+                denied" em diretórios que você não pode acessar.
+                <code>find / -nouser</code> encontra arquivos cujo UID não
+                corresponde a nenhum usuário — comum após deletar usuários sem
+                remover seus arquivos.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-9">
+            <div class="exercise-header">
+              <div class="exercise-num">9</div>
+              <div class="exercise-question">
+                O disco está quase cheio (<code>df -h</code> mostra 98%). Você
+                precisa identificar rapidamente quais diretórios/arquivos estão
+                ocupando mais espaço.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Passo 1: ver uso por partição
+df -h
+
+# Passo 2: identificar maior consumidor no /
+du -sh /* 2>/dev/null | sort -rh | head -10
+
+# Passo 3: drill down no diretório suspeito (ex: /var)
+du -sh /var/* 2>/dev/null | sort -rh | head -10
+
+# Ferramenta interativa (se disponível)
+ncdu /var
+
+# Verificar se há arquivos deletados ainda abertos (por processos)
+lsof | grep deleted | awk '{print $7, $9}' | sort -rn | head -10
+# Este caso é comum: processo deletou o arquivo mas ainda o mantém aberto
+# O espaço só é liberado quando o processo fecha o fd ou é encerrado</code></pre>
+              <p>
+                O caso dos "arquivos deletados mas ainda abertos" é
+                frequentemente esquecido. Um log gigante deletado não libera
+                espaço se o processo que o escreve ainda está rodando.
+                <code>lsof | grep deleted</code> revela isso. Reinicie o
+                processo para liberar o espaço.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── REDE ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">🌐 Rede e Conectividade</h2>
+
+          <div class="exercise-item" id="ex-10">
+            <div class="exercise-header">
+              <div class="exercise-num">10</div>
+              <div class="exercise-question">
+                Um serviço web não está respondendo na porta 80. Como
+                diagnosticar se o problema é o serviço não rodando, o firewall
+                bloqueando, ou outra coisa?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">
+                Solução — diagnóstico em camadas
+              </div>
+              <pre><code># Camada 1: o serviço está rodando?
+systemctl status nginx
+ps aux | grep nginx
+ss -tulnp | grep :80
+
+# Camada 2: está ouvindo no endereço certo?
+ss -tulnp | grep :80
+# Se 127.0.0.1:80: só aceita conexões locais
+# Se 0.0.0.0:80: aceita de qualquer interface
+
+# Camada 3: testar localmente (sem firewall)
+curl -v http://localhost:80
+# Se funciona localmente mas não externamente → problema de firewall
+
+# Camada 4: verificar firewall
+sudo ufw status
+sudo iptables -L -n | grep 80
+
+# Camada 5: conectividade de rede
+ping -c3 8.8.8.8           # Internet acessível?
+ip route show default       # Gateway configurado?
+
+# Camada 6: logs do serviço
+sudo journalctl -u nginx -n 50
+sudo tail -f /var/log/nginx/error.log</code></pre>
+              <p>
+                Diagnóstico em camadas é o método correto. Não chute. Confirme
+                cada camada: o serviço existe → está rodando → está ouvindo → o
+                firewall permite → a rede alcança. Os logs geralmente têm a
+                resposta exata.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-11">
+            <div class="exercise-header">
+              <div class="exercise-num">11</div>
+              <div class="exercise-question">
+                Você precisa copiar um diretório inteiro de arquivos para um
+                servidor remoto de forma eficiente, sincronizando apenas o que
+                mudou (não copia tudo toda vez).
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># rsync: sincroniza apenas diferenças
+rsync -avz /local/pasta/ usuario@servidor:/remoto/pasta/
+# -a: archive mode (preserva permissões, timestamps, symlinks)
+# -v: verbose
+# -z: comprime em trânsito
+
+# Com exclusões
+rsync -avz --exclude='.git' --exclude='node_modules' \
+  /local/projeto/ usuario@servidor:/var/www/projeto/
+
+# Dry run (simula sem executar)
+rsync -avz --dry-run /local/pasta/ usuario@servidor:/remoto/pasta/
+
+# Deletar arquivos remotos que não existem mais localmente
+rsync -avz --delete /local/pasta/ usuario@servidor:/remoto/pasta/
+
+# Mostrar progresso
+rsync -avz --progress /local/pasta/ usuario@servidor:/remoto/pasta/
+
+# Via porta SSH não-padrão
+rsync -avz -e "ssh -p 2222" /local/ usuario@servidor:/remoto/</code></pre>
+              <p>
+                rsync é a ferramenta certa para sincronização eficiente —
+                transfere apenas as diferenças usando checksums. Atenção à barra
+                no final do caminho de origem: <code>/pasta/</code> (com barra)
+                copia o conteúdo; <code>/pasta</code> (sem barra) copia o
+                diretório em si.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SHELL E SCRIPTING ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">📜 Shell e Scripting</h2>
+
+          <div class="exercise-item" id="ex-12">
+            <div class="exercise-header">
+              <div class="exercise-num">12</div>
+              <div class="exercise-question">
+                Você tem um arquivo <code>usuarios.csv</code> com linhas no
+                formato <code>nome,email,departamento</code> e precisa extrair
+                apenas os emails (segunda coluna) de usuários do departamento
+                "TI" (terceira coluna).
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Conteúdo do arquivo:
+# joao,joao@empresa.com,TI
+# maria,maria@empresa.com,RH
+# pedro,pedro@empresa.com,TI
+
+# Com awk (mais robusto para CSV simples)
+awk -F',' '$3 == "TI" {print $2}' usuarios.csv
+# Saída:
+# joao@empresa.com
+# pedro@empresa.com
+
+# Com grep + cut
+grep ',TI$' usuarios.csv | cut -d',' -f2
+
+# Para salvar em arquivo
+awk -F',' '$3 == "TI" {print $2}' usuarios.csv > emails_ti.txt
+
+# Contar quantos são do TI
+awk -F',' '$3 == "TI"' usuarios.csv | wc -l
+
+# Para CSV com espaços ou campos entre aspas, use Python ou csvkit</code></pre>
+              <p>
+                <code>awk</code> é a ferramenta certa para processamento de
+                campos. <code>-F','</code> define a vírgula como separador.
+                <code>$3 == "TI"</code> filtra a linha;
+                <code>{print $2}</code> imprime o segundo campo. Para CSVs
+                complexos (aspas, quebras de linha em campos), use Python com o
+                módulo <code>csv</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-13">
+            <div class="exercise-header">
+              <div class="exercise-num">13</div>
+              <div class="exercise-question">
+                Você precisa trocar a string <code>localhost</code> por
+                <code>db.producao.com</code> em todos os arquivos
+                <code>.conf</code> de um diretório, sem abrir cada arquivo
+                manualmente.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Com sed (in-place com backup)
+sed -i.bak 's/localhost/db.producao.com/g' *.conf
+
+# -i: edita in-place (modifica o arquivo)
+# .bak: cria backup com extensão .bak
+# s/antigo/novo/g: substitui todas as ocorrências (g = global)
+
+# Verificar antes (dry run — sem -i)
+sed 's/localhost/db.producao.com/g' app.conf
+
+# Sem criar backup
+sed -i 's/localhost/db.producao.com/g' *.conf
+
+# Em subdiretórios também (combinando find e sed)
+find . -name "*.conf" -exec sed -i.bak 's/localhost/db.producao.com/g' {} \;
+
+# Verificar mudanças
+diff app.conf app.conf.bak
+
+# Remover backups após confirmar
+find . -name "*.bak" -delete</code></pre>
+              <p>
+                Sempre faça backup (<code>-i.bak</code>) antes de edições em
+                massa. Teste o padrão sem <code>-i</code> primeiro para
+                confirmar que está substituindo o que quer. Em macOS,
+                <code>sed -i</code> requer argumento:
+                <code>sed -i '' 's/...'</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-14">
+            <div class="exercise-header">
+              <div class="exercise-num">14</div>
+              <div class="exercise-question">
+                Um script bash está falhando silenciosamente — às vezes
+                funciona, às vezes não, e você não consegue ver o erro. Como
+                debugar?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Opção 1: adicionar set -x no início (trace de execução)
+#!/bin/bash
+set -x  # imprime cada comando antes de executar
+set -e  # encerra em qualquer erro
+
+# Opção 2: rodar com bash -x
+bash -x ./script.sh
+
+# Opção 3: usar set -x em seção específica
+set -x   # inicia trace
+comandos_suspeitos
+set +x   # termina trace
+
+# Opção 4: verificar exit codes
+#!/bin/bash
+set -euo pipefail
+# set -e: encerra em erro
+# set -u: erro em variável não definida
+# pipefail: propaga erros em pipes
+
+# Opção 5: adicionar logs
+log() { echo "[$(date '+%H:%M:%S')] $*" &gt;&amp;2; }
+trap 'log "Erro na linha $LINENO"' ERR
+
+log "Iniciando backup..."
+# comandos...
+log "Backup concluído"
+
+# Verificar saída com shellcheck (ferramenta)
+shellcheck script.sh  # em shellcheck.net se não tiver instalado</code></pre>
+              <p>
+                <code>set -x</code> é o primeiro recurso.
+                <code>trap 'echo erro na linha $LINENO' ERR</code> captura erros
+                e mostra onde ocorreram. ShellCheck (shellcheck.net) analisa
+                estaticamente o script e encontra bugs comuns antes de executar.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-15">
+            <div class="exercise-header">
+              <div class="exercise-num">15</div>
+              <div class="exercise-question">
+                Você precisa contar quantas vezes cada endereço IP aparece em um
+                arquivo de log de acesso web (<code>access.log</code>) e mostrar
+                os 5 mais frequentes.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># access.log formato nginx/apache:
+# 192.168.1.1 - - [20/Mai/2026:10:30:00] "GET / HTTP/1.1" 200 1234
+
+# Extrair IPs, contar ocorrências e mostrar top 5
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head -5
+
+# Saída:
+# 1523 192.168.1.100
+#  891 10.0.0.50
+#  234 192.168.1.1
+#   89 172.16.0.5
+#   45 192.168.1.200
+
+# Passo a passo explicado:
+# awk '{print $1}'  → extrai primeiro campo (IP)
+# sort              → ordena (necessário para uniq funcionar)
+# uniq -c           → conta ocorrências consecutivas
+# sort -rn          → ordena por número, decrescente
+# head -5           → pega os 5 primeiros
+
+# Apenas IPs com mais de 1000 requests (possível ataque?)
+awk '{print $1}' access.log | sort | uniq -c | awk '$1 > 1000 {print}'</code></pre>
+              <p>
+                Este pipeline é um clássico do Unix: extrair → ordenar → contar
+                → ordenar inversamente → pegar os N primeiros.
+                <code>uniq -c</code> só conta sequências consecutivas iguais —
+                por isso o <code>sort</code> antes é obrigatório.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── USUÁRIOS E SISTEMA ── -->
+        <section class="exercise-category">
+          <h2 class="exercise-category-title">👤 Usuários e Sistema</h2>
+
+          <div class="exercise-item" id="ex-16">
+            <div class="exercise-header">
+              <div class="exercise-num">16</div>
+              <div class="exercise-question">
+                Você precisa criar um usuário <code>deploy</code> que só pode
+                executar o script <code>/opt/scripts/deploy.sh</code> com sudo,
+                mas não tem acesso a outros comandos privilegiados.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Criar o usuário sem shell de login (conta de serviço)
+sudo useradd -m -s /bin/bash deploy
+
+# Editar sudoers com visudo (NUNCA edite /etc/sudoers diretamente)
+sudo visudo
+
+# Adicionar no final do arquivo:
+# deploy ALL=(ALL) NOPASSWD: /opt/scripts/deploy.sh
+
+# Ou melhor: criar arquivo separado em /etc/sudoers.d/
+echo 'deploy ALL=(ALL) NOPASSWD: /opt/scripts/deploy.sh' | \
+  sudo tee /etc/sudoers.d/deploy
+sudo chmod 440 /etc/sudoers.d/deploy
+
+# Verificar sintaxe antes de fechar
+sudo visudo -c
+
+# Testar como o usuário deploy
+sudo -u deploy sudo /opt/scripts/deploy.sh
+sudo -u deploy sudo /bin/bash  # deve falhar — não autorizado</code></pre>
+              <p>
+                NUNCA edite <code>/etc/sudoers</code> diretamente — um erro de
+                sintaxe pode bloquear sudo em todo o sistema. Use sempre
+                <code>visudo</code>, que valida a sintaxe antes de salvar.
+                Arquivos em <code>/etc/sudoers.d/</code> são mais organizados
+                para regras específicas.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-17">
+            <div class="exercise-header">
+              <div class="exercise-num">17</div>
+              <div class="exercise-question">
+                Após migrar um servidor, você percebe que há muitos arquivos
+                <code>-rw-r--r-- 1 1005 1005</code> — o usuário foi deletado mas
+                os arquivos ficaram. Como reatribuir esses arquivos "órfãos"
+                para um novo usuário?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Verificar arquivos sem dono (UID não existe no sistema)
+find / -nouser -type f 2>/dev/null | head -20
+
+# Ou por UID específico
+find / -uid 1005 -type f 2>/dev/null
+
+# Reatribuir para novo usuário
+find / -uid 1005 -exec chown novousuario:novogrupo {} \; 2>/dev/null
+
+# Ou reatribuir só em uma área específica (mais seguro)
+find /home /var/www -uid 1005 -exec chown www-data:www-data {} \; 2>/dev/null
+
+# Verificar resultado
+find /home -nouser -type f 2>/dev/null  # deve retornar vazio agora
+
+# Boas práticas: ao deletar usuário, deletar ou reatribuir arquivos
+# userdel -r usuario    # deleta usuário E home
+# find / -user usuario -exec chown novouser {} \;  # antes de deletar</code></pre>
+              <p>
+                Arquivos órfãos são um problema de segurança: se um novo usuário
+                receber o mesmo UID (1005), ele herdará automaticamente todos
+                esses arquivos. Sempre limpe arquivos ao deletar usuários, ou
+                reatribua antes.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-18">
+            <div class="exercise-header">
+              <div class="exercise-num">18</div>
+              <div class="exercise-question">
+                Você precisa verificar se alguém além de você fez login no
+                servidor nas últimas 24 horas e ver de qual IP vieram as
+                conexões.
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Últimos logins bem-sucedidos
+last | head -20
+# usuario  pts/0  192.168.1.50  Mon May 20 10:30  still logged in
+# root     pts/1  10.0.0.5      Mon May 20 09:15 - 09:45 (00:30)
+
+# Tentativas de login falhas (possível ataque de força bruta)
+sudo lastb | head -20
+# ou
+sudo grep "Failed password" /var/log/auth.log | tail -20
+
+# IPs com mais tentativas falhas
+sudo grep "Failed password" /var/log/auth.log | \
+  awk '{print $(NF-3)}' | sort | uniq -c | sort -rn | head -10
+
+# Logins SSH bem-sucedidos
+sudo grep "Accepted" /var/log/auth.log | tail -20
+
+# Quem está logado AGORA
+who
+w  # mais detalhado: mostra o que está fazendo</code></pre>
+              <p>
+                <code>last</code> lê <code>/var/log/wtmp</code>.
+                <code>lastb</code> lê <code>/var/log/btmp</code> (tentativas
+                falhas). Se você vê muitas tentativas do mesmo IP, considere
+                banir com ufw:
+                <code>sudo ufw deny from IP_SUSPEITO to any</code>. Fail2ban
+                automatiza isso.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-19">
+            <div class="exercise-header">
+              <div class="exercise-num">19</div>
+              <div class="exercise-question">
+                Um serviço (nginx) parou de funcionar. Como diagnosticar o
+                problema usando systemd?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Verificar status do serviço
+sudo systemctl status nginx
+# ● nginx.service - A high performance web server
+#    Loaded: loaded (/lib/systemd/system/nginx.service)
+#    Active: failed (Result: exit-code)
+#  Main PID: 12345 (code=exited, status=1/FAILURE)
+
+# Ver logs do serviço (mais detalhado)
+sudo journalctl -u nginx -n 50
+# ou acompanhar em tempo real:
+sudo journalctl -u nginx -f
+
+# Logs desde a última falha
+sudo journalctl -u nginx --since "1 hour ago"
+
+# Tentar iniciar e ver o erro
+sudo systemctl start nginx
+# Se falhar, o erro aparece
+
+# Verificar configuração do nginx
+sudo nginx -t
+# nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+
+# Verificar o que está usando a porta
+sudo ss -tulnp | grep :80
+sudo lsof -i :80
+
+# Após corrigir, iniciar e verificar
+sudo systemctl start nginx
+sudo systemctl enable nginx  # para iniciar no boot
+sudo systemctl status nginx</code></pre>
+              <p>
+                <code>journalctl -u serviço</code> é o primeiro lugar a olhar.
+                <code>nginx -t</code> (e equivalentes em outros serviços) valida
+                a configuração antes de reiniciar. A mensagem "Address already
+                in use" é muito comum — outra instância ou outro serviço está na
+                mesma porta.
+              </p>
+            </div>
+          </div>
+
+          <div class="exercise-item" id="ex-20">
+            <div class="exercise-header">
+              <div class="exercise-num">20</div>
+              <div class="exercise-question">
+                Você precisa agendar um script de backup para rodar todo dia às
+                2h da manhã automaticamente. Como configurar com cron?
+              </div>
+              <div class="exercise-toggle">▾</div>
+            </div>
+            <div class="exercise-body">
+              <div class="exercise-solution-label">Solução</div>
+              <pre><code># Editar o crontab do usuário atual
+crontab -e
+
+# Sintaxe: minuto hora dia-do-mês mês dia-da-semana comando
+# Campos:  0-59  0-23  1-31        1-12 0-7(0=dom)
+# * = qualquer valor, */n = a cada n, a,b = valores específicos
+
+# Rodar backup.sh todo dia às 2:00
+0 2 * * * /home/usuario/scripts/backup.sh >> /var/log/backup.log 2>&1
+
+# Rodar às 2:30 de segunda a sexta
+30 2 * * 1-5 /home/usuario/scripts/backup.sh
+
+# A cada 15 minutos
+*/15 * * * * /home/usuario/scripts/monitor.sh
+
+# No primeiro dia de cada mês às 3h
+0 3 1 * * /home/usuario/scripts/relatorio-mensal.sh
+
+# Ver crontab atual
+crontab -l
+
+# Crontab do sistema (com campo de usuário)
+sudo nano /etc/crontab
+# 0 2 * * * root /usr/local/bin/backup.sh
+
+# Verificar se o cron está rodando
+sudo systemctl status cron  # Debian/Ubuntu
+sudo systemctl status crond # Red Hat/Fedora
+
+# Logs do cron
+sudo grep CRON /var/log/syslog | tail -20</code></pre>
+              <p>
+                Cron não tem o mesmo <code>$PATH</code> do seu shell interativo
+                — use caminhos absolutos para tudo (<code
+                  >/usr/bin/python3</code
+                >
+                não apenas <code>python3</code>). Redirecione stdout e stderr
+                para um arquivo de log para poder diagnosticar quando algo
+                falha. Use crontab.guru para validar expressões cron.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

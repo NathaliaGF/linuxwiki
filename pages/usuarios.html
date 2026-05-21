@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Entenda usuários e grupos no Linux: root vs usuário comum, sudo vs su, /etc/passwd, /etc/shadow, /etc/group e como gerenciar contas com useradd, usermod e userdel."
+    />
+    <title>Módulo 06 — Usuários e Grupos | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="usuarios">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 06</span>
+          <h1 class="module-page-title">Usuários e Grupos</h1>
+          <p class="module-intro">
+            Entenda como o Linux controla identidade e acesso: a diferença entre
+            root e usuários comuns, como escalar privilégios com segurança, e o
+            que realmente está dentro de /etc/passwd e /etc/shadow.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 18 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="root-vs-usuario">
+          <div class="section-header">
+            <h2>root vs usuário comum: o princípio do menor privilégio</h2>
+            <button class="mark-studied" data-section="root-vs-usuario">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Prédio corporativo</span>
+            <p>
+              O usuário root é como o administrador geral de um prédio
+              corporativo — tem chave de todos os andares, pode acessar qualquer
+              sala, modificar a estrutura elétrica e hidráulica. Usuários comuns
+              são funcionários com crachá de acesso limitado ao próprio andar.
+              sudo é como pedir permissão temporária ao administrador para uma
+              tarefa específica — com registro no livro de ocorrências.
+            </p>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              O <strong>root</strong> tem UID 0 — e é isso que importa, não o
+              nome. O kernel verifica o UID de quem faz uma chamada de sistema:
+              se for 0, quase todas as verificações de permissão são ignoradas.
+              Root pode ler qualquer arquivo, matar qualquer processo, montar
+              qualquer dispositivo.
+            </p>
+            <p>
+              Rodar como root o tempo todo é perigoso por uma razão simples:
+              <strong>um typo pode destruir o sistema</strong>.
+            </p>
+            <ul>
+              <li>
+                <code>rm -rf /tmp/lixo</code> — limpa um diretório temporário
+              </li>
+              <li>
+                <code>rm -rf / tmp/lixo</code> — apaga
+                <em>a raiz inteira do sistema</em> (espaço entre / e tmp)
+              </li>
+            </ul>
+            <p>
+              O <strong>princípio do menor privilégio</strong> diz que cada
+              processo e usuário deve ter apenas as permissões mínimas
+              necessárias para sua função. Isso limita o dano quando algo dá
+              errado — seja um erro humano, um bug ou uma invasão.
+            </p>
+            <p><strong>UIDs especiais:</strong></p>
+            <ul>
+              <li>UID 0 = root</li>
+              <li>
+                UID 1–999 = contas de sistema (<code>www-data</code>,
+                <code>nobody</code>, <code>systemd-network</code>)
+              </li>
+              <li>UID 1000+ = usuários humanos normais</li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver seu UID e grupos
+$ id
+uid=1000(joao) gid=1000(joao) grupos=1000(joao),4(adm),27(sudo),999(docker)
+
+# O UID é o que importa, não o nome
+$ id root
+uid=0(root) gid=0(root) grupos=0(root)
+
+# Ver todos os usuários com UID abaixo de 1000 (contas de sistema)
+$ awk -F: '$3 &lt; 1000 {print $1, $3}' /etc/passwd | head -10
+root 0
+daemon 1
+bin 2
+sys 3
+www-data 33
+nobody 65534
+
+# Qual usuário está rodando um processo específico?
+$ ps aux | grep nginx
+www-data  1234  ...  nginx: worker process
+root      1100  ...  nginx: master process</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Rodar tudo como root</strong> — comum em ambientes de
+              desenvolvimento por "praticidade". Em produção é um risco grave:
+              qualquer vulnerabilidade em uma aplicação rodando como root
+              compromete o sistema inteiro.
+            </p>
+            <p>
+              <strong>Renomear root acha que remove os poderes</strong> — o UID
+              0 é o que confere os poderes, não o nome "root". Renomear para
+              "admin" mantém todos os privilégios.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                UID 0 = poderes totais — o nome "root" é convenção, o UID é o
+                que importa
+              </li>
+              <li>
+                UID 1–999 = contas de sistema; UID 1000+ = usuários humanos
+              </li>
+              <li>
+                Princípio do menor privilégio: use só o que precisa — limita
+                danos
+              </li>
+              <li>
+                Um typo como root pode destruir o sistema inteiro — nunca opere
+                como root por padrão
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="sudo-su">
+          <div class="section-header">
+            <h2>sudo vs su: como elevar privilégios com segurança</h2>
+            <button class="mark-studied" data-section="sudo-su">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>su (substitute user)</strong> — abre um novo shell com
+              outro usuário. Requer a
+              <em>senha do usuário alvo</em> (normalmente root).
+              <code>su -</code> (com o traço) faz login completo como root,
+              carregando o ambiente de root (PATH, variáveis, diretório home).
+              Sem o traço, você entra como root mas mantém o ambiente do usuário
+              anterior.
+            </p>
+            <p>
+              <strong>sudo (superuser do)</strong> — executa um único comando
+              com privilégios elevados. Usa a senha do <em>usuário atual</em>,
+              não de root. Configurado em <code>/etc/sudoers</code> (edite com
+              <code>visudo</code> para validação automática). Cada comando sudo
+              é registrado em <code>/var/log/auth.log</code>.
+            </p>
+            <p>
+              Por que sudo é superior ao su para administração do dia a dia:
+            </p>
+            <ul>
+              <li>
+                <strong>Auditoria</strong> — cada comando aparece no log com
+                usuário, hora e comando completo
+              </li>
+              <li>
+                <strong>Granularidade</strong> — você pode permitir apenas
+                comandos específicos para cada usuário
+              </li>
+              <li>
+                <strong>Sem senha de root</strong> — em distros como Ubuntu, o
+                root nem tem senha definida por padrão
+              </li>
+              <li>
+                <strong>Timeout</strong> — após alguns minutos sem uso, pede a
+                senha novamente
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># su — abre shell como root (requer senha do root)
+$ su
+Password:
+root@servidor:~#
+
+# su - (login completo como root, ambiente de root)
+$ su -
+Password:
+root@servidor:/root#
+
+# su - usuario (trocar para outro usuário)
+$ su - deploy
+
+# sudo — um comando como root (requer sua própria senha)
+$ sudo apt update
+[sudo] senha para joao:
+
+# sudo -i — shell root interativo (equivalente a su -)
+$ sudo -i
+root@servidor:~#
+
+# sudo -u usuario comando — executar como outro usuário
+$ sudo -u www-data ls /var/www/html
+
+# O atalho mais útil: esqueceu o sudo?
+$ apt update
+E: Não foi possível abrir o arquivo de bloqueio...
+$ sudo !!          # re-executa último comando com sudo
+
+# Ver log de sudo
+$ sudo grep sudo /var/log/auth.log | tail -5
+May 20 10:30:15 servidor sudo: joao : TTY=pts/0 ; PWD=/home/joao ; USER=root ; COMMAND=/usr/bin/apt update
+
+# /etc/sudoers — configuração (sempre edite com visudo)
+$ sudo visudo
+# joao ALL=(ALL:ALL) ALL   → joao pode tudo
+# deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx  → sem senha para esse comando</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Editar /etc/sudoers diretamente</strong> — nunca edite com
+              nano/vim direto. Um erro de sintaxe pode tornar o sudo
+              inutilizável. Sempre use <code>visudo</code>, que valida antes de
+              salvar.
+            </p>
+            <p>
+              <strong>NOPASSWD para tudo</strong> —
+              <code>usuario ALL=(ALL) NOPASSWD: ALL</code> elimina a proteção do
+              sudo. Use NOPASSWD apenas para comandos específicos e necessários.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>su -</code>: shell completo como root — requer senha do
+                root
+              </li>
+              <li>
+                <code>sudo comando</code>: um comando com privilégios — requer
+                sua senha
+              </li>
+              <li>
+                sudo é auditável: tudo vai para <code>/var/log/auth.log</code>
+              </li>
+              <li><code>sudo !!</code>: re-executa último comando com sudo</li>
+              <li>
+                Editar sudoers: sempre com <code>visudo</code>, nunca
+                diretamente
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="etc-passwd">
+          <div class="section-header">
+            <h2>/etc/passwd e /etc/shadow: entendendo os arquivos</h2>
+            <button class="mark-studied" data-section="etc-passwd">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>/etc/passwd</strong> — legível por todos os usuários.
+              Contém informações básicas de cada conta. Formato: 7 campos
+              separados por <code>:</code>
+            </p>
+            <p><code>usuario:x:UID:GID:GECOS:home:shell</code></p>
+            <ul>
+              <li><strong>usuario</strong>: nome de login</li>
+              <li>
+                <strong>x</strong>: campo de senha — o 'x' indica que a senha
+                real está em /etc/shadow
+              </li>
+              <li><strong>UID</strong>: User ID numérico</li>
+              <li><strong>GID</strong>: Group ID primário</li>
+              <li>
+                <strong>GECOS</strong>: campo informacional (nome completo,
+                telefone). Pode estar vazio.
+              </li>
+              <li><strong>home</strong>: diretório home</li>
+              <li>
+                <strong>shell</strong>: shell de login.
+                <code>/bin/bash</code> para humanos;
+                <code>/usr/sbin/nologin</code> ou <code>/bin/false</code> para
+                contas de serviço.
+              </li>
+            </ul>
+            <p>
+              <strong>/etc/shadow</strong> — legível apenas por root (e pelo
+              grupo shadow). Contém os hashes de senha e políticas de expiração.
+            </p>
+            <p>
+              Formato:
+              <code
+                >usuario:$tipo$salt$hash:último_change:min:max:warn:inactive:expire</code
+              >
+            </p>
+            <ul>
+              <li><code>$6$</code> = SHA-512 (seguro — padrão moderno)</li>
+              <li><code>$y$</code> = yescrypt (mais moderno que SHA-512)</li>
+              <li><code>$1$</code> = MD5 (obsoleto e inseguro)</li>
+              <li>
+                Campos numéricos: dias desde epoch (01/01/1970) para última
+                mudança, mínimo de dias entre mudanças, máximo, aviso antes de
+                expirar, dias de graça, data de expiração.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver entrada de um usuário no /etc/passwd
+$ grep joao /etc/passwd
+joao:x:1000:1000:João Silva,,,:/home/joao:/bin/bash
+
+# Campos: login:senha(x):UID:GID:GECOS:home:shell
+
+# Contas de serviço — shell nologin/false
+$ grep -E "www-data|nobody|mysql" /etc/passwd
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+mysql:x:125:131:MySQL Server,,,:/var/lib/mysql:/bin/false
+
+# /etc/shadow — apenas root pode ler
+$ sudo grep joao /etc/shadow
+joao:$6$salt$hashmuito longo aqui...:19500:0:99999:7:::
+
+# Campos:
+# $6$ = SHA-512
+# 19500 = dias desde epoch da última mudança de senha
+# 0 = mínimo 0 dias entre mudanças
+# 99999 = senha válida por ~274 anos (sem expiração)
+# 7 = aviso 7 dias antes de expirar
+
+# Ver informações de expiração de senha
+$ sudo chage -l joao
+Last password change          : Mai 20, 2026
+Password expires              : never
+Password inactive             : never
+Account expires               : never
+Minimum number of days        : 0
+Maximum number of days        : 99999
+Number of days of warning     : 7</code></pre>
+          </div>
+
+          <div class="card card-info">
+            <span class="card-label">ℹ️ Saiba mais</span>
+            <p>
+              Por que /etc/passwd existe em dois arquivos? Historicamente, o
+              hash da senha ficava diretamente em /etc/passwd — legível por
+              todos. Qualquer usuário local podia fazer ataques de dicionário
+              offline. O <strong>/etc/shadow</strong> foi criado para separar as
+              informações públicas (UID, shell) das sensíveis (senha), com
+              permissões mais restritivas.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                /etc/passwd: login:x:UID:GID:GECOS:home:shell — legível por
+                todos
+              </li>
+              <li>O 'x' em passwd significa que o hash está em /etc/shadow</li>
+              <li>
+                /etc/shadow: legível só por root — contém hashes e política de
+                senha
+              </li>
+              <li>
+                Shell <code>/usr/sbin/nologin</code> ou
+                <code>/bin/false</code> = conta de serviço (sem login)
+              </li>
+              <li>
+                <code>$6$</code> = SHA-512 (seguro); <code>$1$</code> = MD5
+                (inseguro, obsoleto)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="etc-group">
+          <div class="section-header">
+            <h2>/etc/group e UIDs/GIDs especiais</h2>
+            <button class="mark-studied" data-section="etc-group">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>/etc/group</strong> — define os grupos do sistema.
+              Formato: <code>nome_grupo:x:GID:membros</code>
+            </p>
+            <ul>
+              <li><strong>nome_grupo</strong>: nome do grupo</li>
+              <li>
+                <strong>x</strong>: campo de senha do grupo (raramente usado)
+              </li>
+              <li><strong>GID</strong>: Group ID numérico</li>
+              <li>
+                <strong>membros</strong>: lista de usuários separados por
+                vírgula (membros suplementares)
+              </li>
+            </ul>
+            <p>
+              Um usuário tem um <strong>grupo primário</strong> (definido em
+              /etc/passwd, GID) e pode ter múltiplos
+              <strong>grupos suplementares</strong> (definidos em /etc/group).
+              Novos arquivos criados pelo usuário herdam o grupo primário.
+            </p>
+            <p><strong>Grupos importantes no sistema:</strong></p>
+            <ul>
+              <li>
+                <code>sudo</code> / <code>wheel</code>: membros podem usar sudo
+              </li>
+              <li><code>docker</code>: membros podem usar o Docker sem sudo</li>
+              <li><code>adm</code>: membros podem ler logs do sistema</li>
+              <li><code>www-data</code>: grupo do servidor web</li>
+              <li><code>shadow</code>: acesso ao /etc/shadow</li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver grupos do usuário atual
+$ groups
+joao adm cdrom sudo docker
+
+$ id joao
+uid=1000(joao) gid=1000(joao) grupos=1000(joao),4(adm),24(cdrom),27(sudo),999(docker)
+
+# Ver membros de um grupo
+$ grep docker /etc/group
+docker:x:999:joao,maria,deploy
+
+# Ver grupos de um arquivo
+$ ls -la /var/log/syslog
+-rw-r----- 1 syslog adm 15234 Mai 20 10:00 /var/log/syslog
+# Grupo adm pode ler logs; outros usuários não
+
+# Verificar se você tem acesso (sem tentar abrir)
+$ id | grep adm  # se aparecer, você tem acesso
+
+# Grupos suplementares têm efeito imediato para acesso a arquivos,
+# mas um novo grupo adicionado via usermod só tem efeito
+# após logout/login (a sessão atual mantém o token antigo)
+$ newgrp docker  # alternativa: ativa o grupo na sessão atual</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>/etc/group: nome:x:GID:membros</li>
+              <li>
+                Grupo primário: definido em /etc/passwd — herdado por novos
+                arquivos
+              </li>
+              <li>
+                Grupos suplementares: definem acesso adicional (docker, sudo,
+                adm)
+              </li>
+              <li>
+                <code>groups</code> lista grupos do usuário atual;
+                <code>id usuario</code> para outro usuário
+              </li>
+              <li>
+                Novo grupo via usermod só tem efeito após logout/login (ou
+                <code>newgrp</code>)
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="gerenciar-usuarios">
+          <div class="section-header">
+            <h2>Criando e gerenciando usuários</h2>
+            <button class="mark-studied" data-section="gerenciar-usuarios">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Os comandos principais para gerenciar usuários no Linux são
+              <code>useradd</code>, <code>usermod</code>, <code>userdel</code>,
+              <code>passwd</code> e <code>groupadd</code>. Todos requerem
+              privilégios de root.
+            </p>
+            <p><strong>useradd</strong> — cria usuário. Flags importantes:</p>
+            <ul>
+              <li><code>-m</code>: cria o diretório home</li>
+              <li><code>-s /bin/bash</code>: define o shell</li>
+              <li><code>-c "Nome Completo"</code>: campo GECOS</li>
+              <li>
+                <code>-G grupo1,grupo2</code>: grupos suplementares iniciais
+              </li>
+            </ul>
+            <p>
+              <strong>usermod</strong> — modifica usuário existente. O flag mais
+              importante:
+            </p>
+            <ul>
+              <li>
+                <code>-aG grupo</code>: adiciona ao grupo
+                <em>sem remover</em> dos grupos existentes. O
+                <code>-a</code> (append) é crítico — sem ele,
+                <code>-G</code> substituiria todos os grupos suplementares.
+              </li>
+              <li><code>-s /bin/bash</code>: muda o shell</li>
+              <li><code>-l novo_nome</code>: renomeia o usuário</li>
+              <li>
+                <code>-L</code> / <code>-U</code>: bloqueia / desbloqueia a
+                conta
+              </li>
+            </ul>
+            <p>
+              <strong>userdel</strong> — remove usuário. <code>-r</code> também
+              remove o diretório home e mail spool.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Criar usuário completo
+$ sudo useradd -m -s /bin/bash -c "João Silva" joao
+$ sudo passwd joao          # definir senha interativamente
+
+# Verificar criação
+$ grep joao /etc/passwd
+joao:x:1000:1000:João Silva:/home/joao:/bin/bash
+$ ls /home/joao             # home criado com -m
+
+# Adicionar a grupos (flag -a é obrigatório para não perder grupos)
+$ sudo usermod -aG docker joao
+$ sudo usermod -aG sudo joao
+$ id joao
+uid=1000(joao) gid=1000(joao) grupos=1000(joao),27(sudo),999(docker)
+
+# Criar grupo e adicionar usuário
+$ sudo groupadd devs
+$ sudo usermod -aG devs joao
+
+# Bloquear/desbloquear conta
+$ sudo usermod -L joao      # bloqueia (adiciona ! na senha no shadow)
+$ sudo usermod -U joao      # desbloqueia
+
+# Logar como outro usuário
+$ su - joao
+$ sudo -u joao ls /home/joao   # um comando como joao
+
+# Deletar usuário (mantém home)
+$ sudo userdel joao
+# Deletar usuário E diretório home
+$ sudo userdel -r joao
+
+# Ver últimos logins
+$ last | head -10
+joao     pts/0   10.0.0.5    Wed May 20 10:30   still logged in
+joao     pts/1   10.0.0.5    Tue May 19 15:20 - 17:45  (02:25)
+
+$ lastlog | grep -v Never | head -10
+Username  Port   From         Latest
+root      tty1              Wed May 20 09:00:00
+joao      pts/0  10.0.0.5   Wed May 20 10:30:15</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>usermod -G docker joao (sem -a)</strong> — substitui TODOS
+              os grupos suplementares por apenas "docker". Se joao estava em
+              sudo, adm e docker, após o comando ele fica somente em docker —
+              perde acesso ao sudo. Sempre use <code>-aG</code>.
+            </p>
+            <p>
+              <strong>useradd vs adduser</strong> — em sistemas Debian/Ubuntu,
+              <code>adduser</code> (com duplo d) é um script de alto nível mais
+              amigável que faz as perguntas interativamente.
+              <code>useradd</code> é o comando de baixo nível, disponível em
+              todas as distros — use em scripts.
+            </p>
+            <p>
+              <strong>Novo grupo não tem efeito na sessão atual</strong> — após
+              <code>usermod -aG docker joao</code>, joao precisa fazer logout e
+              login novamente. Para evitar isso na sessão atual:
+              <code>newgrp docker</code> ou <code>su - joao</code>.
+            </p>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <code>useradd -m -s /bin/bash -c "Nome" usuario</code> — criação
+                completa
+              </li>
+              <li>
+                <code>usermod -aG grupo usuario</code> — adicionar a grupo (o
+                <strong>-a</strong> é obrigatório)
+              </li>
+              <li><code>userdel -r usuario</code> — remove usuário E home</li>
+              <li><code>passwd usuario</code> — define/altera senha</li>
+              <li>
+                Novo grupo só tem efeito após logout/login (ou
+                <code>newgrp</code>)
+              </li>
+              <li>
+                <code>last</code> e <code>lastlog</code> para auditoria de
+                logins
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 06</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="shell.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="pacotes.html" class="module-nav-link next"
+            >Próximo Módulo →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script>
+      const flashcards = [
+        {
+          id: "MOD06-FC-001",
+          question: "Por que nunca rodar tudo como root?",
+          answer:
+            "Root ignora quase todas as verificações de permissão — um erro de digitação pode destruir o sistema. rm -rf / tmp/ (espaço mal posicionado) vs rm -rf /tmp/ é a diferença entre apagar a raiz ou limpar temporários. Use root só para tarefas que exigem — princípio do menor privilégio.",
+        },
+        {
+          id: "MOD06-FC-002",
+          question: "Qual a diferença entre sudo e su?",
+          answer:
+            "su abre um shell como outro usuário, requer a senha do usuário alvo (root). sudo executa um comando com privilégios elevados, usa a senha do próprio usuário — e loga tudo em /var/log/auth.log. sudo dá auditabilidade; su não.",
+        },
+        {
+          id: "MOD06-FC-003",
+          question: 'O que significa o "x" no campo de senha do /etc/passwd?',
+          answer:
+            "Indica que a senha está armazenada em /etc/shadow (legível apenas por root). Antigamente a senha hasheada ficava no /etc/passwd, legível por qualquer um. O /etc/shadow foi criado para corrigir isso.",
+        },
+        {
+          id: "MOD06-FC-004",
+          question: "O que é o campo shell /usr/sbin/nologin em /etc/passwd?",
+          answer:
+            "Impede login interativo para aquela conta. Contas de serviço (www-data, mysql, nobody) existem apenas para que processos rodem com identidade específica, mas não devem ter shell de login. Tentativa de login com essas contas retorna mensagem e encerra.",
+        },
+        {
+          id: "MOD06-FC-005",
+          question: "O que faz usermod -aG docker joao?",
+          answer:
+            'Adiciona joao ao grupo supplementar "docker" sem remover dos grupos existentes. O flag -a (append) é crítico — sem ele, -G substituiria TODOS os grupos suplementares do usuário. O usuário precisa fazer logout/login para o novo grupo ter efeito.',
+        },
+        {
+          id: "MOD06-FC-006",
+          question: "Como ver todos os grupos de um usuário?",
+          answer:
+            "id usuario — mostra UID, GID primário e todos os grupos (uid=1000(joao) gid=1000(joao) groups=1000(joao),27(sudo),999(docker)). Ou: groups usuario — só os grupos. /etc/group mostra a lista inversa: para cada grupo, quem são os membros.",
+        },
+      ];
+
+      window._quizData_usuarios = [
+        {
+          question: "Qual UID tem o usuário root?",
+          options: ["999", "1000", "-1", "0"],
+          correct: 3,
+          explanation:
+            'UID 0 é o que dá os poderes de root — não o nome "root". Você pode renomear o usuário root para qualquer coisa, mas enquanto o UID for 0, terá todos os privilégios. UIDs 1-999 são reservados para contas de sistema.',
+        },
+        {
+          question:
+            'Você digita um comando e recebe "Permission denied". Quer tentar novamente com sudo. O atalho é:',
+          options: ["sudo último", "sudo !!", "sudo $!", "!!sudo"],
+          correct: 1,
+          explanation:
+            "!! é uma expansão de histórico que representa o último comando. sudo !! expande para sudo [último_comando]. Muito útil quando você esquece o sudo.",
+        },
+        {
+          question:
+            "No arquivo /etc/passwd, o campo de shell /bin/false significa:",
+          options: [
+            "O usuário não tem shell configurado",
+            "O shell bash não foi encontrado",
+            "A conta não permite login interativo",
+            "A senha está incorreta",
+          ],
+          correct: 2,
+          explanation:
+            "/bin/false e /usr/sbin/nologin são usados para contas de serviço. Qualquer tentativa de login retorna imediatamente com status de erro. A conta pode ser usada por processos, mas não por humanos via terminal.",
+        },
+        {
+          question: "Qual arquivo contém os hashes de senha dos usuários?",
+          options: [
+            "/etc/passwd",
+            "/etc/shadow",
+            "/etc/security",
+            "/etc/login",
+          ],
+          correct: 1,
+          explanation:
+            "/etc/shadow armazena os hashes e políticas de senha. Legível apenas por root. /etc/passwd era o arquivo original, mas ficava legível por todos — o shadow foi criado para separar dados públicos (nome, UID, shell) dos sensíveis (senha).",
+        },
+        {
+          question: "O comando usermod -G docker joao (sem -a) resulta em:",
+          options: [
+            "Joao adicionado ao grupo docker",
+            "Joao removido do grupo docker",
+            'Grupos suplementares de joao substituídos por apenas "docker"',
+            "Erro: use -aG",
+          ],
+          correct: 2,
+          explanation:
+            "-G sem -a SUBSTITUI todos os grupos suplementares. Se joao estava em sudo, adm, docker: após usermod -G docker joao, ele fica APENAS em docker. Sempre use -aG para adicionar sem remover.",
+        },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initFlashcards(flashcards, "usuarios");
+        initQuiz(window._quizData_usuarios, "usuarios");
+      });
+    </script>
+  </body>
+</html>

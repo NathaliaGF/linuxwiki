@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LinuxWiki — aprenda Linux com profundidade: conceitos, comandos reais, troubleshooting, flashcards SM-2 e prática no browser."
+    />
+    <meta name="theme-color" content="#08090b" />
+    <meta property="og:title" content="LinuxWiki — Aprenda Linux de Verdade" />
+    <meta
+      property="og:description"
+      content="Do kernel ao troubleshooting real: uma wiki educacional premium, gratuita e open-source."
+    />
+    <title>LinuxWiki — Aprenda Linux de Verdade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">&gt;_</span>
+          <span>LinuxWiki</span>
+        </a>
+        <nav class="header-nav">
+          <a href="#modulos">Módulos</a>
+          <a href="#ferramentas">Ferramentas</a>
+          <a href="#progresso">Progresso</a>
+        </nav>
+        <button class="btn-install-pwa" title="Instalar app offline">
+          Instalar PWA
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero-shell">
+        <div class="container hero-shell-inner">
+          <div class="hero-copy">
+            <p class="eyebrow">// WIKI GRATUITA &amp; OPEN-SOURCE</p>
+            <h1 class="hero-title">
+              Aprenda<br />Linux<br /><span class="muted">de verdade.</span>
+            </h1>
+            <p class="hero-subtitle">
+              Entenda o porquê antes do o quê. Do kernel ao shell script, com
+              analogias do mundo real e labs que funcionam no browser.
+            </p>
+            <div class="hero-actions">
+              <a href="pages/filosofia.html" class="btn-primary"
+                >Começar agora →</a
+              >
+              <a href="#modulos" class="btn-secondary">Ver módulos</a>
+            </div>
+            <div class="hero-stats" aria-label="Estatísticas do projeto">
+              <div class="hero-stat">
+                <span class="hero-stat-number">10</span>
+                <span class="hero-stat-label">Módulos</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-number">60+</span>
+                <span class="hero-stat-label">Flashcards SM-2</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-number">50+</span>
+                <span class="hero-stat-label">Questões</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-number">PWA</span>
+                <span class="hero-stat-label">Offline</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-terminal-panel" aria-hidden="true">
+            <div class="hero-terminal">
+              <div class="hero-terminal-topbar">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="hero-terminal-name">bash — linuxwiki</span>
+              </div>
+              <div class="hero-terminal-body">
+                <div class="hero-line">
+                  <span class="hero-prompt">root@lab</span
+                  ><span class="hero-path">:/</span>
+                  <span class="hero-cmd">ls -la /etc</span>
+                </div>
+                <div class="hero-out">drwxr-xr-x 2 root root 4096 cron.d</div>
+                <div class="hero-out">
+                  drwxr-xr-x 92 root root 12288 systemd
+                </div>
+                <div class="hero-out">-rw-r--r-- 1 root root 296 hosts</div>
+                <div class="hero-line">
+                  <span class="hero-prompt">user@lab</span
+                  ><span class="hero-path">:~/scripts</span>
+                  <span class="hero-cmd">chmod 755 script.sh</span>
+                </div>
+                <div class="hero-line">
+                  <span class="hero-prompt">user@lab</span
+                  ><span class="hero-path">:~/scripts</span>
+                  <span class="hero-cmd">./script.sh</span>
+                </div>
+                <div class="hero-out success">[ok] backup finalizado</div>
+                <div class="hero-out info">logs em /var/log/linuxwiki.log</div>
+                <div class="hero-line">
+                  <span class="hero-prompt">user@lab</span
+                  ><span class="hero-path">:~</span>
+                  <span class="hero-cursor"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="container">
+        <section class="section-block modules-showcase" id="modulos">
+          <div class="section-heading">
+            <p class="section-kicker">// MÓDULOS — SIGA A ORDEM</p>
+            <h2 class="section-title">
+              Base forte primeiro. Infra real depois.
+            </h2>
+            <p class="section-subtitle">
+              A trilha começa pelo modelo mental do sistema e avança até
+              operação, logs, disco e troubleshooting de produção.
+            </p>
+          </div>
+
+          <div class="modules-grid">
+            <a
+              href="pages/filosofia.html"
+              class="module-card module-card-featured"
+              data-module-id="filosofia"
+            >
+              <span class="module-card-number">01</span>
+              <span class="module-card-emoji">🐧</span>
+              <div class="module-card-title">Filosofia Linux</div>
+              <div class="module-card-desc">
+                Kernel, distro, shell e open-source. O mapa mental que faz o
+                resto deixar de parecer arbitrário.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/filesystem.html"
+              class="module-card module-card-featured"
+              data-module-id="filesystem"
+            >
+              <span class="module-card-number">02</span>
+              <span class="module-card-emoji">🗂</span>
+              <div class="module-card-title">Filesystem</div>
+              <div class="module-card-desc">
+                Tudo é arquivo, árvore de diretórios, inodes, links e o terreno
+                onde o Linux realmente vive.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/permissoes.html"
+              class="module-card module-card-featured"
+              data-module-id="permissoes"
+            >
+              <span class="module-card-number">03</span>
+              <span class="module-card-emoji">🔐</span>
+              <div class="module-card-title">Permissões</div>
+              <div class="module-card-desc">
+                rwx, octal, ownership e os erros de acesso que todo iniciante
+                encontra cedo demais.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/processos.html"
+              class="module-card module-card-featured"
+              data-module-id="processos"
+            >
+              <span class="module-card-number">04</span>
+              <span class="module-card-emoji">⚙</span>
+              <div class="module-card-title">Processos</div>
+              <div class="module-card-desc">
+                PID, sinais, jobs, `/proc` e o que realmente acontece quando um
+                processo trava.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/shell.html"
+              class="module-card module-card-featured"
+              data-module-id="shell"
+            >
+              <span class="module-card-number">05</span>
+              <span class="module-card-emoji">&gt;_</span>
+              <div class="module-card-title">Shell</div>
+              <div class="module-card-desc">
+                Pipes, redirecionamentos, ambiente e prática guiada em terminal
+                direto no browser.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+            <a
+              href="pages/systemctl.html"
+              class="module-card"
+              data-module-id="systemctl"
+            >
+              <span class="module-card-number">06</span>
+              <span class="module-card-emoji">🧩</span>
+              <div class="module-card-title">Serviços com systemctl</div>
+              <div class="module-card-desc">
+                Units, enable, restart, status e leitura prática do ciclo de
+                vida de serviços Linux.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a href="pages/logs.html" class="module-card" data-module-id="logs">
+              <span class="module-card-number">07</span>
+              <span class="module-card-emoji">📝</span>
+              <div class="module-card-title">
+                Logs com journalctl e /var/log
+              </div>
+              <div class="module-card-desc">
+                Onde olhar primeiro, como filtrar evidência e como não se perder
+                em volume de log.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/rede-linux.html"
+              class="module-card"
+              data-module-id="rede-linux"
+            >
+              <span class="module-card-number">08</span>
+              <span class="module-card-emoji">🌐</span>
+              <div class="module-card-title">Rede no Linux</div>
+              <div class="module-card-desc">
+                `ip a`, `ss`, `ping`, `traceroute`, `dig` e o fluxo mental para
+                depurar conectividade.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/disco.html"
+              class="module-card"
+              data-module-id="disco"
+            >
+              <span class="module-card-number">09</span>
+              <span class="module-card-emoji">💽</span>
+              <div class="module-card-title">Disco</div>
+              <div class="module-card-desc">
+                `df`, `du`, `lsblk` e leitura objetiva de consumo, partições e
+                gargalos de storage.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+
+            <a
+              href="pages/troubleshooting.html"
+              class="module-card"
+              data-module-id="troubleshooting"
+            >
+              <span class="module-card-number">10</span>
+              <span class="module-card-emoji">🚑</span>
+              <div class="module-card-title">Troubleshooting Real</div>
+              <div class="module-card-desc">
+                Método para atacar incidentes: hipótese, evidência, escopo,
+                rollback e validação final.
+              </div>
+              <div class="module-card-footer">
+                <span class="module-card-status">Não iniciado</span>
+              </div>
+              <div class="module-card-progress">
+                <div class="fill"></div>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="section-block tools-section" id="ferramentas">
+          <div class="section-heading">
+            <p class="section-kicker">// FERRAMENTAS</p>
+            <h2 class="section-title">Menos brinquedo. Mais prática.</h2>
+          </div>
+          <div class="tools-grid tools-grid-featured">
+            <a href="pages/revisao.html" class="tool-card tool-card-featured">
+              <div class="tool-card-icon-wrap">
+                <span class="tool-card-icon">🃏</span>
+              </div>
+              <div class="tool-card-title">Revisão</div>
+              <div class="tool-card-desc">
+                Fila SM-2 consolidada, temas fracos e histórico recente para
+                manter ritmo sem improviso.
+              </div>
+            </a>
+            <a href="pages/simulado.html" class="tool-card tool-card-featured">
+              <div class="tool-card-icon-wrap">
+                <span class="tool-card-icon">📝</span>
+              </div>
+              <div class="tool-card-title">Simulado</div>
+              <div class="tool-card-desc">
+                30 questões cronometradas com breakdown por módulo para
+                localizar lacunas antes da revisão final.
+              </div>
+            </a>
+            <a
+              href="pages/exercicios.html"
+              class="tool-card tool-card-featured"
+            >
+              <div class="tool-card-icon-wrap">
+                <span class="tool-card-icon">⚒</span>
+              </div>
+              <div class="tool-card-title">Exercícios</div>
+              <div class="tool-card-desc">
+                Cenários de operação real para praticar decisão, sequência de
+                comandos e leitura de sintomas.
+              </div>
+            </a>
+            <a href="pages/resumos.html" class="tool-card tool-card-featured">
+              <div class="tool-card-icon-wrap">
+                <span class="tool-card-icon">⌘</span>
+              </div>
+              <div class="tool-card-title">Cheat Sheets</div>
+              <div class="tool-card-desc">
+                Referência rápida e imprimível para filesystem, permissões,
+                shell, rede e administração diária.
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="section-block" id="progresso">
+          <div class="section-heading">
+            <p class="section-kicker">// PROGRESSO</p>
+            <h2 class="section-title">Seu ritmo, sua trilha.</h2>
+          </div>
+          <div class="progress-section">
+            <div class="progress-overall">
+              <div class="progress-label">
+                <span>Progresso geral</span>
+                <span id="overall-progress-pct">0%</span>
+              </div>
+              <div class="progress-bar" id="overall-progress">
+                <div class="fill"></div>
+              </div>
+            </div>
+            <div class="progress-actions">
+              <button class="btn-ghost" id="btn-export">
+                Exportar progresso
+              </button>
+              <button class="btn-ghost danger" id="btn-reset">
+                Resetar progresso
+              </button>
+            </div>
+            <div class="study-history">
+              <div class="history-title">Histórico recente</div>
+              <div id="study-history-list"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <div class="footer-links">
+          <a href="pages/rede-linux.html">Também estuda redes? → RedesWiki ↗</a>
+        </div>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="data/modules/index.js"></script>
+    <script src="scripts/catalog.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/progress.js"></script>
+    <script src="scripts/flashcards.js"></script>
+    <script src="scripts/quiz.js"></script>
+    <script src="scripts/terminal.js"></script>
+    <script src="scripts/pwa.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

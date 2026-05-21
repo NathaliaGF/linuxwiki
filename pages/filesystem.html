@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda a estrutura de diretórios do Linux, o princípio 'tudo é arquivo', inodes, hard links e symbolic links."
+    />
+    <title>Módulo 02 — Sistema de Arquivos | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="filesystem">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <!-- CABEÇALHO DO MÓDULO -->
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 02</span>
+          <h1 class="module-page-title">Sistema de Arquivos Linux</h1>
+          <p class="module-intro">
+            Domine a estrutura de diretórios do Linux, entenda por que "tudo é
+            arquivo", e aprenda o que é um inode, hard link e symbolic link —
+            conceitos que aparecem em todo trabalho de infraestrutura.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 20 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 5 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
+        <section class="content-section" id="tudo-e-arquivo">
+          <div class="section-header">
+            <h2>O princípio: Tudo é Arquivo</h2>
+            <button class="mark-studied" data-section="tudo-e-arquivo">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              <strong>"Tudo é arquivo"</strong> é a filosofia central do
+              Unix/Linux. Não é apenas um slogan — é uma decisão de design que
+              torna o sistema radicalmente consistente.
+            </p>
+            <p>No Linux, os seguintes itens são representados como arquivos:</p>
+            <ul>
+              <li>
+                <strong>Arquivos comuns</strong> — texto, binários, imagens
+              </li>
+              <li>
+                <strong>Diretórios</strong> — arquivos especiais que listam
+                outros arquivos
+              </li>
+              <li>
+                <strong>Dispositivos de hardware</strong> —
+                <code>/dev/sda</code> (disco), <code>/dev/tty</code> (terminal)
+              </li>
+              <li>
+                <strong>Processos</strong> — <code>/proc/1234/</code> representa
+                o processo PID 1234
+              </li>
+              <li>
+                <strong>Sockets de rede</strong> e <strong>pipes</strong> —
+                mecanismos de comunicação entre processos
+              </li>
+              <li>
+                <strong>Pseudodispositivos</strong> — <code>/dev/null</code>,
+                <code>/dev/zero</code>, <code>/dev/random</code>
+              </li>
+            </ul>
+            <p>
+              Isso significa que as mesmas ferramentas que operam em arquivos
+              (<code>cat</code>, <code>read()</code>, <code>write()</code>)
+              operam igualmente em dispositivos e processos. Você pode ler
+              informações da CPU com <code>cat /proc/cpuinfo</code> como se
+              fosse um simples arquivo de texto.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Tudo é arquivo — na prática:
+
+# Ler informações da CPU como se fosse um arquivo de texto
+cat /proc/cpuinfo | head -20
+
+# Descartar output enviando para /dev/null
+comando_ruidoso > /dev/null 2>&1
+
+# Gerar zeros infinitos (útil para apagar discos)
+dd if=/dev/zero of=/dev/sdb bs=1M count=100
+
+# Ver o tipo real de cada "arquivo" em /dev
+file /dev/sda    # block special (dispositivo de bloco)
+file /dev/null   # character special (dispositivo de caractere)
+file /dev/tty    # character special
+
+# Listar o que está dentro do "diretório" de um processo
+ls -la /proc/1   # processo init/systemd</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                Hardware, processos, pipes e sockets são todos acessíveis como
+                arquivos
+              </li>
+              <li>Isso torna o sistema previsível: uma interface para tudo</li>
+              <li>
+                <code>/dev/null</code> descarta qualquer dado escrito nele
+              </li>
+              <li>
+                <code>/proc</code> expõe estado do kernel e processos em tempo
+                real
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2 -->
+        <section class="content-section" id="arvore-diretorios">
+          <div class="section-header">
+            <h2>A Árvore de Diretórios</h2>
+            <button class="mark-studied" data-section="arvore-diretorios">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              No Linux há <strong>uma única árvore de diretórios</strong>, com
+              raiz em <code>/</code>. Diferente do Windows com <code>C:\</code>,
+              <code>D:\</code>, aqui tudo parte do mesmo ponto. Dispositivos
+              externos são "montados" dentro dessa árvore.
+            </p>
+            <p>Os diretórios principais que você deve conhecer:</p>
+            <ul>
+              <li>
+                <strong><code>/</code></strong> — raiz de tudo. O início da
+                árvore.
+              </li>
+              <li>
+                <strong><code>/etc</code></strong> — arquivos de configuração do
+                sistema. <code>/etc/passwd</code>, <code>/etc/fstab</code>,
+                <code>/etc/ssh/sshd_config</code>.
+              </li>
+              <li>
+                <strong><code>/var</code></strong> — dados variáveis: logs
+                (<code>/var/log</code>), spools, bases de dados de pacotes.
+              </li>
+              <li>
+                <strong><code>/home</code></strong> — diretórios dos usuários.
+                <code>/home/joao</code>, <code>/home/maria</code>.
+              </li>
+              <li>
+                <strong><code>/root</code></strong> — diretório home do usuário
+                root (não fica dentro de /home).
+              </li>
+              <li>
+                <strong><code>/tmp</code></strong> — arquivos temporários,
+                apagados no boot ou periodicamente.
+              </li>
+              <li>
+                <strong><code>/usr</code></strong> — programas e dados do
+                usuário. <code>/usr/bin</code> (executáveis),
+                <code>/usr/lib</code> (bibliotecas),
+                <code>/usr/share</code> (dados compartilhados).
+              </li>
+              <li>
+                <strong><code>/bin</code> e <code>/usr/bin</code></strong> —
+                executáveis essenciais. Em distros modernas, <code>/bin</code> é
+                um symlink para <code>/usr/bin</code>.
+              </li>
+              <li>
+                <strong><code>/sbin</code> e <code>/usr/sbin</code></strong> —
+                executáveis do sistema (tipicamente requerem root):
+                <code>fdisk</code>, <code>iptables</code>, <code>reboot</code>.
+              </li>
+              <li>
+                <strong><code>/lib</code> e <code>/usr/lib</code></strong> —
+                bibliotecas compartilhadas (<code>.so</code> files — o
+                equivalente de <code>.dll</code> no Windows).
+              </li>
+              <li>
+                <strong><code>/mnt</code> e <code>/media</code></strong> —
+                pontos de montagem para dispositivos externos (pendrives, HDs
+                externos).
+              </li>
+              <li>
+                <strong><code>/opt</code></strong> — softwares opcionais
+                instalados manualmente, fora do gerenciador de pacotes.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Listar a raiz com permissões e tamanhos
+ls -la /
+
+# Output típico:
+drwxr-xr-x  19 root root  4096 Mai 20 10:00 .
+drwxr-xr-x  19 root root  4096 Mai 20 10:00 ..
+lrwxrwxrwx   1 root root     7 Jan  1  2024 bin -> usr/bin
+drwxr-xr-x   4 root root  4096 Mai 15 08:30 boot
+drwxr-xr-x  20 root root  4760 Mai 20 09:55 dev
+drwxr-xr-x 130 root root 12288 Mai 20 09:58 etc
+drwxr-xr-x   3 root root  4096 Fev 10 14:20 home
+lrwxrwxrwx   1 root root     7 Jan  1  2024 lib -> usr/lib
+drwxr-xr-x   2 root root  4096 Jan  1  2024 mnt
+drwxr-xr-x   3 root root  4096 Mar  5 11:00 opt
+dr-xr-xr-x 348 root root     0 Mai 20 07:00 proc
+drwx------   6 root root  4096 Mai 18 16:45 root
+drwxr-xr-x  30 root root   940 Mai 20 09:55 run
+lrwxrwxrwx   1 root root     8 Jan  1  2024 sbin -> usr/sbin
+drwxrwxrwt  24 root root  4096 Mai 20 11:20 tmp
+drwxr-xr-x  12 root root  4096 Mai 10 09:00 usr
+drwxr-xr-x  13 root root  4096 Mai 10 09:00 var
+
+# Note: bin e lib são symlinks para usr/bin e usr/lib
+# Isso é o FHS moderno (distros como Ubuntu 20.04+)
+
+# Encontrar logs modificados nos últimos 7 dias
+find /var/log -name "*.log" -mtime -7</code></pre>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>Confundir /root com /"</strong> — <code>/root</code> é o
+              diretório home do usuário root. <code>/</code> (root do
+              filesystem) é a raiz de toda a árvore. São coisas diferentes.
+            </p>
+            <p>
+              <strong>Salvar arquivos de configuração em /tmp</strong> —
+              <code>/tmp</code> é apagado no boot. Qualquer configuração salva
+              lá some ao reiniciar.
+            </p>
+            <p>
+              <strong>Instalar software manualmente em /usr/bin</strong> —
+              software instalado manualmente vai em
+              <code>/usr/local/bin</code> ou <code>/opt</code>. Isso evita
+              conflito com o gerenciador de pacotes.
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section class="content-section" id="diretorios-especiais">
+          <div class="section-header">
+            <h2>Diretórios Especiais: /proc, /dev, /sys</h2>
+            <button class="mark-studied" data-section="diretorios-especiais">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Estes três diretórios são
+              <strong>sistemas de arquivos virtuais</strong> — não existem no
+              disco. O kernel os cria na memória RAM e os expõe como se fossem
+              diretórios comuns.
+            </p>
+            <p>
+              <strong><code>/proc</code></strong> — expõe informações sobre
+              processos e o estado do kernel:
+            </p>
+            <ul>
+              <li>
+                <code>/proc/cpuinfo</code> — modelo, velocidade e cores da CPU
+              </li>
+              <li><code>/proc/meminfo</code> — uso de memória RAM</li>
+              <li>
+                <code>/proc/1234/</code> — tudo sobre o processo com PID 1234
+              </li>
+              <li>
+                <code>/proc/1234/cmdline</code> — comando que iniciou o processo
+              </li>
+              <li>
+                <code>/proc/1234/fd/</code> — file descriptors abertos pelo
+                processo
+              </li>
+              <li><code>/proc/net/</code> — informações de rede</li>
+            </ul>
+            <p>
+              <strong><code>/dev</code></strong> — arquivos de dispositivo. Cada
+              dispositivo de hardware tem um arquivo aqui:
+            </p>
+            <ul>
+              <li><code>/dev/sda</code> — primeiro disco SATA/SCSI</li>
+              <li><code>/dev/sda1</code> — primeira partição desse disco</li>
+              <li><code>/dev/nvme0n1</code> — disco NVMe</li>
+              <li>
+                <code>/dev/null</code> — buraco negro (dados escritos aqui
+                somem)
+              </li>
+              <li><code>/dev/zero</code> — fonte infinita de zeros</li>
+              <li>
+                <code>/dev/random</code> e <code>/dev/urandom</code> — fontes de
+                dados aleatórios
+              </li>
+              <li><code>/dev/tty</code> — terminal atual</li>
+            </ul>
+            <p>
+              <strong><code>/sys</code></strong> — similar ao /proc, expõe
+              informações de hardware e drivers com uma estrutura mais
+              organizada. Usado para configurar drivers e ver informações de
+              dispositivos.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Informações da CPU (lendo um "arquivo" na memória)
+cat /proc/cpuinfo | head -20
+# processor : 0
+# model name: Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+# cpu MHz   : 2800.000
+# cache size: 12288 KB
+# ...
+
+# Uso de memória em tempo real
+cat /proc/meminfo
+# MemTotal:       16384000 kB
+# MemFree:         3201024 kB
+# MemAvailable:    8547328 kB
+
+# Ver file descriptors abertos pelo processo bash (PID=$$)
+ls -la /proc/$$/fd
+
+# Gerar arquivo de 1MB com zeros
+dd if=/dev/zero of=/tmp/teste.bin bs=1M count=1
+
+# Ver tipo de arquivo do dispositivo de disco
+file /dev/sda
+# /dev/sda: block special (8/0)
+
+# Ver informações de hardware via /sys
+cat /sys/class/net/eth0/speed  # velocidade da interface de rede</code></pre>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4 -->
+        <section class="content-section" id="inodes">
+          <div class="section-header">
+            <h2>Inodes: o que é um arquivo por dentro</h2>
+            <button class="mark-studied" data-section="inodes">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Um <strong>inode</strong> (index node) é uma estrutura de dados
+              que o sistema de arquivos mantém para cada arquivo. Ele armazena
+              todos os metadados do arquivo, <em>exceto o nome</em>:
+            </p>
+            <ul>
+              <li>
+                <strong>Número do inode</strong> — identificador único dentro do
+                sistema de arquivos
+              </li>
+              <li><strong>Permissões</strong> — rwxrwxrwx e tipo de arquivo</li>
+              <li><strong>Dono (UID) e Grupo (GID)</strong></li>
+              <li><strong>Tamanho em bytes</strong></li>
+              <li>
+                <strong>Timestamps</strong>: atime (último acesso), mtime
+                (última modificação do conteúdo), ctime (última mudança de
+                metadados)
+              </li>
+              <li>
+                <strong>Número de hard links</strong> apontando para este inode
+              </li>
+              <li><strong>Ponteiros para blocos de dados</strong> no disco</li>
+            </ul>
+            <p>
+              O <strong>nome do arquivo NÃO está no inode</strong> — ele fica no
+              diretório. Um diretório é essencialmente uma tabela que mapeia
+              nomes de arquivos para números de inode. É por isso que você pode
+              ter vários nomes diferentes apontando para o mesmo arquivo.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Ver todas as informações do inode de um arquivo
+stat arquivo.txt
+
+# Output:
+#   File: arquivo.txt
+#   Size: 4096            Blocks: 8          IO Block: 4096
+# Device: 8,1    Inode: 1234567     Links: 1
+# Access: (0644/-rw-r--r--)  Uid: (1000/   joao)   Gid: (1000/  devs)
+# Access: 2026-05-20 10:00:00.000 +0000   ← atime
+# Modify: 2026-05-19 14:30:00.000 +0000   ← mtime
+# Change: 2026-05-19 14:30:00.000 +0000   ← ctime
+
+# Ver o número do inode na listagem
+ls -lai /etc/passwd
+# 655361 -rw-r--r-- 1 root root 2847 Mai 20 10:00 /etc/passwd
+# ↑ número do inode
+
+# Ver uso de inodes no sistema de arquivos
+df -i
+# Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+# /dev/sda1      6553600 234871 6318729    4% /</code></pre>
+          </div>
+
+          <div class="card card-analogy">
+            <span class="card-label">💡 Analogia — Ficha de biblioteca</span>
+            <p>
+              Pense no inode como uma ficha de biblioteca. A ficha contém todas
+              as informações do livro: autor, páginas, data de aquisição,
+              localização na estante (blocos no disco). O título do livro (nome
+              do arquivo) fica no catálogo (diretório), que aponta para a ficha.
+              Você pode colocar o mesmo livro em múltiplos catálogos com nomes
+              diferentes — é isso que são os hard links.
+            </p>
+          </div>
+
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Erros comuns</span>
+            <p>
+              <strong>"Copiar um arquivo cria um inode novo"</strong> — sim,
+              <code>cp</code> cria um inode e blocos de dados novos. Mas
+              <code>mv</code> dentro do mesmo sistema de arquivos apenas
+              renomeia a entrada no diretório — o inode não muda.
+            </p>
+            <p>
+              <strong>"Discos grandes nunca ficam sem inodes"</strong> — errado.
+              Um disco pode ter espaço livre mas estar sem inodes disponíveis,
+              impossibilitando criar novos arquivos. Acontece quando há milhões
+              de arquivos pequenos (ex: cache de email, npm modules).
+            </p>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 5 -->
+        <section class="content-section" id="links">
+          <div class="section-header">
+            <h2>Hard Links e Symbolic Links</h2>
+            <button class="mark-studied" data-section="links">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Existem dois tipos de links no Linux, com comportamentos muito
+              diferentes:
+            </p>
+            <p>
+              <strong>Hard Link</strong> — outro nome para o
+              <em>mesmo inode</em>. Ambos os nomes apontam diretamente para os
+              mesmos blocos de dados no disco. O inode mantém um contador de
+              hard links. O dado só é removido do disco quando esse contador
+              chega a zero (todos os hard links foram deletados). Limitações:
+              não pode cruzar sistemas de arquivos, não pode apontar para
+              diretórios.
+            </p>
+            <p>
+              <strong>Symbolic Link (symlink)</strong> — arquivo especial que
+              contém um caminho para outro arquivo. Similar a um atalho no
+              Windows. O symlink tem seu próprio inode. Se o arquivo original
+              for deletado, o symlink fica "quebrado" (dangling link). Pode
+              cruzar sistemas de arquivos e apontar para diretórios.
+            </p>
+          </div>
+
+          <div class="card card-example">
+            <span class="card-label">🔍 Exemplo Concreto</span>
+            <pre><code># Criar um hard link
+ln arquivo.txt hard_link.txt
+
+# Verificar: ambos têm o mesmo inode
+ls -lai arquivo.txt hard_link.txt
+# 1234567 -rw-r--r-- 2 joao devs 1024 ... arquivo.txt
+# 1234567 -rw-r--r-- 2 joao devs 1024 ... hard_link.txt
+# ↑ mesmo inode!       ↑ link count = 2
+
+# Deletar o original não afeta o hard link
+rm arquivo.txt
+cat hard_link.txt   # ainda funciona!
+
+# ---
+
+# Criar um symbolic link
+ln -s /caminho/para/original /caminho/para/symlink
+
+# Exemplo prático: link para versão atual do python
+ln -s /usr/bin/python3.12 /usr/local/bin/python
+
+# Ver para onde o symlink aponta
+ls -la /usr/bin/python
+# lrwxrwxrwx 1 root root 16 ... /usr/bin/python -> python3.12
+
+# Resolver o caminho real de um symlink
+readlink -f /usr/bin/python
+# /usr/bin/python3.12
+
+# Symlinks quebrados (dangling links)
+ln -s /arquivo/que/nao/existe meu_link
+ls -la meu_link   # aparece em vermelho — link quebrado</code></pre>
+          </div>
+
+          <div class="card card-summary">
+            <span class="card-label">⚡ O que você precisa guardar</span>
+            <ul>
+              <li>
+                <strong>Hard link:</strong> mesmo inode, dados sobrevivem
+                enquanto houver ao menos um link
+              </li>
+              <li>
+                <strong>Symlink:</strong> arquivo separado com caminho — quebra
+                se o destino some
+              </li>
+              <li>
+                Symlinks aparecem com <code>l</code> no <code>ls -la</code> e
+                têm permissão <code>lrwxrwxrwx</code>
+              </li>
+              <li>Hard links não cruzam sistemas de arquivos — symlinks sim</li>
+              <li>
+                <code>readlink -f</code> resolve a cadeia completa de symlinks
+                até o arquivo real
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="flashcards-section">
+          <h2>🃏 Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="quiz-section">
+          <h2>📝 Quiz — Módulo 02</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="module-nav">
+          <a href="filosofia.html" class="module-nav-link prev">← Anterior</a>
+          <a href="permissoes.html" class="module-nav-link next">Próximo →</a>
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aprenda troubleshooting real em Linux: método, escopo, evidência, rollback e resolução de incidentes comuns."
+    />
+    <title>Módulo 10 — Troubleshooting Real | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body data-module="troubleshooting">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"
+          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
+        >
+        <nav class="header-nav">
+          <a href="../index.html#modulos" class="back-link">← Módulos</a>
+          <button class="btn-install-pwa">Instalar PWA</button>
+        </nav>
+      </div>
+    </header>
+    <div class="module-progress-bar"><div class="fill"></div></div>
+
+    <main id="main" class="module-page">
+      <div class="container--narrow">
+        <div class="module-header">
+          <span class="module-number-badge">Módulo 10</span>
+          <h1 class="module-page-title">Troubleshooting Real</h1>
+          <p class="module-intro">
+            Aqui tudo converge. O objetivo não é decorar comandos isolados, mas
+            aprender a investigar sintomas, construir hipóteses, validar
+            evidência e corrigir com o menor risco possível.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">⏱ 20 min de leitura</span>
+            <span class="module-meta-item">🃏 6 flashcards</span>
+            <span class="module-meta-item">📝 6 questões</span>
+            <span class="progress-display"
+              >Progresso: <strong id="progress-pct">0%</strong></span
+            >
+          </div>
+        </div>
+
+        <section class="content-section" id="metodo">
+          <div class="section-header">
+            <h2>O método: sintoma → hipótese → evidência</h2>
+            <button class="mark-studied" data-section="metodo">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Bom troubleshooting não começa com comando. Começa com definição
+              de sintoma: o quê falhou, desde quando, para quem e com qual
+              impacto. A partir disso, você constrói hipóteses e procura
+              evidência para confirmar ou descartar cada uma.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Fluxo mínimo</span>
+            <ul>
+              <li>Defina o sintoma com precisão.</li>
+              <li>Restrinja escopo: um host, um serviço, todos os usuários?</li>
+              <li>Colete evidência antes de alterar tudo.</li>
+              <li>Faça uma mudança por vez e valide.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="content-section" id="primeiros-comandos">
+          <div class="section-header">
+            <h2>Primeiros comandos que quase sempre ajudam</h2>
+            <button class="mark-studied" data-section="primeiros-comandos">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Caixa de ferramentas</span>
+            <pre><code>uptime
+free -h
+df -h
+ip a
+ss -tulpn
+ps aux --sort=-%mem | head
+systemctl --failed
+journalctl -xe --no-pager</code></pre>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Esses comandos respondem rápido se o problema é carga, memória,
+              disco, rede, processos ou serviço falho. Não resolvem sozinhos,
+              mas orientam a próxima pergunta técnica.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="cenarios">
+          <div class="section-header">
+            <h2>Cenários reais</h2>
+            <button class="mark-studied" data-section="cenarios">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Cenário 1 — Site fora do ar</span>
+            <pre><code>systemctl status nginx
+journalctl -u nginx -n 50 --no-pager
+ss -tulpn | grep ':80'
+curl -I http://127.0.0.1</code></pre>
+            <p>
+              Objetivo: diferenciar se o problema é serviço parado, porta
+              ocupada, config inválida ou aplicação upstream quebrada.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Cenário 2 — SSH não conecta</span>
+            <pre><code>systemctl status ssh
+ss -tulpn | grep ':22'
+ip a
+ping gateway
+journalctl -u ssh -n 50 --no-pager</code></pre>
+            <p>
+              Objetivo: separar problema de serviço, firewall, rede ou
+              credencial.
+            </p>
+          </div>
+          <div class="card card-example">
+            <span class="card-label">🔍 Cenário 3 — Disco lotado</span>
+            <pre><code>df -h
+df -i
+du -sh /var/*
+journalctl --disk-usage</code></pre>
+            <p>
+              Objetivo: localizar rapidamente partição, tipo de exaustão e maior
+              consumidor.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="erros-comuns">
+          <div class="section-header">
+            <h2>Erros comuns de quem está começando</h2>
+            <button class="mark-studied" data-section="erros-comuns">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-warning">
+            <span class="card-label">⚠️ Armadilhas</span>
+            <p>
+              <strong>Reiniciar tudo cedo demais</strong>: às vezes isso apaga
+              evidência. Logs e estado do processo podem se perder.
+            </p>
+            <p>
+              <strong>Mudar várias coisas ao mesmo tempo</strong>: quando
+              melhora, você não sabe o que realmente resolveu. Quando piora, não
+              sabe o que desfez.
+            </p>
+            <p>
+              <strong>Parar no sintoma superficial</strong>: "o site caiu" não é
+              causa, é efeito. A causa pode ser disco, DNS, porta, serviço ou
+              permissão.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section" id="rollback-validacao">
+          <div class="section-header">
+            <h2>Rollback e validação final</h2>
+            <button class="mark-studied" data-section="rollback-validacao">
+              ☆ Marcar como estudado
+            </button>
+          </div>
+          <div class="card card-explanation">
+            <span class="card-label">📖 Explicação</span>
+            <p>
+              Resolver não basta. Você precisa provar que resolveu. Valide pelo
+              mesmo sintoma que abriu o incidente: requisição voltou? login
+              funciona? uso de disco caiu? Além disso, tenha sempre uma forma de
+              voltar atrás se a mudança piorar o estado.
+            </p>
+          </div>
+          <div class="card card-summary">
+            <span class="card-label">⚡ Fechamento correto</span>
+            <ul>
+              <li>Confirme que o sintoma sumiu para o usuário.</li>
+              <li>Registre causa raiz e correção.</li>
+              <li>Anote como detectar isso mais cedo da próxima vez.</li>
+              <li>Se possível, automatize verificação ou monitoração.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="flashcards-section">
+          <h2>Flashcards</h2>
+          <div id="flashcard-widget"></div>
+        </section>
+
+        <section class="quiz-section">
+          <h2>Quiz</h2>
+          <div id="quiz-widget"></div>
+        </section>
+
+        <nav class="module-nav">
+          <a href="disco.html" class="module-nav-link prev"
+            >← Módulo Anterior</a
+          >
+          <a href="simulado.html" class="module-nav-link next"
+            >Fazer o Simulado Geral →</a
+          >
+        </nav>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>
