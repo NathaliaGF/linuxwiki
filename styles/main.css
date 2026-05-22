@@ -584,7 +584,11 @@ kbd {
   margin-bottom: 0;
 }
 
-.hero-line,
+.hero-line {
+  white-space: normal;
+  word-break: break-word;
+}
+
 .t-line {
   white-space: pre-wrap;
   word-break: break-word;

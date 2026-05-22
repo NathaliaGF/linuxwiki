@@ -90,33 +90,21 @@
                 <span class="hero-terminal-name">bash — linuxwiki</span>
               </div>
               <div class="hero-terminal-body">
-                <div class="hero-line">
-                  <span class="hero-prompt">root@lab</span
-                  ><span class="hero-path">:/</span>
-                  <span class="hero-cmd">ls -la /etc</span>
+                <div class="hero-cmd-group">
+                  <div class="hero-line"><span class="hero-prompt">root@lab</span><span class="hero-path">:/</span><span class="hero-dollar"> $</span><span class="hero-cmd"> ls -la /etc</span></div>
+                  <div class="hero-out t-dir">drwxr-xr-x  2 root  cron.d</div>
+                  <div class="hero-out t-dir">drwxr-xr-x 92 root  systemd</div>
+                  <div class="hero-out">-rw-r--r--  1 root  hosts</div>
                 </div>
-                <div class="hero-out">drwxr-xr-x 2 root root 4096 cron.d</div>
-                <div class="hero-out">
-                  drwxr-xr-x 92 root root 12288 systemd
+                <div class="hero-cmd-group">
+                  <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~/scripts</span><span class="hero-dollar"> $</span><span class="hero-cmd"> chmod 755 script.sh</span></div>
                 </div>
-                <div class="hero-out">-rw-r--r-- 1 root root 296 hosts</div>
-                <div class="hero-line">
-                  <span class="hero-prompt">user@lab</span
-                  ><span class="hero-path">:~/scripts</span>
-                  <span class="hero-cmd">chmod 755 script.sh</span>
+                <div class="hero-cmd-group">
+                  <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~/scripts</span><span class="hero-dollar"> $</span><span class="hero-cmd"> ./script.sh</span></div>
+                  <div class="hero-out success">[ok] backup finalizado</div>
+                  <div class="hero-out">logs em /var/log/linuxwiki.log</div>
                 </div>
-                <div class="hero-line">
-                  <span class="hero-prompt">user@lab</span
-                  ><span class="hero-path">:~/scripts</span>
-                  <span class="hero-cmd">./script.sh</span>
-                </div>
-                <div class="hero-out success">[ok] backup finalizado</div>
-                <div class="hero-out info">logs em /var/log/linuxwiki.log</div>
-                <div class="hero-line">
-                  <span class="hero-prompt">user@lab</span
-                  ><span class="hero-path">:~</span>
-                  <span class="hero-cursor"></span>
-                </div>
+                <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~</span><span class="hero-dollar"> $</span><span class="hero-cursor"></span></div>
               </div>
             </div>
           </div>
