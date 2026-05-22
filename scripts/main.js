@@ -50,6 +50,47 @@
     }, 2500);
   }
 
+  function renderContinueBanner() {
+    const banner = document.getElementById('continue-banner');
+    if (!banner) return;
+
+    const data = Storage.get();
+    const positions = data.readingPositions || {};
+
+    let latestModuleId = null;
+    let latestTime = '';
+
+    for (const [moduleId, pos] of Object.entries(positions)) {
+      if (pos.updatedAt && pos.updatedAt > latestTime) {
+        latestTime = pos.updatedAt;
+        latestModuleId = moduleId;
+      }
+    }
+
+    if (!latestModuleId) return;
+
+    const progress = Progress.getModuleProgress(latestModuleId);
+    if (progress.percent >= 100) return;
+
+    const mod = Catalog.getModule(latestModuleId);
+    if (!mod) return;
+
+    const pos = positions[latestModuleId];
+    const href = mod.path + (pos.sectionId ? '#' + pos.sectionId : '');
+
+    banner.hidden = false;
+    banner.className = 'continue-banner';
+    banner.innerHTML = `
+      <div class="continue-banner-inner">
+        <div class="continue-banner-text">
+          <span class="continue-banner-label">// continuar estudando</span>
+          <strong class="continue-banner-module">${mod.title}</strong>
+          <span class="continue-banner-progress">${progress.percent}% concluído · ${progress.sections.length} seção(ões) marcadas</span>
+        </div>
+        <a href="${href}" class="continue-banner-btn">Retomar →</a>
+      </div>`;
+  }
+
   function renderStudyHistory() {
     const container = document.getElementById("study-history-list");
     if (!container) return;
@@ -73,6 +114,63 @@
       </div>`,
       )
       .join("");
+  }
+
+  function syncCompletionPanel(moduleId) {
+    const existing = document.getElementById('module-completion-panel');
+    const progress = Progress.getModuleProgress(moduleId);
+
+    if (progress.percent < 100) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
+
+    const { next } = getModuleSequence(moduleId);
+    const moduleData = Catalog.getModule(moduleId);
+    const quizScore = Storage.get().quizScores?.[moduleId];
+
+    let statsHtml = `
+      <div class="completion-stat">
+        <span class="completion-stat-value">${progress.sections.length}</span>
+        <span class="completion-stat-label">seções</span>
+      </div>`;
+
+    const fcCount = moduleData?.flashcards?.length || 0;
+    if (fcCount > 0) {
+      statsHtml += `
+      <div class="completion-stat">
+        <span class="completion-stat-value">${fcCount}</span>
+        <span class="completion-stat-label">flashcards</span>
+      </div>`;
+    }
+
+    if (quizScore) {
+      const pct = Math.round((quizScore.score / quizScore.total) * 100);
+      statsHtml += `
+      <div class="completion-stat">
+        <span class="completion-stat-value">${pct}%</span>
+        <span class="completion-stat-label">no quiz</span>
+      </div>`;
+    }
+
+    const nextHref = next ? next.path.replace('pages/', '') : '../index.html';
+    const nextLabel = next ? `Próximo: ${next.title} →` : 'Ver todos os módulos →';
+
+    const panel = document.createElement('div');
+    panel.id = 'module-completion-panel';
+    panel.className = 'module-completion-panel';
+    panel.setAttribute('role', 'status');
+    panel.setAttribute('aria-live', 'polite');
+    panel.innerHTML = `
+      <div class="completion-check" aria-hidden="true">✓</div>
+      <h3 class="completion-title">Módulo concluído!</h3>
+      <p class="completion-subtitle">Você marcou todas as seções. Bom trabalho.</p>
+      <div class="completion-stats">${statsHtml}</div>
+      <a href="${nextHref}" class="btn-primary">${nextLabel}</a>`;
+
+    const moduleNav = document.querySelector('.module-nav');
+    if (moduleNav) moduleNav.parentNode.insertBefore(panel, moduleNav);
   }
 
   function initMarkStudied(moduleId) {
@@ -110,6 +208,114 @@
 
     const progress = Progress.getModuleProgress(moduleId);
     Progress.updateUI(progress.percent);
+  }
+
+  function initHighlighting() {
+    const SHELL_KW = new Set([
+      'if', 'then', 'else', 'elif', 'fi', 'for', 'do', 'done', 'while',
+      'until', 'case', 'esac', 'in', 'function', 'return', 'exit', 'break',
+      'continue', 'local', 'export', 'source', 'readonly', 'declare', 'unset',
+      'shift', 'trap', 'sudo', 'chmod', 'chown', 'ls', 'mkdir', 'rm', 'cp',
+      'mv', 'grep', 'find', 'cat', 'echo', 'cd', 'pwd', 'ssh', 'git', 'curl',
+      'wget', 'tar', 'touch', 'sed', 'awk', 'sort', 'head', 'tail', 'wc',
+      'systemctl', 'journalctl', 'apt', 'apt-get', 'yum', 'dnf', 'pacman',
+      'df', 'du', 'ps', 'kill', 'killall', 'man', 'which', 'type', 'env',
+      'alias', 'history', 'jobs', 'fg', 'bg', 'nohup', 'chgrp', 'stat',
+      'ln', 'file', 'less', 'more', 'mount', 'umount', 'lsblk', 'fdisk',
+      'dd', 'rsync', 'useradd', 'usermod', 'userdel', 'groupadd', 'passwd',
+      'id', 'whoami', 'ping', 'netstat', 'ss', 'ip', 'ifconfig', 'hostname',
+      'dig', 'iptables', 'ufw', 'crontab', 'screen', 'tmux', 'vim', 'nano',
+      'vi', 'diff', 'patch', 'make', 'bash', 'sh', 'zsh', 'python', 'python3',
+      'node', 'npm', 'pip', 'set', 'unset', 'read', 'printf', 'test',
+    ]);
+
+    const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const wrap = (cls, val) => cls ? `<span class="${cls}">${esc(val)}</span>` : esc(val);
+
+    function tokenizeLine(line) {
+      let out = '';
+      let i = 0;
+      let isCmd = true;
+
+      while (i < line.length) {
+        if (/[ \t]/.test(line[i])) {
+          let j = i;
+          while (j < line.length && /[ \t]/.test(line[j])) j++;
+          out += esc(line.slice(i, j));
+          i = j;
+          continue;
+        }
+        if (line[i] === '#') { out += wrap('sh-cmt', line.slice(i)); break; }
+        if (line[i] === '"') {
+          let j = i + 1;
+          while (j < line.length) {
+            if (line[j] === '\\') { j += 2; continue; }
+            if (line[j] === '"') { j++; break; }
+            j++;
+          }
+          out += wrap('sh-str', line.slice(i, j)); i = j; isCmd = false; continue;
+        }
+        if (line[i] === "'") {
+          let j = i + 1;
+          while (j < line.length && line[j] !== "'") j++;
+          if (j < line.length) j++;
+          out += wrap('sh-str', line.slice(i, j)); i = j; isCmd = false; continue;
+        }
+        if (line[i] === '$') {
+          if (line[i + 1] === '{') {
+            let j = i + 2;
+            while (j < line.length && line[j] !== '}') j++;
+            if (j < line.length) j++;
+            out += wrap('sh-var', line.slice(i, j)); i = j;
+          } else {
+            let j = i + 1;
+            while (j < line.length && /[\w]/.test(line[j])) j++;
+            out += wrap('sh-var', line.slice(i, j || i + 2)); i = j || i + 2;
+          }
+          isCmd = false; continue;
+        }
+        if (line[i] === '-' && /[a-zA-Z-]/.test(line[i + 1] || '')) {
+          let j = i + 1;
+          while (j < line.length && /[\w-]/.test(line[j])) j++;
+          out += wrap('sh-flag', line.slice(i, j)); i = j; isCmd = false; continue;
+        }
+        if (line[i] === '/' && i > 0 && /[\w.~_-]/.test(line[i + 1] || '')) {
+          let j = i + 1;
+          while (j < line.length && /[^\s"'#|;&<>!()\[\]{}]/.test(line[j])) j++;
+          out += wrap('sh-path', line.slice(i, j)); i = j; isCmd = false; continue;
+        }
+        if (/[|;&><!()\[\]{}]/.test(line[i])) {
+          let val = line[i];
+          if (
+            (val === '|' && line[i + 1] === '|') || (val === '&' && line[i + 1] === '&') ||
+            (val === '>' && line[i + 1] === '>') || (val === '<' && line[i + 1] === '<')
+          ) val += line[i + 1];
+          out += wrap('sh-op', val);
+          i += val.length;
+          if (/[|;&]/.test(val[0])) isCmd = true;
+          continue;
+        }
+        if (/\S/.test(line[i])) {
+          let j = i;
+          while (j < line.length && /[^\s"'#|;&><!()\[\]{}]/.test(line[j])) j++;
+          const word = line.slice(i, j);
+          let cls = null;
+          if (/^\d+$/.test(word)) cls = 'sh-num';
+          else if (isCmd) cls = 'sh-cmd';
+          else if (SHELL_KW.has(word)) cls = 'sh-kw';
+          out += wrap(cls, word); i = j; isCmd = false; continue;
+        }
+        out += esc(line[i]); i++;
+      }
+      return out;
+    }
+
+    document.querySelectorAll('pre code, pre').forEach((el) => {
+      if (el.tagName === 'PRE' && el.querySelector('code')) return;
+      if (el.dataset.highlighted) return;
+      el.dataset.highlighted = '1';
+      el.innerHTML = el.textContent.split('\n').map(tokenizeLine).join('\n');
+    });
   }
 
   function initCopyButtons() {
@@ -246,6 +452,7 @@
         progressBadge.remove();
     });
 
+    renderContinueBanner();
     renderStudyHistory();
 
     const btnExport = document.getElementById("btn-export");
@@ -551,6 +758,11 @@
   function initModulePage(moduleId) {
     initMarkStudied(moduleId);
     initModuleLayout(moduleId);
+    syncCompletionPanel(moduleId);
+
+    document.addEventListener('linuxwiki:section-study-change', () => {
+      syncCompletionPanel(moduleId);
+    });
 
     const moduleData = Catalog.getModule(moduleId);
     if (!moduleData) return;
@@ -595,6 +807,7 @@
   global.initSimulado = (questions) => Quiz.initSimulado(questions);
 
   document.addEventListener("DOMContentLoaded", () => {
+    initHighlighting();
     initCopyButtons();
     initAccordions();
     initRevealMotion();
