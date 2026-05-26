@@ -15,6 +15,378 @@
     <link rel="stylesheet" href="../styles/main.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+
+    <!-- ============================================================
+         LAYOUT EXCLUSIVO — MÓDULO 01 FILOSOFIA LINUX
+         Scoped em body[data-module="filosofia"]
+         Não afeta nenhum outro módulo ou página
+         ============================================================ -->
+    <style>
+      /* ---- Reset do container padrão ------------------------- */
+      body[data-module="filosofia"] .module-page {
+        padding-top: 0;
+      }
+      body[data-module="filosofia"] .container--narrow {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* ---- Grid principal 3 colunas -------------------------- */
+      .mod-layout {
+        display: grid;
+        grid-template-columns: 212px 1fr 192px;
+        grid-template-areas: "nav-left main nav-right";
+        gap: 0 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+        align-items: start;
+      }
+
+      /* ---- SIDEBAR ESQUERDA ---------------------------------- */
+      .mod-nav-left {
+        grid-area: nav-left;
+        position: sticky;
+        top: 64px;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.08) transparent;
+        padding-top: 4px;
+      }
+
+      .mod-nav-left-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        padding: 0 10px 10px;
+        display: block;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 6px;
+      }
+
+      .mod-nav-left-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .mod-nav-left-item {
+        margin: 2px 0;
+      }
+
+      .mod-nav-left-item a {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: background 0.15s ease, color 0.15s ease;
+        line-height: 1.35;
+      }
+
+      .mod-nav-left-item a:hover {
+        background: rgba(255,255,255,0.05);
+        color: var(--text);
+      }
+
+      .mod-nav-left-item a:focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 2px;
+      }
+
+      .mod-nav-left-item.is-current a {
+        background: rgba(34,211,238,0.07);
+        color: var(--cyan);
+        font-weight: 500;
+      }
+
+      .mod-num {
+        font-size: 10px;
+        color: var(--text-faint);
+        font-variant-numeric: tabular-nums;
+        min-width: 16px;
+        flex-shrink: 0;
+      }
+
+      .mod-nav-left-item.is-current .mod-num {
+        color: var(--cyan);
+      }
+
+      /* ---- CONTEÚDO PRINCIPAL -------------------------------- */
+      .mod-main {
+        grid-area: main;
+        min-width: 0;
+      }
+
+      /* ---- HERO DO MÓDULO ------------------------------------ */
+      .mod-hero {
+        padding: 8px 0 36px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0;
+        position: relative;
+      }
+
+      .mod-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        background: rgba(34,211,238,0.07);
+        border: 1px solid rgba(34,211,238,0.16);
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        color: var(--cyan);
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      .mod-hero-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.9rem, 3.5vw, 2.6rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin: 0 0 14px;
+      }
+
+      .mod-hero-desc {
+        font-size: 15.5px;
+        line-height: 1.7;
+        color: var(--text-muted);
+        max-width: 540px;
+        margin: 0 0 22px;
+      }
+
+      .mod-hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .mod-hero-meta-item {
+        font-size: 12px;
+        color: var(--text-faint);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* Progresso inline no hero (continua funcional para o JS) */
+      .mod-hero-meta-item.mod-progress-inline strong {
+        color: var(--cyan);
+      }
+
+      /* ---- SEÇÕES DE CONTEÚDO -------------------------------- */
+      body[data-module="filosofia"] .content-section {
+        padding: 36px 0 32px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      body[data-module="filosofia"] .flashcards-section,
+      body[data-module="filosofia"] .quiz-section {
+        padding: 36px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      body[data-module="filosofia"] .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+
+      body[data-module="filosofia"] .section-header h2 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin: 0;
+      }
+
+      body[data-module="filosofia"] .card {
+        margin-bottom: 12px;
+      }
+
+      body[data-module="filosofia"] .card:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ---- SIDEBAR DIREITA ----------------------------------- */
+      .mod-nav-right {
+        grid-area: nav-right;
+        position: sticky;
+        top: 64px;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.08) transparent;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding-top: 4px;
+      }
+
+      /* ---- Card de progresso --------------------------------- */
+      .mod-progress-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+      }
+
+      .mod-sidebar-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        display: block;
+        margin-bottom: 11px;
+      }
+
+      .mod-progress-track {
+        height: 4px;
+        background: rgba(255,255,255,0.07);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .mod-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--cyan), #60a5fa);
+        border-radius: 4px;
+        transition: width 0.45s ease;
+        width: 0%;
+      }
+
+      .mod-progress-text {
+        font-size: 12px;
+        color: var(--text-faint);
+      }
+
+      .mod-progress-text strong {
+        color: var(--cyan);
+      }
+
+      /* ---- Sumário da página --------------------------------- */
+      .mod-toc {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+      }
+
+      .mod-toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+
+      .mod-toc-list a {
+        display: block;
+        padding: 5px 8px;
+        border-radius: 6px;
+        font-size: 11.5px;
+        line-height: 1.4;
+        color: var(--text-faint);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+        transition: color 0.15s, background 0.15s, border-color 0.15s;
+      }
+
+      .mod-toc-list a:hover {
+        color: var(--text-muted);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .mod-toc-list a:focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 1px;
+      }
+
+      .mod-toc-list a.is-active {
+        color: var(--cyan);
+        border-left-color: var(--cyan);
+        background: rgba(34,211,238,0.05);
+      }
+
+      /* ---- Navegação anterior/próximo ----------------------- */
+      body[data-module="filosofia"] .module-nav {
+        margin-top: 8px;
+        padding-top: 28px;
+        border-top: none;
+      }
+
+      /* ============================================================
+         RESPONSIVO
+         ============================================================ */
+
+      /* Tablet: esconde sidebar esquerda */
+      @media (max-width: 1024px) {
+        .mod-layout {
+          grid-template-columns: 1fr 180px;
+          grid-template-areas: "main nav-right";
+          gap: 0 24px;
+        }
+        .mod-nav-left {
+          display: none;
+        }
+      }
+
+      /* Mobile: coluna única, sidebar direita vira linha horizontal acima do conteúdo */
+      @media (max-width: 720px) {
+        .mod-layout {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "nav-right"
+            "main";
+          gap: 16px 0;
+          padding: 20px 16px 56px;
+        }
+
+        .mod-nav-right {
+          position: static;
+          max-height: none;
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 10px;
+          overflow: visible;
+        }
+
+        .mod-progress-card,
+        .mod-toc {
+          flex: 1;
+          min-width: 140px;
+        }
+
+        .mod-hero-title {
+          font-size: 1.75rem;
+        }
+      }
+
+      /* Reduzir movimento */
+      @media (prefers-reduced-motion: reduce) {
+        .mod-progress-fill {
+          transition: none;
+        }
+      }
+    </style>
   </head>
   <body data-module="filosofia">
     <a class="skip-link" href="#main">Pular para o conteúdo</a>
@@ -35,141 +407,207 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <!-- CABEÇALHO DO MÓDULO -->
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 01</span>
-          <h1 class="module-page-title">Filosofia Linux</h1>
-          <p class="module-intro">
-            Entenda o que é Linux de verdade — a diferença entre kernel, distro
-            e shell, como tudo começou em 1991 e por que esse conhecimento muda
-            sua carreira em tecnologia.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 18 min de leitura</span>
-            <span class="module-meta-item">🃏 6 flashcards</span>
-            <span class="module-meta-item">📝 6 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="mod-layout">
 
-        <!-- SEÇÃO 1 -->
-        <section class="content-section" id="o-que-e-linux">
-          <div class="section-header">
-            <h2>O que é Linux</h2>
-            <button class="mark-studied" data-section="o-que-e-linux">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+          <!-- ================================================
+               SIDEBAR ESQUERDA — Trilha de módulos
+               ================================================ -->
+          <aside class="mod-nav-left" aria-label="Trilha de módulos">
+            <span class="mod-nav-left-label">Trilha Linux</span>
+            <ol class="mod-nav-left-list">
+              <li class="mod-nav-left-item is-current">
+                <a href="filosofia.html" aria-current="page">
+                  <span class="mod-num">01</span>Filosofia Linux
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="filesystem.html">
+                  <span class="mod-num">02</span>Filesystem
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="permissoes.html">
+                  <span class="mod-num">03</span>Permissões
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="processos.html">
+                  <span class="mod-num">04</span>Processos
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="shell.html">
+                  <span class="mod-num">05</span>Shell
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="systemctl.html">
+                  <span class="mod-num">06</span>Serviços com systemctl
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="logs.html">
+                  <span class="mod-num">07</span>Logs
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="rede-linux.html">
+                  <span class="mod-num">08</span>Rede no Linux
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="disco.html">
+                  <span class="mod-num">09</span>Disco
+                </a>
+              </li>
+              <li class="mod-nav-left-item">
+                <a href="troubleshooting.html">
+                  <span class="mod-num">10</span>Troubleshooting
+                </a>
+              </li>
+            </ol>
+          </aside>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              Linux é um <strong>kernel</strong>, não um sistema operacional
-              completo. O que chamamos de "Linux" no dia a dia é tecnicamente
-              uma <strong>distribuição Linux</strong> (distro), que combina:
-            </p>
-            <ul>
-              <li>
-                O <strong>kernel Linux</strong> — o núcleo que conversa com o
-                hardware
-              </li>
-              <li>
-                As <strong>ferramentas GNU</strong> — compilador, shell,
-                utilitários essenciais
-              </li>
-              <li>
-                Um <strong>gerenciador de pacotes</strong> — para instalar e
-                atualizar software
-              </li>
-              <li>
-                Opcionalmente, uma <strong>interface gráfica</strong> (Desktop
-                Environment)
-              </li>
-            </ul>
-            <p>
-              Quando você instala o Ubuntu, o Fedora ou o Arch, você está
-              instalando uma distro — não "o Linux" em si. O kernel Linux é
-              apenas uma das peças.
-            </p>
-          </div>
+          <!-- ================================================
+               CONTEÚDO PRINCIPAL
+               ================================================ -->
+          <div class="mod-main">
 
-          <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — Planta baixa de imóvel</span>
-            <p>
-              Linux é como a planta baixa de um imóvel. O Windows te entrega o
-              apartamento decorado e mobiliado — você usa, mas não entende o que
-              tem dentro das paredes. Não sabe onde passa a fiação, onde fica o
-              encanamento, nem como a estrutura foi construída.
-            </p>
-            <p>
-              O Linux te dá os tijolos, a planta e as ferramentas. Você monta o
-              que quiser, do jeito que quiser. Mais difícil no início — mas você
-              controla absolutamente tudo. E quando algo quebra, você sabe onde
-              olhar.
-            </p>
-          </div>
+            <!-- HERO DO MÓDULO -->
+            <header class="mod-hero">
+              <span class="mod-hero-badge">Módulo 01 · Fundamentos</span>
+              <h1 class="mod-hero-title">Filosofia Linux</h1>
+              <p class="mod-hero-desc">
+                Entenda o que é Linux de verdade — a diferença entre kernel, distro
+                e shell, como tudo começou em 1991 e por que esse conhecimento muda
+                sua carreira em tecnologia.
+              </p>
+              <div class="mod-hero-meta">
+                <span class="mod-hero-meta-item">⏱ 18 min de leitura</span>
+                <span class="mod-hero-meta-item">🃏 6 flashcards</span>
+                <span class="mod-hero-meta-item">📝 6 questões</span>
+                <span class="mod-hero-meta-item mod-progress-inline"
+                  >Progresso: <strong id="progress-pct">0%</strong></span
+                >
+              </div>
+            </header>
 
-          <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
-            <ul>
-              <li>Linux é o <strong>kernel</strong> — o núcleo do sistema</li>
-              <li>
-                Distro = kernel + GNU tools + gerenciador de pacotes +
-                (opcional) GUI
-              </li>
-              <li>
-                Ubuntu, Fedora, Arch Linux são distros — todas usam o kernel
-                Linux
-              </li>
-              <li>
-                O correto seria dizer "GNU/Linux", mas ninguém fala assim no dia
-                a dia
-              </li>
-            </ul>
-          </div>
-        </section>
+            <!-- SEÇÃO 1 -->
+            <section class="content-section" id="o-que-e-linux">
+              <div class="section-header">
+                <h2>O que é Linux</h2>
+                <button class="mark-studied" data-section="o-que-e-linux">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
 
-        <!-- SEÇÃO 2 -->
-        <section class="content-section" id="historia">
-          <div class="section-header">
-            <h2>A história: de 1991 ao mundo</h2>
-            <button class="mark-studied" data-section="historia">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  Linux é um <strong>kernel</strong>, não um sistema operacional
+                  completo. O que chamamos de "Linux" no dia a dia é tecnicamente
+                  uma <strong>distribuição Linux</strong> (distro), que combina:
+                </p>
+                <ul>
+                  <li>
+                    O <strong>kernel Linux</strong> — o núcleo que conversa com o
+                    hardware
+                  </li>
+                  <li>
+                    As <strong>ferramentas GNU</strong> — compilador, shell,
+                    utilitários essenciais
+                  </li>
+                  <li>
+                    Um <strong>gerenciador de pacotes</strong> — para instalar e
+                    atualizar software
+                  </li>
+                  <li>
+                    Opcionalmente, uma <strong>interface gráfica</strong> (Desktop
+                    Environment)
+                  </li>
+                </ul>
+                <p>
+                  Quando você instala o Ubuntu, o Fedora ou o Arch, você está
+                  instalando uma distro — não "o Linux" em si. O kernel Linux é
+                  apenas uma das peças.
+                </p>
+              </div>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              Em <strong>25 de agosto de 1991</strong>, um estudante finlandês
-              de 21 anos chamado Linus Torvalds postou na newsgroup
-              <code>comp.os.minix</code>:
-            </p>
-            <blockquote class="editorial-quote">
-              "Hello everybody out there using minix — I'm doing a (free)
-              operating system (just a hobby, won't be big and professional like
-              gnu)..."
-            </blockquote>
-            <p>
-              Era uma mensagem que mudaria a computação. Em outubro do mesmo
-              ano, o Linux 0.02 foi liberado publicamente.
-            </p>
-            <p>
-              Antes disso, Richard Stallman havia lançado o
-              <strong>Projeto GNU em 1983</strong> com o objetivo de criar um
-              sistema operacional completamente livre. O GNU criou ferramentas
-              essenciais — o compilador <code>gcc</code>, o shell
-              <code>bash</code>, a biblioteca C <code>glibc</code> — mas faltava
-              o componente central: o kernel. Linus completou o quebra-cabeça.
-            </p>
-          </div>
+              <div class="card card-analogy">
+                <span class="card-label">💡 Analogia — Planta baixa de imóvel</span>
+                <p>
+                  Linux é como a planta baixa de um imóvel. O Windows te entrega o
+                  apartamento decorado e mobiliado — você usa, mas não entende o que
+                  tem dentro das paredes. Não sabe onde passa a fiação, onde fica o
+                  encanamento, nem como a estrutura foi construída.
+                </p>
+                <p>
+                  O Linux te dá os tijolos, a planta e as ferramentas. Você monta o
+                  que quiser, do jeito que quiser. Mais difícil no início — mas você
+                  controla absolutamente tudo. E quando algo quebra, você sabe onde
+                  olhar.
+                </p>
+              </div>
 
-          <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
-            <p>A evolução do Linux em números:</p>
-            <pre><code>1991 — Linux 0.01: ~10.000 linhas de código, só rodava em x86
+              <div class="card card-summary">
+                <span class="card-label">⚡ O que você precisa guardar</span>
+                <ul>
+                  <li>Linux é o <strong>kernel</strong> — o núcleo do sistema</li>
+                  <li>
+                    Distro = kernel + GNU tools + gerenciador de pacotes +
+                    (opcional) GUI
+                  </li>
+                  <li>
+                    Ubuntu, Fedora, Arch Linux são distros — todas usam o kernel
+                    Linux
+                  </li>
+                  <li>
+                    O correto seria dizer "GNU/Linux", mas ninguém fala assim no dia
+                    a dia
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- SEÇÃO 2 -->
+            <section class="content-section" id="historia">
+              <div class="section-header">
+                <h2>A história: de 1991 ao mundo</h2>
+                <button class="mark-studied" data-section="historia">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
+
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  Em <strong>25 de agosto de 1991</strong>, um estudante finlandês
+                  de 21 anos chamado Linus Torvalds postou na newsgroup
+                  <code>comp.os.minix</code>:
+                </p>
+                <blockquote class="editorial-quote">
+                  "Hello everybody out there using minix — I'm doing a (free)
+                  operating system (just a hobby, won't be big and professional like
+                  gnu)..."
+                </blockquote>
+                <p>
+                  Era uma mensagem que mudaria a computação. Em outubro do mesmo
+                  ano, o Linux 0.02 foi liberado publicamente.
+                </p>
+                <p>
+                  Antes disso, Richard Stallman havia lançado o
+                  <strong>Projeto GNU em 1983</strong> com o objetivo de criar um
+                  sistema operacional completamente livre. O GNU criou ferramentas
+                  essenciais — o compilador <code>gcc</code>, o shell
+                  <code>bash</code>, a biblioteca C <code>glibc</code> — mas faltava
+                  o componente central: o kernel. Linus completou o quebra-cabeça.
+                </p>
+              </div>
+
+              <div class="card card-example">
+                <span class="card-label">🔍 Exemplo Concreto</span>
+                <p>A evolução do Linux em números:</p>
+                <pre><code>1991 — Linux 0.01: ~10.000 linhas de código, só rodava em x86
 1994 — Linux 1.0: 176.250 linhas, suporte a rede
 2003 — Linux 2.6: suporte a SMP, 64-bit, mobile
 2011 — Linux 3.0: 15 milhões de linhas de código
@@ -177,75 +615,75 @@
 
 Hoje: Android (2,5 bilhões de dispositivos), 96% dos servidores
 web, 100% dos supercomputadores do TOP500 — todos rodando Linux.</code></pre>
-          </div>
+              </div>
 
-          <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
-            <ul>
-              <li>
-                Linus Torvalds anunciou o Linux em
-                <strong>agosto de 1991</strong>, com 21 anos
-              </li>
-              <li>
-                O Projeto GNU (1983) criou as ferramentas; o Linux completou com
-                o kernel
-              </li>
-              <li>
-                GPL: a licença que garantiu que o Linux permanecesse livre
-              </li>
-              <li>
-                Hoje domina servidores, mobile (Android), supercomputadores e
-                nuvem
-              </li>
-            </ul>
-          </div>
-        </section>
+              <div class="card card-summary">
+                <span class="card-label">⚡ O que você precisa guardar</span>
+                <ul>
+                  <li>
+                    Linus Torvalds anunciou o Linux em
+                    <strong>agosto de 1991</strong>, com 21 anos
+                  </li>
+                  <li>
+                    O Projeto GNU (1983) criou as ferramentas; o Linux completou com
+                    o kernel
+                  </li>
+                  <li>
+                    GPL: a licença que garantiu que o Linux permanecesse livre
+                  </li>
+                  <li>
+                    Hoje domina servidores, mobile (Android), supercomputadores e
+                    nuvem
+                  </li>
+                </ul>
+              </div>
+            </section>
 
-        <!-- SEÇÃO 3 -->
-        <section class="content-section" id="kernel-distro-shell">
-          <div class="section-header">
-            <h2>Kernel, Distro, Shell e Desktop Environment</h2>
-            <button class="mark-studied" data-section="kernel-distro-shell">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+            <!-- SEÇÃO 3 -->
+            <section class="content-section" id="kernel-distro-shell">
+              <div class="section-header">
+                <h2>Kernel, Distro, Shell e Desktop Environment</h2>
+                <button class="mark-studied" data-section="kernel-distro-shell">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              Esses quatro conceitos descrevem camadas distintas do sistema:
-            </p>
-            <p>
-              <strong>Kernel</strong> — o núcleo. Gerencia hardware (CPU,
-              memória, disco, rede), processos e o sistema de arquivos. Você
-              nunca interage com ele diretamente. É a ponte entre o software e o
-              hardware físico.
-            </p>
-            <p>
-              <strong>Distro (Distribuição)</strong> — tudo em volta do kernel:
-              as ferramentas, o ambiente, o gerenciador de pacotes (apt, dnf,
-              pacman), a documentação e as escolhas de configuração padrão. Cada
-              distro tem sua filosofia.
-            </p>
-            <p>
-              <strong>Shell</strong> — o intérprete de comandos. É o programa
-              que lê o que você digita no terminal e pede ao kernel que execute.
-              O shell mais comum é o <code>bash</code> (Bourne Again Shell).
-              Outros: <code>zsh</code> (padrão no macOS),
-              <code>fish</code> (amigável para iniciantes),
-              <code>sh</code> (POSIX padrão).
-            </p>
-            <p>
-              <strong>Desktop Environment (DE)</strong> — a interface gráfica:
-              janelas, menus, ícones. GNOME, KDE Plasma e XFCE são exemplos. É
-              completamente opcional — servidores Linux geralmente rodam sem
-              nenhum DE.
-            </p>
-          </div>
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  Esses quatro conceitos descrevem camadas distintas do sistema:
+                </p>
+                <p>
+                  <strong>Kernel</strong> — o núcleo. Gerencia hardware (CPU,
+                  memória, disco, rede), processos e o sistema de arquivos. Você
+                  nunca interage com ele diretamente. É a ponte entre o software e o
+                  hardware físico.
+                </p>
+                <p>
+                  <strong>Distro (Distribuição)</strong> — tudo em volta do kernel:
+                  as ferramentas, o ambiente, o gerenciador de pacotes (apt, dnf,
+                  pacman), a documentação e as escolhas de configuração padrão. Cada
+                  distro tem sua filosofia.
+                </p>
+                <p>
+                  <strong>Shell</strong> — o intérprete de comandos. É o programa
+                  que lê o que você digita no terminal e pede ao kernel que execute.
+                  O shell mais comum é o <code>bash</code> (Bourne Again Shell).
+                  Outros: <code>zsh</code> (padrão no macOS),
+                  <code>fish</code> (amigável para iniciantes),
+                  <code>sh</code> (POSIX padrão).
+                </p>
+                <p>
+                  <strong>Desktop Environment (DE)</strong> — a interface gráfica:
+                  janelas, menus, ícones. GNOME, KDE Plasma e XFCE são exemplos. É
+                  completamente opcional — servidores Linux geralmente rodam sem
+                  nenhum DE.
+                </p>
+              </div>
 
-          <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
-            <pre><code># As camadas de baixo para cima:
+              <div class="card card-example">
+                <span class="card-label">🔍 Exemplo Concreto</span>
+                <pre><code># As camadas de baixo para cima:
 
 Hardware (CPU, RAM, Disco, Rede)
     ↑
@@ -266,234 +704,234 @@ echo $SHELL
 # Ver a versão do kernel:
 uname -r
 # 6.8.0-41-generic</code></pre>
-          </div>
+              </div>
 
-          <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
-            <p>
-              <strong>"Linux é o sistema operacional"</strong> — tecnicamente
-              errado. Linux é o kernel. O sistema operacional completo seria
-              "GNU/Linux". Na prática, todo mundo diz Linux e entende o conjunto
-              inteiro.
-            </p>
-            <p>
-              <strong>"O terminal é o Linux"</strong> — o terminal é apenas um
-              emulador de terminal que roda o shell. Você pode ter Linux sem
-              terminal gráfico (servidores via SSH) ou com ele.
-            </p>
-            <p>
-              <strong>"Shell e terminal são a mesma coisa"</strong> — o terminal
-              é o programa que abre a janela preta. O shell (bash, zsh) é o
-              programa que roda dentro dessa janela e interpreta seus comandos.
-            </p>
-          </div>
-        </section>
+              <div class="card card-warning">
+                <span class="card-label">⚠️ Erros comuns</span>
+                <p>
+                  <strong>"Linux é o sistema operacional"</strong> — tecnicamente
+                  errado. Linux é o kernel. O sistema operacional completo seria
+                  "GNU/Linux". Na prática, todo mundo diz Linux e entende o conjunto
+                  inteiro.
+                </p>
+                <p>
+                  <strong>"O terminal é o Linux"</strong> — o terminal é apenas um
+                  emulador de terminal que roda o shell. Você pode ter Linux sem
+                  terminal gráfico (servidores via SSH) ou com ele.
+                </p>
+                <p>
+                  <strong>"Shell e terminal são a mesma coisa"</strong> — o terminal
+                  é o programa que abre a janela preta. O shell (bash, zsh) é o
+                  programa que roda dentro dessa janela e interpreta seus comandos.
+                </p>
+              </div>
+            </section>
 
-        <!-- SEÇÃO 4 -->
-        <section class="content-section" id="open-source">
-          <div class="section-header">
-            <h2>O que é open-source e por que importa</h2>
-            <button class="mark-studied" data-section="open-source">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+            <!-- SEÇÃO 4 -->
+            <section class="content-section" id="open-source">
+              <div class="section-header">
+                <h2>O que é open-source e por que importa</h2>
+                <button class="mark-studied" data-section="open-source">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              <strong>Open-source</strong> significa que o código-fonte é
-              público: qualquer pessoa pode ler, auditar, modificar e distribuir
-              o software — respeitando os termos da licença.
-            </p>
-            <p>
-              Existem várias licenças open-source com filosofias diferentes:
-            </p>
-            <ul>
-              <li>
-                <strong>GPL (General Public License)</strong> — criada por
-                Richard Stallman. É <em>copyleft</em>: qualquer software GPL que
-                você modificar e distribuir <strong>deve</strong> também ser
-                disponibilizado com código-fonte sob a GPL. O kernel Linux usa a
-                GPLv2.
-              </li>
-              <li>
-                <strong>MIT / BSD</strong> — permissivas. Você pode usar em
-                software proprietário sem obrigação de abrir o código. Muito
-                usadas em bibliotecas.
-              </li>
-              <li>
-                <strong>Apache 2.0</strong> — similar ao MIT, com cláusula de
-                patentes.
-              </li>
-            </ul>
-            <p>
-              Por que importa? Porque você pode
-              <strong>auditar o que o software faz</strong>. Nenhuma backdoor
-              escondida. A comunidade encontra e corrige vulnerabilidades. E
-              nenhuma empresa pode simplesmente "desligar" o software que você
-              depende.
-            </p>
-          </div>
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  <strong>Open-source</strong> significa que o código-fonte é
+                  público: qualquer pessoa pode ler, auditar, modificar e distribuir
+                  o software — respeitando os termos da licença.
+                </p>
+                <p>
+                  Existem várias licenças open-source com filosofias diferentes:
+                </p>
+                <ul>
+                  <li>
+                    <strong>GPL (General Public License)</strong> — criada por
+                    Richard Stallman. É <em>copyleft</em>: qualquer software GPL que
+                    você modificar e distribuir <strong>deve</strong> também ser
+                    disponibilizado com código-fonte sob a GPL. O kernel Linux usa a
+                    GPLv2.
+                  </li>
+                  <li>
+                    <strong>MIT / BSD</strong> — permissivas. Você pode usar em
+                    software proprietário sem obrigação de abrir o código. Muito
+                    usadas em bibliotecas.
+                  </li>
+                  <li>
+                    <strong>Apache 2.0</strong> — similar ao MIT, com cláusula de
+                    patentes.
+                  </li>
+                </ul>
+                <p>
+                  Por que importa? Porque você pode
+                  <strong>auditar o que o software faz</strong>. Nenhuma backdoor
+                  escondida. A comunidade encontra e corrige vulnerabilidades. E
+                  nenhuma empresa pode simplesmente "desligar" o software que você
+                  depende.
+                </p>
+              </div>
 
-          <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — Receita de culinária</span>
-            <p>
-              Software proprietário é como um prato de restaurante: você come,
-              mas a receita é segredo. Software open-source é como um livro de
-              receitas público: você vê exatamente os ingredientes e o modo de
-              preparo, pode reproduzir em casa, adaptar ao seu gosto e
-              compartilhar sua versão melhorada.
-            </p>
-          </div>
+              <div class="card card-analogy">
+                <span class="card-label">💡 Analogia — Receita de culinária</span>
+                <p>
+                  Software proprietário é como um prato de restaurante: você come,
+                  mas a receita é segredo. Software open-source é como um livro de
+                  receitas público: você vê exatamente os ingredientes e o modo de
+                  preparo, pode reproduzir em casa, adaptar ao seu gosto e
+                  compartilhar sua versão melhorada.
+                </p>
+              </div>
 
-          <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
-            <ul>
-              <li>Open-source = código público, auditável, modificável</li>
-              <li>
-                GPL (copyleft): modificações devem ser abertas — garante que o
-                ecossistema permaneça livre
-              </li>
-              <li>
-                MIT/BSD: permissivas — podem ser usadas em software fechado
-              </li>
-              <li>
-                Red Hat/Canonical faturam bilhões com suporte e serviços em
-                torno do Linux open-source
-              </li>
-            </ul>
-          </div>
-        </section>
+              <div class="card card-summary">
+                <span class="card-label">⚡ O que você precisa guardar</span>
+                <ul>
+                  <li>Open-source = código público, auditável, modificável</li>
+                  <li>
+                    GPL (copyleft): modificações devem ser abertas — garante que o
+                    ecossistema permaneça livre
+                  </li>
+                  <li>
+                    MIT/BSD: permissivas — podem ser usadas em software fechado
+                  </li>
+                  <li>
+                    Red Hat/Canonical faturam bilhões com suporte e serviços em
+                    torno do Linux open-source
+                  </li>
+                </ul>
+              </div>
+            </section>
 
-        <!-- SEÇÃO 5 -->
-        <section class="content-section" id="por-que-aprender">
-          <div class="section-header">
-            <h2>Por que aprender Linux muda sua carreira</h2>
-            <button class="mark-studied" data-section="por-que-aprender">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+            <!-- SEÇÃO 5 -->
+            <section class="content-section" id="por-que-aprender">
+              <div class="section-header">
+                <h2>Por que aprender Linux muda sua carreira</h2>
+                <button class="mark-studied" data-section="por-que-aprender">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              Linux está em toda parte onde o dinheiro da tecnologia está
-              concentrado:
-            </p>
-            <ul>
-              <li>
-                <strong>96% dos servidores web</strong> do mundo rodam Linux
-                (Netcraft)
-              </li>
-              <li>
-                <strong>100% dos supercomputadores</strong> do TOP500 usam Linux
-              </li>
-              <li>
-                <strong>AWS, Azure e Google Cloud</strong> — a infraestrutura de
-                nuvem é Linux
-              </li>
-              <li>
-                <strong>Android</strong> — 2,5 bilhões de dispositivos rodando
-                kernel Linux
-              </li>
-              <li>
-                <strong>Containers Docker/Kubernetes</strong> — dependem de
-                recursos do kernel Linux
-              </li>
-              <li>
-                <strong>Dispositivos embarcados</strong> — roteadores, TVs,
-                câmeras IP, carros
-              </li>
-            </ul>
-            <p>
-              Carreiras que exigem Linux: DevOps/SRE, Engenharia de Dados,
-              Segurança da Informação, Desenvolvimento Backend, Cloud
-              Architecture. Saber Linux bem distingue um profissional sênior de
-              um pleno.
-            </p>
-          </div>
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  Linux está em toda parte onde o dinheiro da tecnologia está
+                  concentrado:
+                </p>
+                <ul>
+                  <li>
+                    <strong>96% dos servidores web</strong> do mundo rodam Linux
+                    (Netcraft)
+                  </li>
+                  <li>
+                    <strong>100% dos supercomputadores</strong> do TOP500 usam Linux
+                  </li>
+                  <li>
+                    <strong>AWS, Azure e Google Cloud</strong> — a infraestrutura de
+                    nuvem é Linux
+                  </li>
+                  <li>
+                    <strong>Android</strong> — 2,5 bilhões de dispositivos rodando
+                    kernel Linux
+                  </li>
+                  <li>
+                    <strong>Containers Docker/Kubernetes</strong> — dependem de
+                    recursos do kernel Linux
+                  </li>
+                  <li>
+                    <strong>Dispositivos embarcados</strong> — roteadores, TVs,
+                    câmeras IP, carros
+                  </li>
+                </ul>
+                <p>
+                  Carreiras que exigem Linux: DevOps/SRE, Engenharia de Dados,
+                  Segurança da Informação, Desenvolvimento Backend, Cloud
+                  Architecture. Saber Linux bem distingue um profissional sênior de
+                  um pleno.
+                </p>
+              </div>
 
-          <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
-            <ul>
-              <li>Servidores, nuvem, containers, mobile — tudo roda Linux</li>
-              <li>
-                Linux não é "opção" para quem trabalha com infraestrutura — é
-                requisito
-              </li>
-              <li>
-                O conhecimento é transferível: o que você aprende no Ubuntu
-                funciona no Debian, no CentOS, no Alpine
-              </li>
-              <li>
-                Terminal Linux no dia a dia torna você significativamente mais
-                produtivo
-              </li>
-            </ul>
-          </div>
-        </section>
+              <div class="card card-summary">
+                <span class="card-label">⚡ O que você precisa guardar</span>
+                <ul>
+                  <li>Servidores, nuvem, containers, mobile — tudo roda Linux</li>
+                  <li>
+                    Linux não é "opção" para quem trabalha com infraestrutura — é
+                    requisito
+                  </li>
+                  <li>
+                    O conhecimento é transferível: o que você aprende no Ubuntu
+                    funciona no Debian, no CentOS, no Alpine
+                  </li>
+                  <li>
+                    Terminal Linux no dia a dia torna você significativamente mais
+                    produtivo
+                  </li>
+                </ul>
+              </div>
+            </section>
 
-        <!-- SEÇÃO 6 -->
-        <section class="content-section" id="principais-distros">
-          <div class="section-header">
-            <h2>As principais distros e quando usar cada uma</h2>
-            <button class="mark-studied" data-section="principais-distros">
-              ☆ Marcar como estudado
-            </button>
-          </div>
+            <!-- SEÇÃO 6 -->
+            <section class="content-section" id="principais-distros">
+              <div class="section-header">
+                <h2>As principais distros e quando usar cada uma</h2>
+                <button class="mark-studied" data-section="principais-distros">
+                  ☆ Marcar como estudado
+                </button>
+              </div>
 
-          <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
-            <p>
-              Existem centenas de distros. Estas são as que você vai encontrar
-              no mercado:
-            </p>
-            <p>
-              <strong>Ubuntu</strong> — baseada no Debian. Fácil para
-              iniciantes, com suporte empresarial via Canonical. Versões LTS
-              (Long Term Support) recebem 5 anos de atualizações de segurança. A
-              distro mais usada em servidores cloud. <em>Use quando:</em> quer
-              estabilidade, documentação ampla, e não quer configurar tudo do
-              zero.
-            </p>
-            <p>
-              <strong>Debian</strong> — a "avó" de muitas distros (Ubuntu, Mint,
-              Raspberry Pi OS). Extremamente estável — os pacotes são testados
-              por muito mais tempo antes de entrar na versão estável.
-              <em>Use quando:</em> quer a base sólida do Ubuntu mas com menos
-              camadas da Canonical.
-            </p>
-            <p>
-              <strong>Fedora</strong> — patrocinado pela Red Hat. Adota novas
-              tecnologias mais cedo (Wayland, Btrfs, systemd). É o campo de
-              testes para o Red Hat Enterprise Linux. <em>Use quando:</em> quer
-              tecnologia de ponta em um ambiente relativamente estável.
-            </p>
-            <p>
-              <strong>Arch Linux</strong> — você instala tudo manualmente, peça
-              por peça. Obriga a entender cada componente do sistema. Rolling
-              release: sempre na versão mais atual. A Arch Wiki é considerada a
-              melhor documentação Linux existente. <em>Use quando:</em> quer
-              aprender Linux a fundo e não se importa de passar horas
-              configurando.
-            </p>
-            <p>
-              <strong>Red Hat Enterprise Linux (RHEL) / CentOS Stream</strong> —
-              o padrão corporativo. Certificações (RHCSA, RHCE) são muito
-              valorizadas no mercado. <em>Use quando:</em> o ambiente de
-              trabalho é corporativo e exige suporte oficial.
-            </p>
-            <p>
-              <strong>Alpine Linux</strong> — minimalista ao extremo. Usa musl
-              libc e busybox em vez do GNU completo. Imagem base de apenas ~5MB.
-              <em>Use quando:</em> precisa de containers Docker pequenos e
-              seguros.
-            </p>
-          </div>
+              <div class="card card-explanation">
+                <span class="card-label">📖 Explicação</span>
+                <p>
+                  Existem centenas de distros. Estas são as que você vai encontrar
+                  no mercado:
+                </p>
+                <p>
+                  <strong>Ubuntu</strong> — baseada no Debian. Fácil para
+                  iniciantes, com suporte empresarial via Canonical. Versões LTS
+                  (Long Term Support) recebem 5 anos de atualizações de segurança. A
+                  distro mais usada em servidores cloud. <em>Use quando:</em> quer
+                  estabilidade, documentação ampla, e não quer configurar tudo do
+                  zero.
+                </p>
+                <p>
+                  <strong>Debian</strong> — a "avó" de muitas distros (Ubuntu, Mint,
+                  Raspberry Pi OS). Extremamente estável — os pacotes são testados
+                  por muito mais tempo antes de entrar na versão estável.
+                  <em>Use quando:</em> quer a base sólida do Ubuntu mas com menos
+                  camadas da Canonical.
+                </p>
+                <p>
+                  <strong>Fedora</strong> — patrocinado pela Red Hat. Adota novas
+                  tecnologias mais cedo (Wayland, Btrfs, systemd). É o campo de
+                  testes para o Red Hat Enterprise Linux. <em>Use quando:</em> quer
+                  tecnologia de ponta em um ambiente relativamente estável.
+                </p>
+                <p>
+                  <strong>Arch Linux</strong> — você instala tudo manualmente, peça
+                  por peça. Obriga a entender cada componente do sistema. Rolling
+                  release: sempre na versão mais atual. A Arch Wiki é considerada a
+                  melhor documentação Linux existente. <em>Use quando:</em> quer
+                  aprender Linux a fundo e não se importa de passar horas
+                  configurando.
+                </p>
+                <p>
+                  <strong>Red Hat Enterprise Linux (RHEL) / CentOS Stream</strong> —
+                  o padrão corporativo. Certificações (RHCSA, RHCE) são muito
+                  valorizadas no mercado. <em>Use quando:</em> o ambiente de
+                  trabalho é corporativo e exige suporte oficial.
+                </p>
+                <p>
+                  <strong>Alpine Linux</strong> — minimalista ao extremo. Usa musl
+                  libc e busybox em vez do GNU completo. Imagem base de apenas ~5MB.
+                  <em>Use quando:</em> precisa de containers Docker pequenos e
+                  seguros.
+                </p>
+              </div>
 
-          <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
-            <pre><code># Diferença nos gerenciadores de pacotes:
+              <div class="card card-example">
+                <span class="card-label">🔍 Exemplo Concreto</span>
+                <pre><code># Diferença nos gerenciadores de pacotes:
 
 # Ubuntu/Debian — APT
 sudo apt update && sudo apt install nginx
@@ -510,55 +948,88 @@ apk add nginx
 # O mesmo objetivo, comandos diferentes.
 # Mas a filosofia do sistema de arquivos,
 # permissões e kernel são iguais em todas.</code></pre>
-          </div>
+              </div>
 
-          <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
-            <p>
-              <strong>"Vou começar pelo Arch para aprender mais"</strong> — a
-              curva é íngreme demais para quem não tem base. Comece pelo Ubuntu
-              ou Fedora. Depois que entender os fundamentos, o Arch faz muito
-              mais sentido.
-            </p>
-            <p>
-              <strong>"Ubuntu é para iniciantes, não para produção"</strong> —
-              Ubuntu Server é usado pela Canonical, AWS, Google Cloud e inúmeras
-              empresas em produção. A versão LTS tem suporte de 5-10 anos.
-            </p>
-          </div>
+              <div class="card card-warning">
+                <span class="card-label">⚠️ Erros comuns</span>
+                <p>
+                  <strong>"Vou começar pelo Arch para aprender mais"</strong> — a
+                  curva é íngreme demais para quem não tem base. Comece pelo Ubuntu
+                  ou Fedora. Depois que entender os fundamentos, o Arch faz muito
+                  mais sentido.
+                </p>
+                <p>
+                  <strong>"Ubuntu é para iniciantes, não para produção"</strong> —
+                  Ubuntu Server é usado pela Canonical, AWS, Google Cloud e inúmeras
+                  empresas em produção. A versão LTS tem suporte de 5-10 anos.
+                </p>
+              </div>
 
-          <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
-            <ul>
-              <li><strong>Iniciante:</strong> Ubuntu ou Fedora</li>
-              <li><strong>Corporativo:</strong> RHEL / CentOS Stream</li>
-              <li><strong>Aprender a fundo:</strong> Arch Linux</li>
-              <li><strong>Containers:</strong> Alpine Linux</li>
-              <li><strong>Servidor estável:</strong> Debian ou Ubuntu LTS</li>
-            </ul>
-          </div>
-        </section>
+              <div class="card card-summary">
+                <span class="card-label">⚡ O que você precisa guardar</span>
+                <ul>
+                  <li><strong>Iniciante:</strong> Ubuntu ou Fedora</li>
+                  <li><strong>Corporativo:</strong> RHEL / CentOS Stream</li>
+                  <li><strong>Aprender a fundo:</strong> Arch Linux</li>
+                  <li><strong>Containers:</strong> Alpine Linux</li>
+                  <li><strong>Servidor estável:</strong> Debian ou Ubuntu LTS</li>
+                </ul>
+              </div>
+            </section>
 
-        <!-- FLASHCARDS -->
-        <section class="flashcards-section">
-          <h2>🃏 Flashcards</h2>
-          <div id="flashcard-widget"></div>
-        </section>
+            <!-- FLASHCARDS -->
+            <section class="flashcards-section">
+              <h2>🃏 Flashcards</h2>
+              <div id="flashcard-widget"></div>
+            </section>
 
-        <!-- QUIZ -->
-        <section class="quiz-section">
-          <h2>📝 Quiz — Módulo 01</h2>
-          <div id="quiz-widget"></div>
-        </section>
+            <!-- QUIZ -->
+            <section class="quiz-section">
+              <h2>📝 Quiz — Módulo 01</h2>
+              <div id="quiz-widget"></div>
+            </section>
 
-        <!-- NAVEGAÇÃO -->
-        <nav class="module-nav">
-          <a href="../index.html" class="module-nav-link prev disabled"
-            >← Início</a
-          >
-          <a href="filesystem.html" class="module-nav-link next">Próximo →</a>
-        </nav>
-      </div>
+            <!-- NAVEGAÇÃO -->
+            <nav class="module-nav">
+              <a href="../index.html" class="module-nav-link prev disabled"
+                >← Início</a
+              >
+              <a href="filesystem.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /mod-main -->
+
+          <!-- ================================================
+               SIDEBAR DIREITA — Progresso + Nesta página
+               ================================================ -->
+          <aside class="mod-nav-right" aria-label="Progresso e sumário">
+
+            <div class="mod-progress-card">
+              <span class="mod-sidebar-label">Progresso</span>
+              <div class="mod-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo">
+                <div class="mod-progress-fill"></div>
+              </div>
+              <p class="mod-progress-text">
+                Seções: <strong class="mod-sidebar-pct">0%</strong>
+              </p>
+            </div>
+
+            <nav class="mod-toc" aria-label="Nesta página">
+              <span class="mod-sidebar-label">Nesta página</span>
+              <ol class="mod-toc-list">
+                <li><a href="#o-que-e-linux">O que é Linux</a></li>
+                <li><a href="#historia">A história: 1991</a></li>
+                <li><a href="#kernel-distro-shell">Kernel, Distro, Shell</a></li>
+                <li><a href="#open-source">Open-source</a></li>
+                <li><a href="#por-que-aprender">Por que aprender</a></li>
+                <li><a href="#principais-distros">Principais distros</a></li>
+              </ol>
+            </nav>
+
+          </aside><!-- /mod-nav-right -->
+
+        </div><!-- /mod-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
@@ -577,5 +1048,50 @@ apk add nginx
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
+    <!-- Scroll spy + sidebar progress sync (scoped a esta página) -->
+    <script>
+      (function () {
+        // --- Scroll spy para "Nesta página" ---
+        var tocLinks = document.querySelectorAll('.mod-toc-list a');
+        if (tocLinks.length) {
+          var sections = [];
+          tocLinks.forEach(function (a) {
+            var id = a.getAttribute('href').slice(1);
+            var el = document.getElementById(id);
+            if (el) sections.push({ link: a, target: el });
+          });
+
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              var match = sections.find(function (s) { return s.target === entry.target; });
+              if (match) match.link.classList.toggle('is-active', entry.isIntersecting);
+            });
+          }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+          sections.forEach(function (s) { observer.observe(s.target); });
+        }
+
+        // --- Sincroniza barra de progresso na sidebar direita ---
+        var pctSource = document.getElementById('progress-pct');
+        var fill = document.querySelector('.mod-progress-fill');
+        var pctLabel = document.querySelector('.mod-sidebar-pct');
+        var progressBar = document.querySelector('.mod-progress-track');
+
+        function syncSidebarProgress() {
+          var val = pctSource ? pctSource.textContent.trim() : '0%';
+          var num = parseInt(val, 10) || 0;
+          if (fill) fill.style.width = val;
+          if (pctLabel) pctLabel.textContent = val;
+          if (progressBar) progressBar.setAttribute('aria-valuenow', num);
+        }
+
+        if (pctSource) {
+          new MutationObserver(syncSidebarProgress)
+            .observe(pctSource, { childList: true, subtree: true, characterData: true });
+          syncSidebarProgress();
+        }
+      })();
+    </script>
   </body>
 </html>
