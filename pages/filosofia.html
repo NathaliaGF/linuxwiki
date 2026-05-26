@@ -7,668 +7,804 @@
     <title>Módulo 01 — Filosofia Linux | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
 
     <style>
       /* ============================================================
-         MÓDULO 01 — LAYOUT EXCLUSIVO
+         MÓDULO 01 — FILOSOFIA LINUX
          Scoped: body[data-module="filosofia"]
-         Zero impacto em outros módulos
+         Zero impacto nos demais módulos
          ============================================================ */
 
-      body[data-module="filosofia"] .module-page {
-        padding-top: 0;
+      /* ---- Variáveis da paleta -------------------------------- */
+      body[data-module="filosofia"] {
+        --bg-page:        #09090f;
+        --bg-card:        #0d1117;
+        --bg-card-alt:    #111827;
+        --bg-step-bar:    #0f1520;
+        --border-subtle:  rgba(255, 255, 255, 0.07);
+        --border-medium:  rgba(255, 255, 255, 0.12);
+        --accent-blue:    #0ea5e9;
+        --accent-cyan:    #22d3ee;
+        --accent-dot:     #38bdf8;
+        --text-primary:   #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted-p:   #475569;
+        --check-color:    #0ea5e9;
+        --link-color:     #38bdf8;
       }
+
+      /* ---- Reset de containers globais ----------------------- */
+      body[data-module="filosofia"] .module-page { padding-top: 0; }
       body[data-module="filosofia"] .container--narrow {
         max-width: none;
         padding: 0;
         margin: 0;
       }
 
-      /* ---- Wrapper externo ------------------------------------ */
-      .lm-wrap {
-        max-width: 1240px;
+      /* ---- Gradiente de fundo -------------------------------- */
+      body[data-module="filosofia"] .module-layout::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 55vw; height: 55vh;
+        background: radial-gradient(ellipse at 0% 0%,
+          rgba(14,165,233,0.06) 0%, transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ============================================================
+         LAYOUT PRINCIPAL (2 colunas)
+         ============================================================ */
+      .module-layout {
+        display: flex;
+        gap: 32px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 24px 80px;
-      }
-
-      /* ---- Layout 2 colunas ---------------------------------- */
-      .lm-body {
-        display: grid;
-        grid-template-columns: 1fr 280px;
-        gap: 0 32px;
-        align-items: start;
-      }
-
-      /* ============================================================
-         HEADER DO MÓDULO
-         ============================================================ */
-      .lm-header {
-        padding: 32px 0 0;
-        margin-bottom: 0;
-      }
-
-      .lm-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        color: var(--text-faint);
-        margin-bottom: 20px;
-      }
-
-      .lm-breadcrumb a {
-        color: var(--text-faint);
-        text-decoration: none;
-        transition: color 0.15s;
-      }
-
-      .lm-breadcrumb a:hover { color: var(--cyan); }
-
-      .lm-breadcrumb-sep {
-        color: var(--text-faint);
-        opacity: 0.5;
-      }
-
-      .lm-breadcrumb-current {
-        color: var(--text-muted);
-      }
-
-      .lm-header-inner {
-        display: flex;
+        padding: 40px 24px 80px;
         align-items: flex-start;
-        gap: 20px;
-      }
-
-      /* Tux */
-      .lm-tux {
-        flex-shrink: 0;
-        width: 64px;
-        height: 72px;
-        margin-top: 4px;
-      }
-
-      .lm-header-text {
-        flex: 1;
-        min-width: 0;
-      }
-
-      /* Badges */
-      .lm-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-
-      .lm-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 3px 10px;
-        border-radius: 100px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--border-mid);
-        color: var(--text-muted);
-      }
-
-      .lm-badge-iniciante {
-        background: rgba(34,211,238,0.07);
-        border-color: rgba(34,211,238,0.2);
-        color: var(--cyan);
-      }
-
-      .lm-badge-fundamental {
-        background: rgba(167,139,250,0.07);
-        border-color: rgba(167,139,250,0.2);
-        color: var(--purple);
-      }
-
-      .lm-badge-progress {
-        background: rgba(96,165,250,0.07);
-        border-color: rgba(96,165,250,0.18);
-        color: var(--blue);
-      }
-
-      .lm-badge-progress strong {
-        color: var(--cyan);
-        margin-left: 3px;
-      }
-
-      .lm-title {
-        font-family: var(--font-display);
-        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        line-height: 1.1;
-        margin: 0 0 10px;
-      }
-
-      .lm-subtitle {
-        font-size: 15px;
-        color: var(--text-muted);
-        margin: 0;
-        line-height: 1.6;
-      }
-
-      /* ============================================================
-         STEP NAVIGATION
-         ============================================================ */
-      .lm-steps {
-        display: flex;
-        gap: 0;
-        margin: 28px 0 0;
-        overflow-x: auto;
-        scrollbar-width: none;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 0;
-      }
-
-      .lm-steps::-webkit-scrollbar { display: none; }
-
-      .lm-step {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 10px 16px 12px;
-        background: none;
-        border: none;
-        border-bottom: 2px solid transparent;
-        cursor: pointer;
-        text-align: left;
-        transition: border-color 0.15s, color 0.15s;
-        flex-shrink: 0;
-        min-width: 0;
-        max-width: 140px;
-        margin-bottom: -1px;
         position: relative;
       }
 
-      .lm-step:hover .lm-step-label {
-        color: var(--text);
-      }
-
-      .lm-step:focus-visible {
-        outline: 2px solid var(--cyan);
-        outline-offset: 2px;
-        border-radius: 4px 4px 0 0;
-      }
-
-      .lm-step-num {
-        font-family: var(--font-mono);
-        font-size: 10px;
-        font-weight: 500;
-        color: var(--text-faint);
-        transition: color 0.15s;
-      }
-
-      .lm-step-label {
-        font-size: 12px;
-        color: var(--text-faint);
-        line-height: 1.3;
-        transition: color 0.15s;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 108px;
-      }
-
-      .lm-step.is-active {
-        border-bottom-color: var(--cyan);
-      }
-
-      .lm-step.is-active .lm-step-num {
-        color: var(--cyan);
-      }
-
-      .lm-step.is-active .lm-step-label {
-        color: var(--text);
-        font-weight: 500;
-      }
-
-      .lm-step.is-done .lm-step-num::after {
-        content: " ✓";
-        color: var(--green);
-      }
-
-      .lm-step.is-done .lm-step-label {
-        color: var(--text-muted);
-      }
-
-      /* ============================================================
-         CONTEÚDO
-         ============================================================ */
-      .lm-left {
+      body[data-module="filosofia"] .module-main {
+        flex: 1;
         min-width: 0;
+        position: relative;
+        z-index: 1;
       }
 
-      body[data-module="filosofia"] .content-section {
-        padding: 40px 0 36px;
-        border-bottom: 1px solid var(--border);
-        scroll-margin-top: calc(var(--header-height) + 16px);
-      }
-
-      body[data-module="filosofia"] .flashcards-section,
-      body[data-module="filosofia"] .quiz-section {
-        padding: 40px 0 36px;
-        border-bottom: 1px solid var(--border);
-      }
-
-      body[data-module="filosofia"] .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-      }
-
-      .lm-section-kicker {
-        font-family: var(--font-mono);
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--cyan);
-        margin-bottom: 8px;
-        display: block;
-      }
-
-      body[data-module="filosofia"] .section-header h2 {
-        font-family: var(--font-display);
-        font-size: 1.3rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        margin: 0;
-      }
-
-      body[data-module="filosofia"] .card {
-        margin-bottom: 14px;
-      }
-
-      body[data-module="filosofia"] .card:last-child {
-        margin-bottom: 0;
-      }
-
-      /* Cards de analogia com ícone de lâmpada */
-      body[data-module="filosofia"] .card-analogy .card-label::before {
-        content: "💡 ";
-      }
-
-      /* ---- Diagrama de camadas ------------------------------- */
-      .lm-layer-diagram {
-        margin: 24px 0 8px;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 20px 16px;
-        overflow-x: auto;
-      }
-
-      .lm-layer-diagram figcaption {
-        text-align: center;
-        font-size: 11px;
-        color: var(--text-faint);
-        margin-top: 12px;
-        font-family: var(--font-mono);
-      }
-
-      .lm-layer-svg {
-        display: block;
-        width: 100%;
-        max-width: 560px;
-        margin: 0 auto;
-        min-width: 320px;
-      }
-
-      /* ============================================================
-         NAVEGAÇÃO ENTRE STEPS (inferior)
-         ============================================================ */
-      .lm-step-nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 32px 0 16px;
-        border-top: 1px solid var(--border);
-        margin-top: 4px;
-      }
-
-      .lm-btn-prev,
-      .lm-btn-next {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s, opacity 0.15s;
-        border: 1px solid var(--border-mid);
-        background: rgba(255,255,255,0.04);
-        color: var(--text-muted);
-      }
-
-      .lm-btn-prev:hover:not(:disabled),
-      .lm-btn-next:hover {
-        background: rgba(255,255,255,0.07);
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      .lm-btn-prev:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-
-      .lm-btn-next {
-        background: rgba(34,211,238,0.09);
-        border-color: rgba(34,211,238,0.25);
-        color: var(--cyan);
-        font-weight: 600;
-      }
-
-      .lm-btn-next:hover {
-        background: rgba(34,211,238,0.15);
-        color: var(--cyan);
-      }
-
-      .lm-btn-prev:focus-visible,
-      .lm-btn-next:focus-visible {
-        outline: 2px solid var(--cyan);
-        outline-offset: 2px;
-      }
-
-      .lm-step-counter {
-        font-size: 12px;
-        color: var(--text-faint);
-        font-family: var(--font-mono);
-        white-space: nowrap;
-      }
-
-      /* Mantém module-nav original oculto — usamos o lm-step-nav */
-      body[data-module="filosofia"] .module-nav {
-        display: none;
-      }
-
-      /* ============================================================
-         SIDEBAR DIREITA
-         ============================================================ */
-      .lm-sidebar {
+      body[data-module="filosofia"] .module-sidebar {
+        width: 320px;
+        flex-shrink: 0;
         position: sticky;
         top: calc(var(--header-height) + 16px);
         max-height: calc(100vh - var(--header-height) - 32px);
         overflow-y: auto;
         scrollbar-width: thin;
         scrollbar-color: rgba(255,255,255,0.07) transparent;
+        z-index: 1;
+      }
+
+      /* ============================================================
+         MODULE HEADER
+         ============================================================ */
+      .module-header-premium {
+        padding: 0 0 32px;
+      }
+
+      .module-breadcrumb {
+        font-size: 12px;
+        color: var(--text-muted-p);
+        letter-spacing: 0.02em;
+        margin-bottom: 20px;
         display: flex;
-        flex-direction: column;
-        gap: 14px;
-        padding-top: 32px;
-        padding-bottom: 16px;
+        align-items: center;
+        gap: 0;
       }
 
-      .lm-sidebar-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 18px 18px 16px;
+      .module-breadcrumb a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .module-breadcrumb a:hover { color: var(--accent-cyan); }
+
+      .module-breadcrumb-sep {
+        margin: 0 6px;
+        color: var(--text-muted-p);
+        opacity: 0.5;
       }
 
-      .lm-card-title {
+      .module-header-body {
+        display: flex;
+        align-items: flex-start;
+        gap: 28px;
+      }
+
+      /* ---- Hexágono com Tux ---------------------------------- */
+      .tux-hex-wrapper {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        position: relative;
+        filter: drop-shadow(0 0 14px rgba(14,165,233,0.35));
+      }
+
+      .tux-hex-border {
+        position: absolute;
+        inset: -2px;
+        clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+        background: linear-gradient(145deg, #0ea5e9, rgba(14,165,233,0.25));
+        width: 124px;
+        height: 124px;
+      }
+
+      .tux-hex {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+        background: linear-gradient(145deg, #0f2744, #0a1628);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .tux-hex svg {
+        width: 70px;
+        height: 80px;
+      }
+
+      /* ---- Header texto -------------------------------------- */
+      .module-header-text { flex: 1; min-width: 0; }
+
+      /* ---- Badges ------------------------------------------- */
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .badge {
         font-size: 11px;
         font-weight: 600;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: var(--text-faint);
-        margin: 0 0 16px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid;
       }
 
-      /* ---- Card de progresso --------------------------------- */
-      .lm-progress-card {
-        border-color: rgba(34,211,238,0.12);
+      .badge-iniciante {
+        color: #34d399;
+        border-color: rgba(52,211,153,0.35);
+        background: rgba(52,211,153,0.08);
       }
 
-      .lm-ring-wrap {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 72px;
-        height: 72px;
-        margin: 0 auto 14px;
+      .badge-fundamental {
+        color: var(--accent-blue);
+        border-color: rgba(14,165,233,0.35);
+        background: rgba(14,165,233,0.08);
       }
 
-      .lm-ring {
-        width: 72px;
-        height: 72px;
+      .badge-progresso {
+        color: var(--text-secondary);
+        border-color: var(--border-subtle);
+        background: transparent;
       }
 
-      .lm-ring-track {
-        stroke: rgba(255,255,255,0.07);
+      .badge-progresso strong { color: var(--accent-cyan); }
+
+      /* ---- Título e subtítulo -------------------------------- */
+      .module-title {
+        font-family: 'Space Grotesk', 'Syne', sans-serif;
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
       }
 
-      .lm-ring-fill {
-        stroke: var(--cyan);
-        stroke-dasharray: 188.5;
-        stroke-dashoffset: 188.5;
-        transition: stroke-dashoffset 0.5s ease;
-        stroke-linecap: round;
-      }
-
-      .lm-ring-pct {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
+      .module-subtitle {
         font-size: 15px;
-        font-weight: 700;
-        color: var(--text);
-      }
-
-      .lm-progress-count {
-        text-align: center;
-        font-size: 13px;
-        color: var(--text-muted);
-        margin: 0 0 4px;
-        line-height: 1.5;
-      }
-
-      .lm-topics-done {
-        color: var(--cyan);
-        font-weight: 600;
-      }
-
-      .lm-progress-time {
-        text-align: center;
-        font-size: 12px;
-        color: var(--text-faint);
-        margin: 0 0 14px;
-        font-family: var(--font-mono);
-      }
-
-      .lm-btn-continue {
-        display: block;
-        width: 100%;
-        padding: 9px 14px;
-        background: linear-gradient(135deg, rgba(34,211,238,0.14), rgba(96,165,250,0.10));
-        border: 1px solid rgba(34,211,238,0.25);
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--cyan);
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s;
-        text-align: center;
-      }
-
-      .lm-btn-continue:hover {
-        background: linear-gradient(135deg, rgba(34,211,238,0.22), rgba(96,165,250,0.16));
-        text-decoration: none;
-      }
-
-      .lm-btn-continue:focus-visible {
-        outline: 2px solid var(--cyan);
-        outline-offset: 2px;
-      }
-
-      /* ---- Card de tópicos ----------------------------------- */
-      .lm-topics-list {
-        list-style: none;
-        padding: 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        max-width: 560px;
         margin: 0;
+      }
+
+      /* ============================================================
+         STEP NAVIGATION BAR
+         ============================================================ */
+      .step-nav {
+        display: flex;
+        background: var(--bg-step-bar);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 0 4px;
+        margin: 28px 0 36px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .step-nav::-webkit-scrollbar { display: none; }
+
+      .step-item {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        padding: 14px 20px;
+        cursor: pointer;
+        position: relative;
+        min-width: 110px;
+        border: none;
+        border-bottom: 2px solid transparent;
+        background: none;
+        text-align: left;
+        transition: border-color 0.2s, background 0.15s;
+        margin-bottom: -1px;
       }
 
-      .lm-topic-item {
+      .step-item + .step-item::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 20%; bottom: 20%;
+        width: 1px;
+        background: var(--border-subtle);
+      }
+
+      .step-item:hover { background: rgba(255,255,255,0.03); }
+      .step-item:hover .step-label { color: var(--text-primary); }
+
+      .step-item:focus-visible {
+        outline: 2px solid var(--accent-blue);
+        outline-offset: -2px;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .step-number {
+        font-size: 11px;
+        font-weight: 700;
+        font-family: 'IBM Plex Mono', monospace;
+        color: var(--text-muted-p);
+        margin-bottom: 4px;
+        letter-spacing: 0.04em;
+        transition: color 0.15s;
+      }
+
+      .step-label {
+        font-size: 12px;
+        color: var(--text-muted-p);
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 130px;
+        transition: color 0.15s;
+      }
+
+      .step-item.active {
+        border-bottom-color: var(--accent-blue);
+      }
+      .step-item.active .step-number { color: var(--accent-blue); }
+      .step-item.active .step-label  { color: var(--text-primary); font-weight: 500; }
+
+      .step-item.done .step-number { color: #34d399; }
+      .step-item.done .step-number::after { content: ' ✓'; }
+      .step-item.done .step-label  { color: var(--text-secondary); }
+
+      /* ============================================================
+         SEÇÕES DE CONTEÚDO
+         ============================================================ */
+      body[data-module="filosofia"] .content-section {
+        padding: 40px 0 36px;
+        border-bottom: 1px solid var(--border-subtle);
+        scroll-margin-top: calc(var(--header-height) + 16px);
+      }
+
+      body[data-module="filosofia"] .flashcards-section,
+      body[data-module="filosofia"] .quiz-section {
+        padding: 40px 0 36px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      body[data-module="filosofia"] .section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .section-kicker {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent-cyan);
+        font-family: 'IBM Plex Mono', monospace;
+        margin: 0 0 8px;
+        display: block;
+      }
+
+      body[data-module="filosofia"] .section-header h2 {
+        font-family: 'Space Grotesk', 'Syne', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+
+      /* ---- Layout texto + diagrama (seção 1) ----------------- */
+      .section-text-diagram {
+        display: flex;
+        gap: 36px;
+        align-items: flex-start;
+      }
+      .section-text-content { flex: 1; min-width: 0; }
+      .section-diagram-wrap { flex-shrink: 0; width: 220px; }
+
+      /* ---- Cards de conteúdo --------------------------------- */
+      body[data-module="filosofia"] .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-left: 3px solid var(--accent-blue);
+        border-radius: 0 8px 8px 0;
+        padding: 22px 26px;
+        margin-bottom: 14px;
+      }
+
+      body[data-module="filosofia"] .card:last-child { margin-bottom: 0; }
+
+      body[data-module="filosofia"] .card-analogy {
+        background: rgba(251,191,36,0.04);
+        border-color: rgba(251,191,36,0.12);
+        border-left-color: #f59e0b;
+      }
+
+      body[data-module="filosofia"] .card-warning {
+        background: rgba(248,113,113,0.04);
+        border-color: rgba(248,113,113,0.12);
+        border-left-color: #f87171;
+      }
+
+      body[data-module="filosofia"] .card-example {
+        background: rgba(34,211,238,0.03);
+        border-color: rgba(34,211,238,0.10);
+        border-left-color: var(--accent-cyan);
+      }
+
+      body[data-module="filosofia"] .card-summary {
+        background: rgba(14,165,233,0.04);
+        border-color: rgba(14,165,233,0.12);
+        border-left-color: var(--accent-blue);
+      }
+
+      /* Label interna dos cards */
+      body[data-module="filosofia"] .card-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent-cyan);
+        font-family: 'IBM Plex Mono', monospace;
+        margin-bottom: 14px;
+      }
+
+      body[data-module="filosofia"] .card-label::before {
+        content: '';
+        display: inline-block;
+        width: 7px; height: 7px;
+        background: var(--accent-cyan);
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+
+      body[data-module="filosofia"] .card-analogy .card-label {
+        color: #f59e0b;
+      }
+      body[data-module="filosofia"] .card-analogy .card-label::before { background: #f59e0b; }
+
+      body[data-module="filosofia"] .card-warning .card-label {
+        color: #f87171;
+      }
+      body[data-module="filosofia"] .card-warning .card-label::before { background: #f87171; }
+
+      body[data-module="filosofia"] .card-example .card-label { color: var(--accent-cyan); }
+      body[data-module="filosofia"] .card-summary .card-label { color: var(--accent-blue); }
+      body[data-module="filosofia"] .card-summary .card-label::before { background: var(--accent-blue); }
+
+      /* Bullets com ✓ */
+      body[data-module="filosofia"] .card ul {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+      }
+
+      body[data-module="filosofia"] .card li {
         display: flex;
         align-items: flex-start;
         gap: 10px;
-        padding: 6px 8px;
-        border-radius: 7px;
-        font-size: 12.5px;
-        color: var(--text-muted);
-        line-height: 1.4;
-        cursor: pointer;
-        transition: background 0.12s, color 0.12s;
-        text-decoration: none;
+        padding: 5px 0;
+        font-size: 14.5px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        margin-top: 0;
       }
 
-      .lm-topic-item:hover {
-        background: rgba(255,255,255,0.04);
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      .lm-topic-radio {
+      body[data-module="filosofia"] .card li::before {
+        content: '✓';
+        color: var(--check-color);
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 3px;
         flex-shrink: 0;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.15);
-        margin-top: 1px;
-        transition: border-color 0.15s, background 0.15s;
+      }
+
+      body[data-module="filosofia"] .card p {
+        font-size: 14.5px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        margin: 0 0 10px;
+      }
+      body[data-module="filosofia"] .card p:last-child { margin-bottom: 0; }
+
+      body[data-module="filosofia"] .card a { color: var(--link-color); }
+
+      /* Card Conceito-chave (analogia) — ícone de lâmpada */
+      body[data-module="filosofia"] .card-analogy .card-label::before {
+        content: '';
+        background: #f59e0b;
+      }
+
+      /* Key concept card */
+      .key-concept-card {
+        display: flex;
+        gap: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 20px 22px;
+        margin-top: 20px;
+      }
+
+      .key-concept-icon {
+        width: 40px; height: 40px;
+        flex-shrink: 0;
+        background: rgba(14,165,233,0.1);
+        border: 1px solid rgba(14,165,233,0.25);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+      }
+
+      .key-concept-body {}
+
+      .key-concept-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin: 0 0 7px;
+      }
+
+      .key-concept-text {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      /* Blockquote */
+      body[data-module="filosofia"] .editorial-quote {
+        border-left: 3px solid rgba(14,165,233,0.4);
+        padding: 12px 18px;
+        margin: 14px 0;
+        color: var(--text-secondary);
+        font-style: italic;
+        font-size: 14px;
+        background: rgba(14,165,233,0.03);
+        border-radius: 0 6px 6px 0;
+      }
+
+      /* ============================================================
+         SIDEBAR CARDS
+         ============================================================ */
+      .sidebar-card {
+        background: var(--bg-card-alt);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 14px;
+      }
+
+      .sidebar-card:last-child { margin-bottom: 0; }
+
+      .sidebar-card-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted-p);
+        margin: 0 0 16px;
+      }
+
+      /* ---- Card progresso ------------------------------------ */
+      .progress-ring-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+
+      /* O texto SVG do anel mantém classe .lm-ring-pct para o JS */
+      .lm-ring-fill {
+        transition: stroke-dashoffset 0.5s ease;
+      }
+
+      .progress-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+
+      .progress-meta-item {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 9px;
-        color: transparent;
+        gap: 8px;
       }
 
-      .lm-topic-item.is-done {
-        color: var(--text-muted);
-      }
+      .progress-done-count { color: var(--accent-blue); font-weight: 600; }
 
-      .lm-topic-item.is-done .lm-topic-radio {
-        background: rgba(34,211,238,0.18);
-        border-color: var(--cyan);
-        color: var(--cyan);
-      }
-
-      .lm-topic-item.is-done .lm-topic-radio::after {
-        content: "✓";
-        font-size: 9px;
-        line-height: 1;
-      }
-
-      /* ---- Card de tempo ------------------------------------- */
-      .lm-time-value {
-        font-family: var(--font-display);
-        font-size: 22px;
+      .btn-continue {
+        display: block;
+        width: 100%;
+        padding: 11px 16px;
+        background: var(--accent-blue);
+        color: #fff;
+        font-size: 13px;
         font-weight: 700;
-        color: var(--text);
-        margin: 0 0 4px;
-        letter-spacing: -0.03em;
+        letter-spacing: 0.04em;
+        text-align: center;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
       }
 
-      .lm-time-label {
-        font-size: 12px;
-        color: var(--text-faint);
+      .btn-continue:hover  { background: #0284c7; text-decoration: none; }
+      .btn-continue:active { transform: scale(0.98); }
+      .btn-continue:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+
+      /* ---- Card tópicos -------------------------------------- */
+      .lesson-topics {
+        list-style: none;
+        padding: 0;
         margin: 0;
+      }
+
+      .lesson-topic-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 8px 6px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border-subtle);
+        text-decoration: none;
+        transition: color 0.15s;
+        cursor: pointer;
+      }
+
+      .lesson-topic-item:last-child { border-bottom: none; }
+      .lesson-topic-item:hover { color: var(--text-primary); text-decoration: none; }
+      .lesson-topic-item:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+      .topic-radio {
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        border: 1.5px solid var(--text-muted-p);
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .lesson-topic-item.done .topic-radio {
+        background: var(--accent-blue);
+        border-color: var(--accent-blue);
+        box-shadow: inset 0 0 0 3px var(--bg-card-alt);
+      }
+
+      .topic-label { line-height: 1.4; }
+
+      .lesson-topic-item.done .topic-label {
+        color: var(--text-muted-p);
+        text-decoration: line-through;
+        text-decoration-color: var(--text-muted-p);
+      }
+
+      /* ---- Card tempo ---------------------------------------- */
+      .time-card-content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .time-icon {
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border-medium);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .time-value {
+        font-family: 'Space Grotesk', 'Syne', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+        margin: 0 0 3px;
+      }
+
+      .time-desc {
+        font-size: 11px;
+        color: var(--text-muted-p);
+        margin: 0;
+      }
+
+      /* ============================================================
+         BOTÕES ANTERIOR / PRÓXIMO (step nav)
+         ============================================================ */
+      .module-nav-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-subtle);
+      }
+
+      .step-counter-label {
+        font-size: 12px;
+        color: var(--text-muted-p);
+        font-family: 'IBM Plex Mono', monospace;
+        white-space: nowrap;
+      }
+
+      .btn-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 22px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.15s;
+        text-decoration: none;
+        border: none;
+      }
+
+      .btn-nav-prev {
+        background: transparent;
+        border: 1px solid var(--border-medium);
+        color: var(--text-secondary);
+      }
+
+      .btn-nav-prev:hover:not(:disabled) {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .btn-nav-prev:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      .btn-nav-next {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+
+      .btn-nav-next:hover {
+        background: #0284c7;
+        transform: translateX(2px);
+        text-decoration: none;
+      }
+
+      .btn-nav-prev:focus-visible,
+      .btn-nav-next:focus-visible {
+        outline: 2px solid var(--accent-cyan);
+        outline-offset: 2px;
+      }
+
+      /* Nav de módulos (kept for main.js, hidden visually) */
+      body[data-module="filosofia"] .module-nav { display: none; }
+
+      /* ============================================================
+         mark-studied override
+         ============================================================ */
+      body[data-module="filosofia"] .mark-studied {
+        flex-shrink: 0;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border-medium);
+        background: transparent;
+        color: var(--text-muted-p);
+        font-size: 11px;
+        font-family: 'IBM Plex Mono', monospace;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+        white-space: nowrap;
+      }
+
+      body[data-module="filosofia"] .mark-studied:hover,
+      body[data-module="filosofia"] .mark-studied.studied {
+        border-color: rgba(14,165,233,0.45);
+        color: var(--accent-blue);
+        background: rgba(14,165,233,0.06);
       }
 
       /* ============================================================
          RESPONSIVO
          ============================================================ */
-      @media (max-width: 900px) {
-        .lm-body {
-          grid-template-columns: 1fr;
+      @media (max-width: 960px) {
+        .module-layout {
+          flex-direction: column-reverse;
+          padding: 24px 20px 64px;
         }
 
-        .lm-sidebar {
+        body[data-module="filosofia"] .module-sidebar {
+          width: 100%;
           position: static;
           max-height: none;
           overflow-y: visible;
-          flex-direction: row;
+          display: flex;
           flex-wrap: wrap;
           gap: 12px;
-          padding-top: 0;
-          border-top: 1px solid var(--border);
-          margin-top: 0;
-          padding-bottom: 0;
-          order: -1;
         }
 
-        .lm-progress-card { flex: 1; min-width: 180px; }
-        .lm-topics-card   { flex: 2; min-width: 220px; }
-        .lm-time-card     { flex: 1; min-width: 130px; }
-
-        .lm-header { padding-top: 24px; }
+        .sidebar-card { flex: 1; min-width: 200px; margin-bottom: 0; }
+        .module-title { font-size: clamp(32px, 6vw, 44px); }
       }
 
-      @media (max-width: 600px) {
-        .lm-wrap { padding: 0 16px 56px; }
-
-        .lm-sidebar {
-          flex-direction: column;
-        }
-
-        .lm-progress-card,
-        .lm-topics-card,
-        .lm-time-card {
-          flex: none;
-          width: 100%;
-        }
-
-        .lm-steps {
-          gap: 0;
-        }
-
-        .lm-step {
-          padding: 8px 10px 10px;
-          max-width: 100px;
-        }
-
-        .lm-step-label {
-          max-width: 80px;
-          font-size: 11px;
-        }
-
-        .lm-header-inner {
-          gap: 14px;
-        }
-
-        .lm-tux {
-          width: 48px;
-          height: 54px;
-        }
+      @media (max-width: 680px) {
+        .section-text-diagram { flex-direction: column; }
+        .section-diagram-wrap { width: 100%; }
+        .module-layout { padding: 20px 16px 56px; }
+        .module-header-body { flex-direction: column; gap: 20px; }
+        .tux-hex-wrapper { width: 90px; height: 90px; }
+        .tux-hex { width: 90px; height: 90px; }
+        .tux-hex-border { width: 94px; height: 94px; }
+        .step-item { min-width: 80px; padding: 10px 12px; }
+        .step-label { display: none; }
+        body[data-module="filosofia"] .module-sidebar { flex-direction: column; }
+        .sidebar-card { flex: none; width: 100%; }
       }
 
       @media (prefers-reduced-motion: reduce) {
         .lm-ring-fill { transition: none; }
-        .lm-btn-prev, .lm-btn-next { transition: none; }
+        .btn-nav-next:hover { transform: none; }
       }
     </style>
   </head>
@@ -690,511 +826,545 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <div class="lm-wrap">
-          <div class="lm-body">
+        <div class="module-layout">
 
-            <!-- ================================================
-                 COLUNA ESQUERDA — conteúdo principal
-                 ================================================ -->
-            <div class="lm-left">
+          <!-- ================================================
+               COLUNA PRINCIPAL
+               ================================================ -->
+          <div class="module-main">
 
-              <!-- HEADER DO MÓDULO -->
-              <header class="lm-header">
-                <nav class="lm-breadcrumb" aria-label="Navegação estrutural">
-                  <a href="../index.html">Módulos</a>
-                  <span class="lm-breadcrumb-sep" aria-hidden="true">›</span>
-                  <span class="lm-breadcrumb-current" aria-current="page">Módulo 01</span>
-                </nav>
-
-                <div class="lm-header-inner">
-                  <!-- Tux SVG -->
-                  <svg class="lm-tux" viewBox="0 0 48 58" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <ellipse cx="24" cy="38" rx="15" ry="17" fill="#0d0e18" stroke="rgba(34,211,238,0.18)" stroke-width="1.2"/>
-                    <circle cx="24" cy="18" r="13" fill="#0d0e18" stroke="rgba(34,211,238,0.18)" stroke-width="1.2"/>
-                    <ellipse cx="24" cy="40" rx="8.5" ry="10.5" fill="rgba(255,255,255,0.07)"/>
-                    <ellipse cx="24" cy="20" rx="7.5" ry="8.5" fill="rgba(255,255,255,0.06)"/>
-                    <circle cx="19.5" cy="16.5" r="3" fill="white" opacity="0.9"/>
-                    <circle cx="28.5" cy="16.5" r="3" fill="white" opacity="0.9"/>
-                    <circle cx="20.2" cy="17.2" r="1.4" fill="#09090f"/>
-                    <circle cx="29.2" cy="17.2" r="1.4" fill="#09090f"/>
-                    <circle cx="19.8" cy="16.2" r="0.6" fill="white" opacity="0.7"/>
-                    <circle cx="28.8" cy="16.2" r="0.6" fill="white" opacity="0.7"/>
-                    <polygon points="21.5,22.5 26.5,22.5 24,26" fill="#f59e0b"/>
-                    <ellipse cx="17" cy="54" rx="5.5" ry="2.5" fill="#f59e0b" opacity="0.75"/>
-                    <ellipse cx="31" cy="54" rx="5.5" ry="2.5" fill="#f59e0b" opacity="0.75"/>
-                    <ellipse cx="10" cy="37" rx="4" ry="10" fill="#0d0e18" stroke="rgba(34,211,238,0.12)" stroke-width="1" transform="rotate(-18 10 37)"/>
-                    <ellipse cx="38" cy="37" rx="4" ry="10" fill="#0d0e18" stroke="rgba(34,211,238,0.12)" stroke-width="1" transform="rotate(18 38 37)"/>
-                  </svg>
-
-                  <div class="lm-header-text">
-                    <div class="lm-badges">
-                      <span class="lm-badge lm-badge-iniciante">Iniciante</span>
-                      <span class="lm-badge lm-badge-fundamental">Fundamental</span>
-                      <span class="lm-badge lm-badge-progress">Progresso <strong id="progress-pct">0%</strong></span>
-                    </div>
-                    <h1 class="lm-title">Filosofia Linux</h1>
-                    <p class="lm-subtitle">Do kernel ao open-source — a base de tudo em TI.</p>
-                  </div>
-                </div>
-              </header>
-
-              <!-- STEP NAVIGATION -->
-              <nav class="lm-steps" aria-label="Tópicos do módulo">
-                <button class="lm-step is-active" data-step="0" data-target="o-que-e-linux" type="button">
-                  <span class="lm-step-num">01</span>
-                  <span class="lm-step-label">O que é Linux</span>
-                </button>
-                <button class="lm-step" data-step="1" data-target="historia" type="button">
-                  <span class="lm-step-num">02</span>
-                  <span class="lm-step-label">1991 ao mundo</span>
-                </button>
-                <button class="lm-step" data-step="2" data-target="kernel-distro-shell" type="button">
-                  <span class="lm-step-num">03</span>
-                  <span class="lm-step-label">Kernel &amp; Distro</span>
-                </button>
-                <button class="lm-step" data-step="3" data-target="open-source" type="button">
-                  <span class="lm-step-num">04</span>
-                  <span class="lm-step-label">Open-source</span>
-                </button>
-                <button class="lm-step" data-step="4" data-target="por-que-aprender" type="button">
-                  <span class="lm-step-num">05</span>
-                  <span class="lm-step-label">Por que aprender</span>
-                </button>
-                <button class="lm-step" data-step="5" data-target="principais-distros" type="button">
-                  <span class="lm-step-num">06</span>
-                  <span class="lm-step-label">Distros</span>
-                </button>
+            <!-- MODULE HEADER -->
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 01</span>
               </nav>
 
-              <!-- ============================================
-                   SEÇÕES DE CONTEÚDO
-                   ============================================ -->
-
-              <!-- SEÇÃO 1 -->
-              <section class="content-section" id="o-que-e-linux">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">01. Conceito</span>
-                    <h2>O que é Linux</h2>
+              <div class="module-header-body">
+                <!-- Hexágono Tux -->
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 48 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <ellipse cx="24" cy="38" rx="15" ry="17" fill="#0a1628" stroke="rgba(14,165,233,0.3)" stroke-width="1.2"/>
+                      <circle cx="24" cy="18" r="13" fill="#0a1628" stroke="rgba(14,165,233,0.3)" stroke-width="1.2"/>
+                      <ellipse cx="24" cy="40" rx="8.5" ry="10.5" fill="rgba(255,255,255,0.07)"/>
+                      <ellipse cx="24" cy="20" rx="7.5" ry="8.5" fill="rgba(255,255,255,0.06)"/>
+                      <circle cx="19.5" cy="16.5" r="3" fill="white" opacity="0.92"/>
+                      <circle cx="28.5" cy="16.5" r="3" fill="white" opacity="0.92"/>
+                      <circle cx="20.2" cy="17.2" r="1.4" fill="#09090f"/>
+                      <circle cx="29.2" cy="17.2" r="1.4" fill="#09090f"/>
+                      <circle cx="19.8" cy="16.2" r="0.6" fill="white" opacity="0.7"/>
+                      <circle cx="28.8" cy="16.2" r="0.6" fill="white" opacity="0.7"/>
+                      <polygon points="21.5,22.5 26.5,22.5 24,26" fill="#f59e0b"/>
+                      <ellipse cx="17" cy="54" rx="5.5" ry="2.5" fill="#f59e0b" opacity="0.75"/>
+                      <ellipse cx="31" cy="54" rx="5.5" ry="2.5" fill="#f59e0b" opacity="0.75"/>
+                      <ellipse cx="10" cy="37" rx="4" ry="10" fill="#0a1628" stroke="rgba(14,165,233,0.2)" stroke-width="1" transform="rotate(-18 10 37)"/>
+                      <ellipse cx="38" cy="37" rx="4" ry="10" fill="#0a1628" stroke="rgba(14,165,233,0.2)" stroke-width="1" transform="rotate(18 38 37)"/>
+                    </svg>
                   </div>
-                  <button class="mark-studied" data-section="o-que-e-linux">☆ Marcar como estudado</button>
                 </div>
 
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p>Linux é um <strong>kernel</strong>, não um sistema operacional completo. O que chamamos de "Linux" no dia a dia é tecnicamente uma <strong>distribuição Linux</strong> (distro), que combina:</p>
-                  <ul>
-                    <li>O <strong>kernel Linux</strong> — o núcleo que conversa com o hardware</li>
-                    <li>As <strong>ferramentas GNU</strong> — compilador, shell, utilitários essenciais</li>
-                    <li>Um <strong>gerenciador de pacotes</strong> — para instalar e atualizar software</li>
-                    <li>Opcionalmente, uma <strong>interface gráfica</strong> (Desktop Environment)</li>
-                  </ul>
-                  <p>Quando você instala o Ubuntu, o Fedora ou o Arch, você está instalando uma distro — não "o Linux" em si. O kernel Linux é apenas uma das peças.</p>
+                <!-- Texto do header -->
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-iniciante">Iniciante</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Filosofia Linux</h1>
+                  <p class="module-subtitle">Do kernel ao open-source — a base que distingue um profissional de verdade.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="o-que-e-linux" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">O que é Linux</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="historia" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">1991 ao mundo</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="kernel-distro-shell" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">Kernel &amp; Distro</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="open-source" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">Open-source</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="por-que-aprender" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">Por que aprender</span>
+              </button>
+              <button class="step-item" data-step="5" data-target="principais-distros" type="button">
+                <span class="step-number">06</span>
+                <span class="step-label">Distros</span>
+              </button>
+            </nav>
+
+            <!-- ============================================
+                 SEÇÃO 1 — O que é Linux
+                 ============================================ -->
+            <section class="content-section" id="o-que-e-linux">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>O que é Linux</h2>
+                </div>
+                <button class="mark-studied" data-section="o-que-e-linux">☆ Marcar como estudado</button>
+              </div>
+
+              <div class="section-text-diagram">
+                <div class="section-text-content">
+                  <div class="card card-explanation">
+                    <span class="card-label">Explicação</span>
+                    <p>Linux é um <strong>kernel</strong>, não um sistema operacional completo. O que chamamos de "Linux" no dia a dia é tecnicamente uma <strong>distribuição Linux</strong> (distro), que combina:</p>
+                    <ul>
+                      <li>O <strong>kernel Linux</strong> — o núcleo que conversa com o hardware</li>
+                      <li>As <strong>ferramentas GNU</strong> — compilador, shell, utilitários essenciais</li>
+                      <li>Um <strong>gerenciador de pacotes</strong> — para instalar e atualizar software</li>
+                      <li>Opcionalmente, uma <strong>interface gráfica</strong> (Desktop Environment)</li>
+                    </ul>
+                    <p>Quando você instala o Ubuntu, o Fedora ou o Arch, você está instalando uma distro — não "o Linux" em si. O kernel Linux é apenas uma das peças.</p>
+                  </div>
+
+                  <div class="card card-analogy">
+                    <span class="card-label">Analogia — Planta baixa de imóvel</span>
+                    <p>Linux é como a planta baixa de um imóvel. O Windows te entrega o apartamento decorado e mobiliado — você usa, mas não entende o que tem dentro das paredes.</p>
+                    <p>O Linux te dá os tijolos, a planta e as ferramentas. Você monta o que quiser, do jeito que quiser. Mais difícil no início — mas você controla absolutamente tudo.</p>
+                  </div>
+
+                  <div class="card card-summary">
+                    <span class="card-label">O que você precisa guardar</span>
+                    <ul>
+                      <li>Linux é o <strong>kernel</strong> — o núcleo do sistema</li>
+                      <li>Distro = kernel + GNU tools + gerenciador de pacotes + (opcional) GUI</li>
+                      <li>Ubuntu, Fedora, Arch Linux são distros — todas usam o kernel Linux</li>
+                      <li>O correto seria dizer "GNU/Linux", mas ninguém fala assim no dia a dia</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <!-- Diagrama de camadas SVG -->
-                <figure class="lm-layer-diagram" role="img" aria-label="Diagrama das camadas do sistema Linux">
-                  <svg class="lm-layer-svg" viewBox="0 0 560 168" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Layer 1: HARDWARE -->
-                    <rect x="2" y="126" width="108" height="38" rx="7" fill="rgba(96,165,250,0.07)" stroke="rgba(96,165,250,0.22)" stroke-width="1.2"/>
-                    <text x="56" y="141" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7dd3fc" font-weight="500">HARDWARE</text>
-                    <text x="56" y="155" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(125,211,252,0.55)">CPU · RAM · Disco</text>
+                <div class="section-diagram-wrap" aria-hidden="true">
+                  <svg width="220" height="270" viewBox="0 0 220 270" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto">
+                    <defs>
+                      <filter id="kernel-glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                      </filter>
+                      <linearGradient id="progressGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0ea5e9"/>
+                        <stop offset="100%" stop-color="#22d3ee"/>
+                      </linearGradient>
+                    </defs>
 
-                    <!-- Arrow 1→2 -->
-                    <line x1="112" y1="145" x2="130" y2="145" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-                    <polygon points="130,140 140,145 130,150" fill="rgba(255,255,255,0.2)"/>
+                    <!-- Label topo -->
+                    <text x="110" y="16" text-anchor="middle" font-size="8.5" font-weight="600" fill="rgba(255,255,255,0.2)" letter-spacing="0.08em" font-family="monospace">CAMADAS DO SISTEMA</text>
+                    <line x1="20" y1="22" x2="200" y2="22" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
 
-                    <!-- Layer 2: KERNEL LINUX -->
-                    <rect x="142" y="116" width="118" height="48" rx="7" fill="rgba(34,211,238,0.07)" stroke="rgba(34,211,238,0.28)" stroke-width="1.2"/>
-                    <text x="201" y="136" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#22d3ee" font-weight="600">KERNEL LINUX</text>
-                    <text x="201" y="151" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(34,211,238,0.55)">gerencia hardware</text>
+                    <!-- APLICAÇÕES -->
+                    <rect x="10" y="34" width="200" height="44" rx="6" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.45)" stroke-width="1.2"/>
+                    <text x="110" y="57" text-anchor="middle" font-size="11.5" font-weight="700" fill="#c4b5fd" letter-spacing="0.08em" font-family="monospace">APLICAÇÕES</text>
+                    <text x="110" y="70" text-anchor="middle" font-size="9" fill="rgba(196,181,253,0.5)" font-family="monospace">nginx · vim · python</text>
 
-                    <!-- Arrow 2→3 -->
-                    <line x1="262" y1="140" x2="280" y2="140" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-                    <polygon points="280,135 290,140 280,145" fill="rgba(255,255,255,0.2)"/>
+                    <!-- Seta ↓ -->
+                    <line x1="110" y1="79" x2="110" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <polygon points="105,89 115,89 110,96" fill="rgba(255,255,255,0.18)"/>
 
-                    <!-- Layer 3: FERRAMENTAS GNU -->
-                    <rect x="292" y="106" width="122" height="58" rx="7" fill="rgba(167,139,250,0.06)" stroke="rgba(167,139,250,0.22)" stroke-width="1.2"/>
-                    <text x="353" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#a78bfa" font-weight="500">FERRAMENTAS GNU</text>
-                    <text x="353" y="141" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(167,139,250,0.55)">gcc · bash · glibc</text>
-                    <text x="353" y="154" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(167,139,250,0.45)">coreutils</text>
+                    <!-- FERRAMENTAS GNU -->
+                    <rect x="22" y="96" width="176" height="44" rx="6" fill="rgba(14,165,233,0.12)" stroke="rgba(14,165,233,0.38)" stroke-width="1.2"/>
+                    <text x="110" y="119" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7dd3fc" letter-spacing="0.08em" font-family="monospace">FERRAMENTAS GNU</text>
+                    <text x="110" y="132" text-anchor="middle" font-size="9" fill="rgba(125,211,252,0.5)" font-family="monospace">gcc · bash · glibc</text>
 
-                    <!-- Arrow 3→4 -->
-                    <line x1="416" y1="135" x2="434" y2="135" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-                    <polygon points="434,130 444,135 434,140" fill="rgba(255,255,255,0.2)"/>
+                    <!-- Seta ↓ -->
+                    <line x1="110" y1="141" x2="110" y2="152" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <polygon points="105,151 115,151 110,158" fill="rgba(255,255,255,0.18)"/>
 
-                    <!-- Layer 4: APLICAÇÕES -->
-                    <rect x="446" y="96" width="112" height="68" rx="7" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.2)" stroke-width="1.2"/>
-                    <text x="502" y="118" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#22c55e" font-weight="500">APLICAÇÕES</text>
-                    <text x="502" y="133" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(34,197,94,0.55)">nginx · vim</text>
-                    <text x="502" y="147" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(34,197,94,0.45)">python · docker</text>
-                    <text x="502" y="159" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="rgba(34,197,94,0.35)">(opcional: GUI)</text>
+                    <!-- KERNEL LINUX (com glow) -->
+                    <rect x="38" y="158" width="144" height="46" rx="6" fill="rgba(14,165,233,0.22)" stroke="rgba(56,189,248,0.65)" stroke-width="1.8" filter="url(#kernel-glow)"/>
+                    <text x="110" y="181" text-anchor="middle" font-size="12" font-weight="800" fill="#e0f2fe" letter-spacing="0.08em" font-family="monospace">KERNEL LINUX</text>
+                    <text x="110" y="196" text-anchor="middle" font-size="9" fill="rgba(224,242,254,0.55)" font-family="monospace">gerencia hardware</text>
 
-                    <!-- Label de direção (embaixo) -->
-                    <text x="280" y="16" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(255,255,255,0.18)" letter-spacing="0.08em">CAMADAS DO SISTEMA — DO HARDWARE ÀS APLICAÇÕES</text>
-                    <line x1="60" y1="22" x2="500" y2="22" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="4 4"/>
-                    <polygon points="500,18 508,22 500,26" fill="rgba(255,255,255,0.12)"/>
+                    <!-- Seta ↓ -->
+                    <line x1="110" y1="205" x2="110" y2="216" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <polygon points="105,215 115,215 110,222" fill="rgba(255,255,255,0.18)"/>
 
-                    <!-- você está aqui -->
-                    <text x="353" y="84" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="rgba(167,139,250,0.45)">← você usa</text>
-                    <line x1="353" y1="88" x2="353" y2="104" stroke="rgba(167,139,250,0.2)" stroke-width="1" stroke-dasharray="3 2"/>
+                    <!-- HARDWARE -->
+                    <rect x="54" y="222" width="112" height="42" rx="6" fill="rgba(30,58,138,0.35)" stroke="rgba(59,130,246,0.45)" stroke-width="1.2"/>
+                    <text x="110" y="245" text-anchor="middle" font-size="11.5" font-weight="700" fill="#93c5fd" letter-spacing="0.08em" font-family="monospace">HARDWARE</text>
+                    <text x="110" y="257" text-anchor="middle" font-size="9" fill="rgba(147,197,253,0.5)" font-family="monospace">CPU · RAM · Disco</text>
                   </svg>
-                  <figcaption>Hardware → Kernel → GNU → Aplicações — cada camada depende da anterior</figcaption>
-                </figure>
-
-                <div class="card card-analogy">
-                  <span class="card-label">Analogia — Planta baixa de imóvel</span>
-                  <p>Linux é como a planta baixa de um imóvel. O Windows te entrega o apartamento decorado e mobiliado — você usa, mas não entende o que tem dentro das paredes. Não sabe onde passa a fiação, onde fica o encanamento, nem como a estrutura foi construída.</p>
-                  <p>O Linux te dá os tijolos, a planta e as ferramentas. Você monta o que quiser, do jeito que quiser. Mais difícil no início — mas você controla absolutamente tudo. E quando algo quebra, você sabe onde olhar.</p>
                 </div>
+              </div>
+            </section>
 
-                <div class="card card-summary">
-                  <span class="card-label">⚡ O que você precisa guardar</span>
-                  <ul>
-                    <li>Linux é o <strong>kernel</strong> — o núcleo do sistema</li>
-                    <li>Distro = kernel + GNU tools + gerenciador de pacotes + (opcional) GUI</li>
-                    <li>Ubuntu, Fedora, Arch Linux são distros — todas usam o kernel Linux</li>
-                    <li>O correto seria dizer "GNU/Linux", mas ninguém fala assim no dia a dia</li>
-                  </ul>
+            <!-- SEÇÃO 2 — História -->
+            <section class="content-section" id="historia">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">02. História</span>
+                  <h2>A história: de 1991 ao mundo</h2>
                 </div>
-              </section>
+                <button class="mark-studied" data-section="historia">☆ Marcar como estudado</button>
+              </div>
 
-              <!-- SEÇÃO 2 -->
-              <section class="content-section" id="historia">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">02. História</span>
-                    <h2>A história: de 1991 ao mundo</h2>
-                  </div>
-                  <button class="mark-studied" data-section="historia">☆ Marcar como estudado</button>
-                </div>
+              <div class="card card-explanation">
+                <span class="card-label">Explicação</span>
+                <p>Em <strong>25 de agosto de 1991</strong>, um estudante finlandês de 21 anos chamado Linus Torvalds postou na newsgroup <code>comp.os.minix</code>:</p>
+                <blockquote class="editorial-quote">
+                  "Hello everybody out there using minix — I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu)..."
+                </blockquote>
+                <p>Era uma mensagem que mudaria a computação. Em outubro do mesmo ano, o Linux 0.02 foi liberado publicamente.</p>
+                <p>Antes disso, Richard Stallman havia lançado o <strong>Projeto GNU em 1983</strong> com o objetivo de criar um sistema operacional completamente livre. O GNU criou ferramentas essenciais — o compilador <code>gcc</code>, o shell <code>bash</code>, a biblioteca C <code>glibc</code> — mas faltava o componente central: o kernel. Linus completou o quebra-cabeça.</p>
+              </div>
 
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p>Em <strong>25 de agosto de 1991</strong>, um estudante finlandês de 21 anos chamado Linus Torvalds postou na newsgroup <code>comp.os.minix</code>:</p>
-                  <blockquote class="editorial-quote">
-                    "Hello everybody out there using minix — I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu)..."
-                  </blockquote>
-                  <p>Era uma mensagem que mudaria a computação. Em outubro do mesmo ano, o Linux 0.02 foi liberado publicamente.</p>
-                  <p>Antes disso, Richard Stallman havia lançado o <strong>Projeto GNU em 1983</strong> com o objetivo de criar um sistema operacional completamente livre. O GNU criou ferramentas essenciais — o compilador <code>gcc</code>, o shell <code>bash</code>, a biblioteca C <code>glibc</code> — mas faltava o componente central: o kernel. Linus completou o quebra-cabeça.</p>
-                </div>
-
-                <div class="card card-example">
-                  <span class="card-label">🔍 Exemplo Concreto</span>
-                  <p>A evolução do Linux em números:</p>
-                  <pre><code>1991 — Linux 0.01: ~10.000 linhas de código, só rodava em x86
+              <div class="card card-example">
+                <span class="card-label">Exemplo Concreto</span>
+                <p>A evolução do Linux em números:</p>
+                <pre><code>1991 — Linux 0.01: ~10.000 linhas de código, só rodava em x86
 1994 — Linux 1.0: 176.250 linhas, suporte a rede
 2003 — Linux 2.6: suporte a SMP, 64-bit, mobile
 2011 — Linux 3.0: 15 milhões de linhas de código
-2024 — Linux 6.x: 30+ milhões de linhas, 4.000+ contribuidores ativos
+2024 — Linux 6.x: 30+ milhões de linhas, 4.000+ contribuidores
 
-Hoje: Android (2,5 bilhões de dispositivos), 96% dos servidores
-web, 100% dos supercomputadores do TOP500 — todos rodando Linux.</code></pre>
+Hoje: Android (2,5 bi dispositivos), 96% dos servidores web,
+100% dos supercomputadores do TOP500 — todos rodando Linux.</code></pre>
+              </div>
+
+              <div class="card card-summary">
+                <span class="card-label">O que você precisa guardar</span>
+                <ul>
+                  <li>Linus Torvalds anunciou o Linux em <strong>agosto de 1991</strong>, com 21 anos</li>
+                  <li>O Projeto GNU (1983) criou as ferramentas; o Linux completou com o kernel</li>
+                  <li>GPL: a licença que garantiu que o Linux permanecesse livre</li>
+                  <li>Hoje domina servidores, mobile (Android), supercomputadores e nuvem</li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- SEÇÃO 3 — Kernel, Distro, Shell -->
+            <section class="content-section" id="kernel-distro-shell">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">03. Arquitetura</span>
+                  <h2>Kernel, Distro, Shell e Desktop Environment</h2>
                 </div>
+                <button class="mark-studied" data-section="kernel-distro-shell">☆ Marcar como estudado</button>
+              </div>
 
-                <div class="card card-summary">
-                  <span class="card-label">⚡ O que você precisa guardar</span>
-                  <ul>
-                    <li>Linus Torvalds anunciou o Linux em <strong>agosto de 1991</strong>, com 21 anos</li>
-                    <li>O Projeto GNU (1983) criou as ferramentas; o Linux completou com o kernel</li>
-                    <li>GPL: a licença que garantiu que o Linux permanecesse livre</li>
-                    <li>Hoje domina servidores, mobile (Android), supercomputadores e nuvem</li>
-                  </ul>
-                </div>
-              </section>
+              <div class="card card-explanation">
+                <span class="card-label">Explicação</span>
+                <p>Esses quatro conceitos descrevem camadas distintas do sistema:</p>
+                <p><strong>Kernel</strong> — o núcleo. Gerencia hardware (CPU, memória, disco, rede), processos e o sistema de arquivos. Você nunca interage com ele diretamente. É a ponte entre o software e o hardware físico.</p>
+                <p><strong>Distro (Distribuição)</strong> — tudo em volta do kernel: as ferramentas, o ambiente, o gerenciador de pacotes (apt, dnf, pacman), a documentação e as escolhas de configuração padrão. Cada distro tem sua filosofia.</p>
+                <p><strong>Shell</strong> — o intérprete de comandos. É o programa que lê o que você digita no terminal e pede ao kernel que execute. O shell mais comum é o <code>bash</code>. Outros: <code>zsh</code>, <code>fish</code>, <code>sh</code>.</p>
+                <p><strong>Desktop Environment (DE)</strong> — a interface gráfica: janelas, menus, ícones. GNOME, KDE Plasma e XFCE são exemplos. Completamente opcional — servidores Linux geralmente rodam sem nenhum DE.</p>
+              </div>
 
-              <!-- SEÇÃO 3 -->
-              <section class="content-section" id="kernel-distro-shell">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">03. Arquitetura</span>
-                    <h2>Kernel, Distro, Shell e Desktop Environment</h2>
-                  </div>
-                  <button class="mark-studied" data-section="kernel-distro-shell">☆ Marcar como estudado</button>
-                </div>
-
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p>Esses quatro conceitos descrevem camadas distintas do sistema:</p>
-                  <p><strong>Kernel</strong> — o núcleo. Gerencia hardware (CPU, memória, disco, rede), processos e o sistema de arquivos. Você nunca interage com ele diretamente. É a ponte entre o software e o hardware físico.</p>
-                  <p><strong>Distro (Distribuição)</strong> — tudo em volta do kernel: as ferramentas, o ambiente, o gerenciador de pacotes (apt, dnf, pacman), a documentação e as escolhas de configuração padrão. Cada distro tem sua filosofia.</p>
-                  <p><strong>Shell</strong> — o intérprete de comandos. É o programa que lê o que você digita no terminal e pede ao kernel que execute. O shell mais comum é o <code>bash</code> (Bourne Again Shell). Outros: <code>zsh</code> (padrão no macOS), <code>fish</code> (amigável para iniciantes), <code>sh</code> (POSIX padrão).</p>
-                  <p><strong>Desktop Environment (DE)</strong> — a interface gráfica: janelas, menus, ícones. GNOME, KDE Plasma e XFCE são exemplos. É completamente opcional — servidores Linux geralmente rodam sem nenhum DE.</p>
-                </div>
-
-                <div class="card card-example">
-                  <span class="card-label">🔍 Exemplo Concreto</span>
-                  <pre><code># As camadas de baixo para cima:
-
+              <div class="card card-example">
+                <span class="card-label">Exemplo Concreto</span>
+                <pre><code># As camadas de baixo para cima:
 Hardware (CPU, RAM, Disco, Rede)
     ↑
 Kernel Linux (gerencia o hardware)
     ↑
 Bibliotecas GNU (glibc, etc.)
     ↑
-Shell (bash, zsh) ← você digita aqui no terminal
+Shell (bash, zsh) ← você digita aqui
     ↑
 Aplicativos (firefox, vim, nginx, python)
     ↑
 Desktop Environment (GNOME, KDE) ← opcional
 
-# Ver qual shell está usando:
-echo $SHELL
-# /bin/bash  ou  /usr/bin/zsh
-
-# Ver a versão do kernel:
-uname -r
-# 6.8.0-41-generic</code></pre>
-                </div>
-
-                <div class="card card-warning">
-                  <span class="card-label">⚠️ Erros comuns</span>
-                  <p><strong>"Linux é o sistema operacional"</strong> — tecnicamente errado. Linux é o kernel. O sistema operacional completo seria "GNU/Linux". Na prática, todo mundo diz Linux e entende o conjunto inteiro.</p>
-                  <p><strong>"O terminal é o Linux"</strong> — o terminal é apenas um emulador de terminal que roda o shell. Você pode ter Linux sem terminal gráfico (servidores via SSH) ou com ele.</p>
-                  <p><strong>"Shell e terminal são a mesma coisa"</strong> — o terminal é o programa que abre a janela preta. O shell (bash, zsh) é o programa que roda dentro dessa janela e interpreta seus comandos.</p>
-                </div>
-              </section>
-
-              <!-- SEÇÃO 4 -->
-              <section class="content-section" id="open-source">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">04. Filosofia</span>
-                    <h2>O que é open-source e por que importa</h2>
-                  </div>
-                  <button class="mark-studied" data-section="open-source">☆ Marcar como estudado</button>
-                </div>
-
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p><strong>Open-source</strong> significa que o código-fonte é público: qualquer pessoa pode ler, auditar, modificar e distribuir o software — respeitando os termos da licença.</p>
-                  <p>Existem várias licenças open-source com filosofias diferentes:</p>
-                  <ul>
-                    <li><strong>GPL (General Public License)</strong> — criada por Richard Stallman. É <em>copyleft</em>: qualquer software GPL que você modificar e distribuir <strong>deve</strong> também ser disponibilizado com código-fonte sob a GPL. O kernel Linux usa a GPLv2.</li>
-                    <li><strong>MIT / BSD</strong> — permissivas. Você pode usar em software proprietário sem obrigação de abrir o código. Muito usadas em bibliotecas.</li>
-                    <li><strong>Apache 2.0</strong> — similar ao MIT, com cláusula de patentes.</li>
-                  </ul>
-                  <p>Por que importa? Porque você pode <strong>auditar o que o software faz</strong>. Nenhuma backdoor escondida. A comunidade encontra e corrige vulnerabilidades. E nenhuma empresa pode simplesmente "desligar" o software que você depende.</p>
-                </div>
-
-                <div class="card card-analogy">
-                  <span class="card-label">Analogia — Receita de culinária</span>
-                  <p>Software proprietário é como um prato de restaurante: você come, mas a receita é segredo. Software open-source é como um livro de receitas público: você vê exatamente os ingredientes e o modo de preparo, pode reproduzir em casa, adaptar ao seu gosto e compartilhar sua versão melhorada.</p>
-                </div>
-
-                <div class="card card-summary">
-                  <span class="card-label">⚡ O que você precisa guardar</span>
-                  <ul>
-                    <li>Open-source = código público, auditável, modificável</li>
-                    <li>GPL (copyleft): modificações devem ser abertas — garante que o ecossistema permaneça livre</li>
-                    <li>MIT/BSD: permissivas — podem ser usadas em software fechado</li>
-                    <li>Red Hat/Canonical faturam bilhões com suporte e serviços em torno do Linux open-source</li>
-                  </ul>
-                </div>
-              </section>
-
-              <!-- SEÇÃO 5 -->
-              <section class="content-section" id="por-que-aprender">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">05. Carreira</span>
-                    <h2>Por que aprender Linux muda sua carreira</h2>
-                  </div>
-                  <button class="mark-studied" data-section="por-que-aprender">☆ Marcar como estudado</button>
-                </div>
-
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p>Linux está em toda parte onde o dinheiro da tecnologia está concentrado:</p>
-                  <ul>
-                    <li><strong>96% dos servidores web</strong> do mundo rodam Linux (Netcraft)</li>
-                    <li><strong>100% dos supercomputadores</strong> do TOP500 usam Linux</li>
-                    <li><strong>AWS, Azure e Google Cloud</strong> — a infraestrutura de nuvem é Linux</li>
-                    <li><strong>Android</strong> — 2,5 bilhões de dispositivos rodando kernel Linux</li>
-                    <li><strong>Containers Docker/Kubernetes</strong> — dependem de recursos do kernel Linux</li>
-                    <li><strong>Dispositivos embarcados</strong> — roteadores, TVs, câmeras IP, carros</li>
-                  </ul>
-                  <p>Carreiras que exigem Linux: DevOps/SRE, Engenharia de Dados, Segurança da Informação, Desenvolvimento Backend, Cloud Architecture. Saber Linux bem distingue um profissional sênior de um pleno.</p>
-                </div>
-
-                <div class="card card-summary">
-                  <span class="card-label">⚡ O que você precisa guardar</span>
-                  <ul>
-                    <li>Servidores, nuvem, containers, mobile — tudo roda Linux</li>
-                    <li>Linux não é "opção" para quem trabalha com infraestrutura — é requisito</li>
-                    <li>O conhecimento é transferível: o que você aprende no Ubuntu funciona no Debian, no CentOS, no Alpine</li>
-                    <li>Terminal Linux no dia a dia torna você significativamente mais produtivo</li>
-                  </ul>
-                </div>
-              </section>
-
-              <!-- SEÇÃO 6 -->
-              <section class="content-section" id="principais-distros">
-                <div class="section-header">
-                  <div>
-                    <span class="lm-section-kicker">06. Referência</span>
-                    <h2>As principais distros e quando usar cada uma</h2>
-                  </div>
-                  <button class="mark-studied" data-section="principais-distros">☆ Marcar como estudado</button>
-                </div>
-
-                <div class="card card-explanation">
-                  <span class="card-label">📖 Explicação</span>
-                  <p>Existem centenas de distros. Estas são as que você vai encontrar no mercado:</p>
-                  <p><strong>Ubuntu</strong> — baseada no Debian. Fácil para iniciantes, com suporte empresarial via Canonical. Versões LTS (Long Term Support) recebem 5 anos de atualizações de segurança. A distro mais usada em servidores cloud. <em>Use quando:</em> quer estabilidade, documentação ampla, e não quer configurar tudo do zero.</p>
-                  <p><strong>Debian</strong> — a "avó" de muitas distros (Ubuntu, Mint, Raspberry Pi OS). Extremamente estável — os pacotes são testados por muito mais tempo antes de entrar na versão estável. <em>Use quando:</em> quer a base sólida do Ubuntu mas com menos camadas da Canonical.</p>
-                  <p><strong>Fedora</strong> — patrocinado pela Red Hat. Adota novas tecnologias mais cedo (Wayland, Btrfs, systemd). É o campo de testes para o Red Hat Enterprise Linux. <em>Use quando:</em> quer tecnologia de ponta em um ambiente relativamente estável.</p>
-                  <p><strong>Arch Linux</strong> — você instala tudo manualmente, peça por peça. Obriga a entender cada componente do sistema. Rolling release: sempre na versão mais atual. A Arch Wiki é considerada a melhor documentação Linux existente. <em>Use quando:</em> quer aprender Linux a fundo e não se importa de passar horas configurando.</p>
-                  <p><strong>Red Hat Enterprise Linux (RHEL) / CentOS Stream</strong> — o padrão corporativo. Certificações (RHCSA, RHCE) são muito valorizadas no mercado. <em>Use quando:</em> o ambiente de trabalho é corporativo e exige suporte oficial.</p>
-                  <p><strong>Alpine Linux</strong> — minimalista ao extremo. Usa musl libc e busybox em vez do GNU completo. Imagem base de apenas ~5MB. <em>Use quando:</em> precisa de containers Docker pequenos e seguros.</p>
-                </div>
-
-                <div class="card card-example">
-                  <span class="card-label">🔍 Exemplo Concreto</span>
-                  <pre><code># Diferença nos gerenciadores de pacotes:
-
-# Ubuntu/Debian — APT
-sudo apt update && sudo apt install nginx
-
-# Fedora/RHEL — DNF
-sudo dnf install nginx
-
-# Arch Linux — Pacman
-sudo pacman -S nginx
-
-# Alpine — APK
-apk add nginx
-
-# O mesmo objetivo, comandos diferentes.
-# Mas a filosofia do sistema de arquivos,
-# permissões e kernel são iguais em todas.</code></pre>
-                </div>
-
-                <div class="card card-warning">
-                  <span class="card-label">⚠️ Erros comuns</span>
-                  <p><strong>"Vou começar pelo Arch para aprender mais"</strong> — a curva é íngreme demais para quem não tem base. Comece pelo Ubuntu ou Fedora. Depois que entender os fundamentos, o Arch faz muito mais sentido.</p>
-                  <p><strong>"Ubuntu é para iniciantes, não para produção"</strong> — Ubuntu Server é usado pela Canonical, AWS, Google Cloud e inúmeras empresas em produção. A versão LTS tem suporte de 5-10 anos.</p>
-                </div>
-
-                <div class="card card-summary">
-                  <span class="card-label">⚡ O que você precisa guardar</span>
-                  <ul>
-                    <li><strong>Iniciante:</strong> Ubuntu ou Fedora</li>
-                    <li><strong>Corporativo:</strong> RHEL / CentOS Stream</li>
-                    <li><strong>Aprender a fundo:</strong> Arch Linux</li>
-                    <li><strong>Containers:</strong> Alpine Linux</li>
-                    <li><strong>Servidor estável:</strong> Debian ou Ubuntu LTS</li>
-                  </ul>
-                </div>
-              </section>
-
-              <!-- FLASHCARDS -->
-              <section class="flashcards-section">
-                <h2>🃏 Flashcards</h2>
-                <div id="flashcard-widget"></div>
-              </section>
-
-              <!-- QUIZ -->
-              <section class="quiz-section">
-                <h2>📝 Quiz — Módulo 01</h2>
-                <div id="quiz-widget"></div>
-              </section>
-
-              <!-- NAVEGAÇÃO ENTRE STEPS -->
-              <div class="lm-step-nav">
-                <button class="lm-btn-prev" id="lm-btn-prev" type="button" disabled aria-label="Tópico anterior">← Anterior</button>
-                <span class="lm-step-counter" id="lm-step-counter" aria-live="polite">Tópico 1 de 6</span>
-                <button class="lm-btn-next" id="lm-btn-next" type="button" aria-label="Próximo tópico">Próximo →</button>
+echo $SHELL   # /bin/bash ou /usr/bin/zsh
+uname -r      # 6.8.0-41-generic</code></pre>
               </div>
 
-              <!-- Module nav (mantido no DOM para o JS de completion panel) -->
-              <nav class="module-nav" aria-hidden="true">
-                <a href="../index.html" class="module-nav-link prev disabled">← Início</a>
-                <a href="filesystem.html" class="module-nav-link next">Próximo →</a>
-              </nav>
+              <div class="card card-warning">
+                <span class="card-label">Erros comuns</span>
+                <p><strong>"Linux é o sistema operacional"</strong> — tecnicamente errado. Linux é o kernel. O sistema operacional completo seria "GNU/Linux". Na prática, todo mundo diz Linux e entende o conjunto inteiro.</p>
+                <p><strong>"Shell e terminal são a mesma coisa"</strong> — o terminal é o programa que abre a janela preta. O shell (bash, zsh) é o programa que roda dentro e interpreta seus comandos.</p>
+              </div>
+            </section>
 
-            </div><!-- /lm-left -->
-
-            <!-- ================================================
-                 SIDEBAR DIREITA
-                 ================================================ -->
-            <aside class="lm-sidebar" aria-label="Progresso e tópicos do módulo">
-
-              <!-- Card: Progresso -->
-              <div class="lm-sidebar-card lm-progress-card">
-                <h2 class="lm-card-title">Seu progresso neste módulo</h2>
-
-                <div class="lm-ring-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo" id="lm-progressbar">
-                  <svg class="lm-ring" viewBox="0 0 72 72" aria-hidden="true">
-                    <circle class="lm-ring-track" cx="36" cy="36" r="30" fill="none" stroke-width="5"/>
-                    <circle class="lm-ring-fill" cx="36" cy="36" r="30" fill="none" stroke-width="5" transform="rotate(-90 36 36)"/>
-                  </svg>
-                  <span class="lm-ring-pct" aria-hidden="true">0%</span>
+            <!-- SEÇÃO 4 — Open-source -->
+            <section class="content-section" id="open-source">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">04. Filosofia</span>
+                  <h2>O que é open-source e por que importa</h2>
                 </div>
-
-                <p class="lm-progress-count">
-                  <strong class="lm-topics-done">0</strong> de 6 tópicos concluídos
-                </p>
-                <p class="lm-progress-time">~18 min de leitura</p>
-                <button class="lm-btn-continue" id="lm-btn-continue" type="button">
-                  Continue aprendendo!
-                </button>
+                <button class="mark-studied" data-section="open-source">☆ Marcar como estudado</button>
               </div>
 
-              <!-- Card: Tópicos -->
-              <div class="lm-sidebar-card lm-topics-card">
-                <h2 class="lm-card-title">Nesta lição você vai aprender</h2>
-                <ol class="lm-topics-list">
-                  <li>
-                    <a class="lm-topic-item" href="#o-que-e-linux" data-topic="o-que-e-linux">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      O que é Linux
-                    </a>
-                  </li>
-                  <li>
-                    <a class="lm-topic-item" href="#historia" data-topic="historia">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      A história: 1991 ao mundo
-                    </a>
-                  </li>
-                  <li>
-                    <a class="lm-topic-item" href="#kernel-distro-shell" data-topic="kernel-distro-shell">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      Kernel, Distro, Shell
-                    </a>
-                  </li>
-                  <li>
-                    <a class="lm-topic-item" href="#open-source" data-topic="open-source">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      Open-source e licenças
-                    </a>
-                  </li>
-                  <li>
-                    <a class="lm-topic-item" href="#por-que-aprender" data-topic="por-que-aprender">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      Por que aprender Linux
-                    </a>
-                  </li>
-                  <li>
-                    <a class="lm-topic-item" href="#principais-distros" data-topic="principais-distros">
-                      <span class="lm-topic-radio" aria-hidden="true"></span>
-                      Principais distros
-                    </a>
-                  </li>
-                </ol>
+              <div class="card card-explanation">
+                <span class="card-label">Explicação</span>
+                <p><strong>Open-source</strong> significa que o código-fonte é público: qualquer pessoa pode ler, auditar, modificar e distribuir o software — respeitando os termos da licença.</p>
+                <ul>
+                  <li><strong>GPL (General Public License)</strong> — criada por Stallman. É <em>copyleft</em>: modificações devem ser abertas. O kernel Linux usa a GPLv2.</li>
+                  <li><strong>MIT / BSD</strong> — permissivas. Você pode usar em software proprietário. Muito usadas em bibliotecas.</li>
+                  <li><strong>Apache 2.0</strong> — similar ao MIT, com cláusula de patentes.</li>
+                </ul>
+                <p>Por que importa? Porque você pode <strong>auditar o que o software faz</strong>. Nenhuma backdoor escondida. A comunidade encontra e corrige vulnerabilidades.</p>
               </div>
 
-              <!-- Card: Tempo -->
-              <div class="lm-sidebar-card lm-time-card">
-                <h2 class="lm-card-title">Tempo estimado</h2>
-                <p class="lm-time-value">4–6 min</p>
-                <p class="lm-time-label">por tópico · Leitura tranquila</p>
+              <div class="key-concept-card">
+                <div class="key-concept-icon">💡</div>
+                <div class="key-concept-body">
+                  <p class="key-concept-title">Analogia — Receita de culinária</p>
+                  <p class="key-concept-text">Software proprietário é como um prato de restaurante: você come, mas a receita é segredo. Open-source é como um livro de receitas público: você vê os ingredientes, pode reproduzir em casa e compartilhar sua versão melhorada.</p>
+                </div>
               </div>
 
-            </aside><!-- /lm-sidebar -->
+              <div class="card card-summary" style="margin-top:14px">
+                <span class="card-label">O que você precisa guardar</span>
+                <ul>
+                  <li>Open-source = código público, auditável, modificável</li>
+                  <li>GPL (copyleft): modificações devem ser abertas — garante que o ecossistema permaneça livre</li>
+                  <li>MIT/BSD: permissivas — podem ser usadas em software fechado</li>
+                  <li>Red Hat/Canonical faturam bilhões com suporte e serviços em torno do Linux open-source</li>
+                </ul>
+              </div>
+            </section>
 
-          </div><!-- /lm-body -->
-        </div><!-- /lm-wrap -->
+            <!-- SEÇÃO 5 — Por que aprender -->
+            <section class="content-section" id="por-que-aprender">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">05. Carreira</span>
+                  <h2>Por que aprender Linux muda sua carreira</h2>
+                </div>
+                <button class="mark-studied" data-section="por-que-aprender">☆ Marcar como estudado</button>
+              </div>
+
+              <div class="card card-explanation">
+                <span class="card-label">Explicação</span>
+                <p>Linux está em toda parte onde o dinheiro da tecnologia está concentrado:</p>
+                <ul>
+                  <li><strong>96% dos servidores web</strong> do mundo rodam Linux (Netcraft)</li>
+                  <li><strong>100% dos supercomputadores</strong> do TOP500 usam Linux</li>
+                  <li><strong>AWS, Azure e Google Cloud</strong> — a infraestrutura de nuvem é Linux</li>
+                  <li><strong>Android</strong> — 2,5 bilhões de dispositivos rodando kernel Linux</li>
+                  <li><strong>Containers Docker/Kubernetes</strong> — dependem de recursos do kernel Linux</li>
+                  <li><strong>Dispositivos embarcados</strong> — roteadores, TVs, câmeras IP, carros</li>
+                </ul>
+                <p>Carreiras que exigem Linux: DevOps/SRE, Engenharia de Dados, Segurança da Informação, Desenvolvimento Backend, Cloud Architecture.</p>
+              </div>
+
+              <div class="card card-summary">
+                <span class="card-label">O que você precisa guardar</span>
+                <ul>
+                  <li>Servidores, nuvem, containers, mobile — tudo roda Linux</li>
+                  <li>Linux não é "opção" para quem trabalha com infraestrutura — é requisito</li>
+                  <li>O conhecimento é transferível: Ubuntu, Debian, CentOS, Alpine — mesma base</li>
+                  <li>Terminal Linux no dia a dia torna você significativamente mais produtivo</li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- SEÇÃO 6 — Distros -->
+            <section class="content-section" id="principais-distros">
+              <div class="section-header">
+                <div>
+                  <span class="section-kicker">06. Referência</span>
+                  <h2>As principais distros e quando usar cada uma</h2>
+                </div>
+                <button class="mark-studied" data-section="principais-distros">☆ Marcar como estudado</button>
+              </div>
+
+              <div class="card card-explanation">
+                <span class="card-label">Explicação</span>
+                <p><strong>Ubuntu</strong> — baseada no Debian. A distro mais usada em servidores cloud. Versões LTS com 5 anos de suporte. <em>Use quando:</em> quer estabilidade e documentação ampla.</p>
+                <p><strong>Debian</strong> — a "avó" de muitas distros. Extremamente estável. <em>Use quando:</em> quer a base sólida do Ubuntu com menos camadas da Canonical.</p>
+                <p><strong>Fedora</strong> — patrocinado pela Red Hat. Adota novas tecnologias mais cedo. <em>Use quando:</em> quer tecnologia de ponta com relativa estabilidade.</p>
+                <p><strong>Arch Linux</strong> — instalação totalmente manual. Rolling release. A Arch Wiki é a melhor documentação Linux existente. <em>Use quando:</em> quer aprender Linux a fundo.</p>
+                <p><strong>RHEL / CentOS Stream</strong> — padrão corporativo. Certificações (RHCSA, RHCE) muito valorizadas. <em>Use quando:</em> ambiente corporativo exige suporte oficial.</p>
+                <p><strong>Alpine Linux</strong> — minimalista, imagem base ~5MB. <em>Use quando:</em> precisa de containers Docker pequenos e seguros.</p>
+              </div>
+
+              <div class="card card-example">
+                <span class="card-label">Exemplo Concreto</span>
+                <pre><code># Diferença nos gerenciadores de pacotes:
+
+sudo apt update && sudo apt install nginx   # Ubuntu/Debian
+sudo dnf install nginx                       # Fedora/RHEL
+sudo pacman -S nginx                         # Arch Linux
+apk add nginx                                # Alpine
+
+# Mesma filosofia de filesystem, permissões
+# e kernel — independente da distro.</code></pre>
+              </div>
+
+              <div class="card card-summary">
+                <span class="card-label">O que você precisa guardar</span>
+                <ul>
+                  <li><strong>Iniciante:</strong> Ubuntu ou Fedora</li>
+                  <li><strong>Corporativo:</strong> RHEL / CentOS Stream</li>
+                  <li><strong>Aprender a fundo:</strong> Arch Linux</li>
+                  <li><strong>Containers:</strong> Alpine Linux</li>
+                  <li><strong>Servidor estável:</strong> Debian ou Ubuntu LTS</li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- FLASHCARDS -->
+            <section class="flashcards-section">
+              <h2>🃏 Flashcards</h2>
+              <div id="flashcard-widget"></div>
+            </section>
+
+            <!-- QUIZ -->
+            <section class="quiz-section">
+              <h2>📝 Quiz — Módulo 01</h2>
+              <div id="quiz-widget"></div>
+            </section>
+
+            <!-- NAVEGAÇÃO ENTRE STEPS -->
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 6</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="../index.html" class="module-nav-link prev disabled">← Início</a>
+              <a href="filesystem.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- ================================================
+               SIDEBAR DIREITA
+               ================================================ -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <!-- Card Progresso -->
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true"
+                     role="img" aria-label="Anel de progresso">
+                  <defs>
+                    <filter id="dot-glow">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Trilha -->
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+
+                  <!-- Arco de progresso -->
+                  <circle class="lm-ring-fill"
+                    cx="45" cy="45" r="36"
+                    fill="none"
+                    stroke="url(#ringGrad)"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                    stroke-dasharray="226"
+                    stroke-dashoffset="226"
+                    transform="rotate(-90 45 45)"/>
+
+                  <!-- Ponto brilhante -->
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow)"/>
+
+                  <!-- Percentagem central -->
+                  <text class="lm-ring-pct"
+                    x="45" y="51"
+                    text-anchor="middle"
+                    font-size="16" font-weight="700"
+                    fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 6 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~18 min de leitura
+                </div>
+              </div>
+
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <!-- Card Tópicos -->
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#o-que-e-linux" data-topic="o-que-e-linux">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">O que é Linux</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#historia" data-topic="historia">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">A história: 1991 ao mundo</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#kernel-distro-shell" data-topic="kernel-distro-shell">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Kernel, Distro, Shell</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#open-source" data-topic="open-source">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Open-source e licenças</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#por-que-aprender" data-topic="por-que-aprender">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Por que aprender Linux</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#principais-distros" data-topic="principais-distros">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Principais distros</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Card Tempo -->
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">4–6 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
       </div><!-- /container--narrow -->
     </main>
 
@@ -1217,66 +1387,60 @@ apk add nginx
 
     <script>
       (function () {
-        var SECTION_IDS = ['o-que-e-linux', 'historia', 'kernel-distro-shell', 'open-source', 'por-que-aprender', 'principais-distros'];
+        var SECTION_IDS = ['o-que-e-linux','historia','kernel-distro-shell','open-source','por-que-aprender','principais-distros'];
+        var CIRC = 2 * Math.PI * 36; // 226.2
         var activeIdx = 0;
 
-        var stepBtns    = Array.from(document.querySelectorAll('.lm-step'));
-        var sectionEls  = SECTION_IDS.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
         var prevBtn     = document.getElementById('lm-btn-prev');
         var nextBtn     = document.getElementById('lm-btn-next');
         var counter     = document.getElementById('lm-step-counter');
         var continueBtn = document.getElementById('lm-btn-continue');
 
-        /* ---- Ativa step visualmente -------------------------- */
+        /* ---- Atualiza step ativo ----------------------------- */
         function setActiveStep(idx) {
           activeIdx = idx;
-          stepBtns.forEach(function (btn, i) {
-            btn.classList.toggle('is-active', i === idx);
+          stepBtns.forEach(function(btn, i) {
+            btn.classList.toggle('active', i === idx);
           });
           if (prevBtn) prevBtn.disabled = idx === 0;
           if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
-          if (nextBtn) {
-            if (idx >= SECTION_IDS.length - 1) {
-              nextBtn.textContent = 'Próximo Módulo →';
-            } else {
-              nextBtn.textContent = 'Próximo →';
-            }
-          }
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
         }
 
         /* ---- Clique nos steps → scroll ----------------------- */
-        stepBtns.forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            var target = document.getElementById(btn.dataset.target);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
 
-        /* ---- Scroll spy via IntersectionObserver ------------- */
+        /* ---- Scroll spy ------------------------------------- */
         if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
               if (entry.isIntersecting) {
                 var idx = SECTION_IDS.indexOf(entry.target.id);
                 if (idx !== -1) setActiveStep(idx);
               }
             });
           }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
-          sectionEls.forEach(function (el) { io.observe(el); });
+          sectionEls.forEach(function(el){ io.observe(el); });
         }
 
-        /* ---- Botões prev / next ------------------------------ */
+        /* ---- Prev / Next step ------------------------------- */
         if (prevBtn) {
-          prevBtn.addEventListener('click', function () {
+          prevBtn.addEventListener('click', function() {
             if (activeIdx > 0) {
               var el = sectionEls[activeIdx - 1];
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
           });
         }
-
         if (nextBtn) {
-          nextBtn.addEventListener('click', function () {
+          nextBtn.addEventListener('click', function() {
             if (activeIdx < SECTION_IDS.length - 1) {
               var el = sectionEls[activeIdx + 1];
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1286,14 +1450,14 @@ apk add nginx
           });
         }
 
-        /* ---- "Continue aprendendo!" → primeira seção não concluída */
+        /* ---- Continue aprendendo → primeira seção incompleta - */
         if (continueBtn) {
-          continueBtn.addEventListener('click', function () {
+          continueBtn.addEventListener('click', function() {
             for (var i = 0; i < SECTION_IDS.length; i++) {
               var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
               if (!btn || !btn.classList.contains('studied')) {
-                var target = document.getElementById(SECTION_IDS[i]);
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
               }
             }
@@ -1302,57 +1466,60 @@ apk add nginx
           });
         }
 
-        /* ---- Sincroniza sidebar: tópicos + ring + badges ----- */
+        /* ---- Sincroniza sidebar, anel e badges --------------- */
         function syncSidebar() {
           var doneCount = 0;
-          SECTION_IDS.forEach(function (id) {
+          SECTION_IDS.forEach(function(id) {
             var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
-            var topicEl  = document.querySelector('.lm-topic-item[data-topic="' + id + '"]');
-            var stepBtn  = document.querySelector('.lm-step[data-target="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
             var done = studyBtn && studyBtn.classList.contains('studied');
             if (done) doneCount++;
-            if (topicEl) topicEl.classList.toggle('is-done', !!done);
-            if (stepBtn) stepBtn.classList.toggle('is-done', !!done);
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
           });
 
           var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
 
           /* Anel SVG */
-          var circ = 2 * Math.PI * 30;
           var fill = document.querySelector('.lm-ring-fill');
-          if (fill) fill.style.strokeDashoffset = circ - (pct / 100) * circ;
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
 
+          /* Ponto animado no anel */
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            var cx = 45 + 36 * Math.cos(rad);
+            var cy = 45 + 36 * Math.sin(rad);
+            dot.setAttribute('cx', cx.toFixed(2));
+            dot.setAttribute('cy', cy.toFixed(2));
+          }
+
+          /* Texto central */
           var ringPct = document.querySelector('.lm-ring-pct');
           if (ringPct) ringPct.textContent = pct + '%';
 
-          var topicsDone = document.querySelector('.lm-topics-done');
-          if (topicsDone) topicsDone.textContent = doneCount;
+          /* Contador de tópicos */
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
 
+          /* ARIA */
           var bar = document.getElementById('lm-progressbar');
           if (bar) bar.setAttribute('aria-valuenow', pct);
         }
 
-        /* Escuta o evento disparado pelo main.js ao marcar seção */
+        /* Escuta evento do main.js ao marcar seção */
         document.addEventListener('linuxwiki:section-study-change', syncSidebar);
 
-        /* Também sincroniza o #progress-pct (badge no header) */
-        var pctEl = document.getElementById('progress-pct');
-        if (pctEl) {
-          new MutationObserver(function () {
-            /* O badge no header já é atualizado pelo progress.js via #progress-pct */
-          }).observe(pctEl, { childList: true, subtree: true, characterData: true });
-        }
-
-        /* Roda na inicialização (após scripts principais carregarem) */
+        /* Inicialização com delay para aguardar progress.js */
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', syncSidebar);
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
         } else {
           syncSidebar();
+          setTimeout(syncSidebar, 250);
         }
-        /* Segundo sync com delay para garantir que progress.js inicializou */
-        setTimeout(syncSidebar, 200);
 
-        /* Inicializa contadores */
         setActiveStep(0);
       })();
     </script>
