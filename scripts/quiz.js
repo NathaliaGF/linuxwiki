@@ -13,8 +13,18 @@
       let score = 0;
       let answered = false;
       const wrongs = [];
+      let keyHandler = null;
+
+      function removeKeyHandler() {
+        if (keyHandler) {
+          document.removeEventListener("keydown", keyHandler);
+          keyHandler = null;
+        }
+      }
 
       const render = () => {
+        removeKeyHandler();
+
         if (current >= questions.length) {
           const pct = Math.round((score / questions.length) * 100);
           let breakdown = "";
@@ -61,7 +71,7 @@
               <div class="fill" style="width:${progressPercent}%"></div>
             </div>
             <div class="quiz-header">
-              <span class="quiz-counter">Questão ${current + 1} de ${questions.length}</span>
+              <span class="quiz-counter">Questão ${current + 1} de ${questions.length} <span class="quiz-kb-hint">· teclas 1–${question.options.length}</span></span>
               <span class="quiz-score">Pontos: ${score}</span>
             </div>
             <div class="quiz-body">
@@ -122,6 +132,21 @@
           current++;
           render();
         });
+
+        keyHandler = (event) => {
+          const num = parseInt(event.key, 10);
+          if (!answered && num >= 1 && num <= question.options.length) {
+            event.preventDefault();
+            const opt = container.querySelector(`.quiz-option[data-idx="${num - 1}"]`);
+            if (opt && !opt.disabled) opt.click();
+            return;
+          }
+          if (answered && (event.key === "Enter" || event.key === "ArrowRight")) {
+            event.preventDefault();
+            document.getElementById("quiz-next")?.click();
+          }
+        };
+        document.addEventListener("keydown", keyHandler);
       };
 
       render();
@@ -138,6 +163,14 @@
       let timerInterval = null;
       let secondsLeft = 30 * 60;
       const userAnswers = [];
+      let keyHandler = null;
+
+      function removeKeyHandler() {
+        if (keyHandler) {
+          document.removeEventListener("keydown", keyHandler);
+          keyHandler = null;
+        }
+      }
 
       function startTimer() {
         const timerEl = document.getElementById("simulado-timer");
@@ -198,6 +231,8 @@
       }
 
       const renderQuestion = () => {
+        removeKeyHandler();
+
         if (current >= questions.length) {
           showResult();
           return;
@@ -265,6 +300,22 @@
           current++;
           renderQuestion();
         });
+
+        let simAnswered = false;
+        keyHandler = (event) => {
+          const num = parseInt(event.key, 10);
+          if (!simAnswered && num >= 1 && num <= question.options.length) {
+            event.preventDefault();
+            const opt = simuladoArea.querySelector(`.quiz-option[data-idx="${num - 1}"]`);
+            if (opt && !opt.disabled) { simAnswered = true; opt.click(); }
+            return;
+          }
+          if (simAnswered && (event.key === "Enter" || event.key === "ArrowRight")) {
+            event.preventDefault();
+            document.getElementById("sim-next")?.click();
+          }
+        };
+        document.addEventListener("keydown", keyHandler);
       };
 
       startBtn.addEventListener("click", () => {

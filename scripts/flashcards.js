@@ -89,8 +89,17 @@
       const normalizedCards = this.normalizeCards(cards, moduleId);
       let currentIndex = 0;
       let isFlipped = false;
+      let keyHandler = null;
+
+      function removeKeyHandler() {
+        if (keyHandler) {
+          document.removeEventListener("keydown", keyHandler);
+          keyHandler = null;
+        }
+      }
 
       function render() {
+        removeKeyHandler();
         if (currentIndex >= normalizedCards.length) {
           container.innerHTML = `
             <div class="flashcard-done" role="status" aria-live="polite">
@@ -126,9 +135,9 @@
             </div>
           </div>
           <div class="flashcard-actions is-hidden" id="fc-actions" role="group" aria-label="Avalie sua resposta">
-            <button class="btn-flashcard no" data-q="0">✗ Não sei</button>
-            <button class="btn-flashcard maybe" data-q="3">△ Sei mais ou menos</button>
-            <button class="btn-flashcard yes" data-q="5">✓ Sei bem</button>
+            <button class="btn-flashcard no" data-q="0"><kbd>1</kbd> Não sei</button>
+            <button class="btn-flashcard maybe" data-q="3"><kbd>2</kbd> Mais ou menos</button>
+            <button class="btn-flashcard yes" data-q="5"><kbd>3</kbd> Sei bem</button>
           </div>
         `;
 
@@ -159,6 +168,17 @@
             render();
           });
         });
+
+        keyHandler = (event) => {
+          if (!isFlipped) return;
+          const qualityMap = { "1": 0, "2": 3, "3": 5 };
+          if (qualityMap[event.key] !== undefined) {
+            event.preventDefault();
+            const btn = actionsEl.querySelector(`[data-q="${qualityMap[event.key]}"]`);
+            if (btn) btn.click();
+          }
+        };
+        document.addEventListener("keydown", keyHandler);
       }
 
       render();
