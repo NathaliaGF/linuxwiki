@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Domine o sistema de permissões do Linux: rwx, octal, chmod, chown, SUID, SGID, sticky bit e umask."
-    />
-    <title>Módulo 03 — Permissões | LinuxWiki</title>
+    <meta name="description" content="Entenda o sistema rwx de permissões, a notação octal, chmod, chown e os bits especiais SUID, SGID e sticky bit." />
+    <title>Módulo 03: Permissões no Linux | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/module-design.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
   </head>
@@ -21,9 +19,7 @@
 
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
-        >
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
         <nav class="header-nav">
           <a href="../index.html" class="back-link">← Módulos</a>
           <button class="btn-install-pwa">Instalar PWA</button>
@@ -35,36 +31,86 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <!-- CABEÇALHO DO MÓDULO -->
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 03</span>
-          <h1 class="module-page-title">Permissões no Linux</h1>
-          <p class="module-intro">
-            Entenda o sistema rwx de permissões, a notação octal, como usar
-            chmod e chown, e os bits especiais SUID, SGID e sticky bit — a base
-            de qualquer trabalho seguro com Linux.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 22 min de leitura</span>
-            <span class="module-meta-item">🃏 6 flashcards</span>
-            <span class="module-meta-item">📝 6 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="module-layout">
 
-        <!-- SEÇÃO 1 -->
+          <!-- COLUNA PRINCIPAL -->
+          <div class="module-main">
+
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 03</span>
+              </nav>
+
+              <div class="module-header-body">
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="18" y="14" width="20" height="13" rx="3" fill="none" stroke="rgba(14,165,233,0.55)" stroke-width="1.8"/>
+              <path d="M18 22 Q18 14 28 14 Q38 14 38 22" fill="none" stroke="rgba(14,165,233,0.45)" stroke-width="1.8"/>
+              <rect x="12" y="27" width="32" height="22" rx="4" fill="rgba(14,165,233,0.08)" stroke="rgba(14,165,233,0.55)" stroke-width="1.8"/>
+              <circle cx="28" cy="36" r="4" fill="none" stroke="rgba(14,165,233,0.7)" stroke-width="1.8"/>
+              <line x1="28" y1="40" x2="28" y2="44" stroke="rgba(14,165,233,0.6)" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-iniciante">Iniciante</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Permissões no Linux</h1>
+                  <p class="module-subtitle">Sistema rwx, notação octal e bits especiais, controle de acesso que todo profissional precisa dominar.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="sistema-rwx" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">rwx</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="usuarios-grupos" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">User & Group</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="octal" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">Octal</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="chmod-chown" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">chmod / chown</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="bits-especiais" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">SUID / SGID</span>
+              </button>
+              <button class="step-item" data-step="5" data-target="umask" type="button">
+                <span class="step-number">06</span>
+                <span class="step-label">umask</span>
+              </button>
+            </nav>
+
+<!-- SEÇÃO 1 -->
         <section class="content-section" id="sistema-rwx">
           <div class="section-header">
-            <h2>O sistema rwx: leitura, escrita, execução</h2>
+            <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>O sistema rwx: leitura, escrita, execução</h2>
+                </div>
             <button class="mark-studied" data-section="sistema-rwx">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Cada arquivo e diretório no Linux tem
               <strong>três tipos de permissão</strong>:
@@ -95,7 +141,7 @@
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Lendo permissões com ls -la
 ls -la /etc/passwd
 -rw-r--r-- 1 root root 2847 Mai 20 10:00 /etc/passwd
@@ -134,18 +180,19 @@ ls -la /etc/passwd
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 2 -->
         <section class="content-section" id="usuarios-grupos">
           <div class="section-header">
-            <h2>Usuário, Grupo e Outros</h2>
+            <div>
+                  <span class="section-kicker">02. Identidade</span>
+                  <h2>Usuário, Grupo e Outros</h2>
+                </div>
             <button class="mark-studied" data-section="usuarios-grupos">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Cada arquivo tem exatamente
               <strong>três classes de permissões</strong>, aplicadas em ordem:
@@ -179,7 +226,7 @@ ls -la /etc/passwd
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver dono e grupo de um arquivo
 ls -la projeto/
 # drwxrwxr-x 2 joao devs 4096 Mai 20 ... projeto/
@@ -200,7 +247,7 @@ groups maria
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong
                 >"Se meu grupo tem mais acesso, o kernel usa o grupo"</strong
@@ -218,18 +265,19 @@ groups maria
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 3 -->
         <section class="content-section" id="octal">
           <div class="section-header">
-            <h2>Representação Octal</h2>
+            <div>
+                  <span class="section-kicker">03. Notação</span>
+                  <h2>Representação Octal</h2>
+                </div>
             <button class="mark-studied" data-section="octal">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               As permissões rwx podem ser representadas como números octais,
               onde cada permissão tem um valor:
@@ -262,7 +310,7 @@ groups maria
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Decodificando permissões octais:
 
 # chmod 755 → rwxr-xr-x
@@ -290,18 +338,19 @@ stat -c "%a %n" arquivo.txt
 # 644 arquivo.txt</code></pre>
           </div>
         </section>
-
-        <!-- SEÇÃO 4 -->
         <section class="content-section" id="chmod-chown">
           <div class="section-header">
-            <h2>chmod, chown e chgrp na prática</h2>
+            <div>
+                  <span class="section-kicker">04. Prática</span>
+                  <h2>chmod, chown e chgrp na prática</h2>
+                </div>
             <button class="mark-studied" data-section="chmod-chown">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>chmod</strong> — muda as permissões de um arquivo ou
               diretório. Aceita notação octal ou simbólica.
@@ -327,7 +376,7 @@ stat -c "%a %n" arquivo.txt
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># chmod — notação octal
 chmod 755 script.sh        # rwxr-xr-x
 chmod 644 config.txt       # rw-r--r--
@@ -357,7 +406,7 @@ ls -la /var/www/html/
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong><code>chmod -R 777 /var/www</code></strong> — o erro
               clássico de iniciante. Dar 777 a tudo significa que qualquer
@@ -373,18 +422,19 @@ ls -la /var/www/html/
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 5 -->
         <section class="content-section" id="bits-especiais">
           <div class="section-header">
-            <h2>Bits especiais: SUID, SGID e Sticky Bit</h2>
+            <div>
+                  <span class="section-kicker">05. Avançado</span>
+                  <h2>Bits especiais: SUID, SGID e Sticky Bit</h2>
+                </div>
             <button class="mark-studied" data-section="bits-especiais">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Além dos 9 bits rwx, existem três bits especiais que modificam o
               comportamento de execução e acesso:
@@ -426,7 +476,7 @@ ls -la /var/www/html/
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># SUID no passwd — qualquer usuário pode mudar sua senha
 ls -la /usr/bin/passwd
 -rwsr-xr-x 1 root root 68208 Jan 15 ... /usr/bin/passwd
@@ -458,7 +508,7 @@ find / -perm -4000 -type f 2>/dev/null</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>Criar executáveis SUID desnecessariamente</strong> — SUID
               é um vetor de escalada de privilégios. Um binário SUID de root com
@@ -475,7 +525,7 @@ find / -perm -4000 -type f 2>/dev/null</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 <strong>SUID (4xxx):</strong> executável roda como o dono —
@@ -500,18 +550,19 @@ find / -perm -4000 -type f 2>/dev/null</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 6 -->
         <section class="content-section" id="umask">
           <div class="section-header">
-            <h2>umask: a máscara de permissões padrão</h2>
+            <div>
+                  <span class="section-kicker">06. Padrão</span>
+                  <h2>umask: a máscara de permissões padrão</h2>
+                </div>
             <button class="mark-studied" data-section="umask">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Quando você cria um arquivo ou diretório, o sistema precisa
               definir suas permissões iniciais. A <strong>umask</strong> (user
@@ -548,7 +599,7 @@ find / -perm -4000 -type f 2>/dev/null</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver a umask atual
 umask
 # 0022
@@ -583,7 +634,7 @@ echo "umask 022" >> ~/.bashrc</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>"umask 022 remove permissão de execução"</strong> — a
               umask age sobre as permissões máximas padrão. Para arquivos, o
@@ -600,7 +651,7 @@ echo "umask 022" >> ~/.bashrc</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 umask é subtraída das permissões máximas (666 arquivos, 777
@@ -625,30 +676,134 @@ echo "umask 022" >> ~/.bashrc</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- FLASHCARDS -->
         <section class="flashcards-section">
           <h2>🃏 Flashcards</h2>
           <div id="flashcard-widget"></div>
         </section>
-
-        <!-- QUIZ -->
         <section class="quiz-section">
-          <h2>📝 Quiz — Módulo 03</h2>
+          <h2>📝 Quiz: Módulo 03</h2>
           <div id="quiz-widget"></div>
         </section>
 
-        <!-- NAVEGAÇÃO -->
-        <nav class="module-nav">
-          <a href="filesystem.html" class="module-nav-link prev">← Anterior</a>
-          <a href="processos.html" class="module-nav-link next">Próximo →</a>
-        </nav>
-      </div>
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 6</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="filesystem.html" class="module-nav-link prev">← Anterior</a>
+              <a href="processos.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- SIDEBAR DIREITA -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+                  <defs>
+                    <filter id="dot-glow-permissoes">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad-permissoes" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+                  <circle class="lm-ring-fill" cx="45" cy="45" r="36" fill="none"
+                    stroke="url(#ringGrad-permissoes)" stroke-width="5" stroke-linecap="round"
+                    stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 45 45)"/>
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow-permissoes)"/>
+                  <text class="lm-ring-pct" x="45" y="51" text-anchor="middle"
+                    font-size="16" font-weight="700" fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 6 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~22 min de leitura
+                </div>
+              </div>
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#sistema-rwx" data-topic="sistema-rwx">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">rwx</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#usuarios-grupos" data-topic="usuarios-grupos">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">User & Group</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#octal" data-topic="octal">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Octal</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#chmod-chown" data-topic="chmod-chown">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">chmod / chown</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#bits-especiais" data-topic="bits-especiais">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">SUID / SGID</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#umask" data-topic="umask">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">umask</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">3–4 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
       </div>
     </footer>
 
@@ -662,5 +817,121 @@ echo "umask 022" >> ~/.bashrc</code></pre>
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
+    <script>
+      (function () {
+        var SECTION_IDS = ['sistema-rwx','usuarios-grupos','octal','chmod-chown','bits-especiais','umask'];
+        var CIRC = 2 * Math.PI * 36;
+        var activeIdx = 0;
+
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var prevBtn     = document.getElementById('lm-btn-prev');
+        var nextBtn     = document.getElementById('lm-btn-next');
+        var counter     = document.getElementById('lm-step-counter');
+        var continueBtn = document.getElementById('lm-btn-continue');
+
+        function setActiveStep(idx) {
+          activeIdx = idx;
+          stepBtns.forEach(function(btn, i) { btn.classList.toggle('active', i === idx); });
+          if (prevBtn) prevBtn.disabled = idx === 0;
+          if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
+        }
+
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                var idx = SECTION_IDS.indexOf(entry.target.id);
+                if (idx !== -1) setActiveStep(idx);
+              }
+            });
+          }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+          sectionEls.forEach(function(el){ io.observe(el); });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            if (activeIdx > 0) {
+              var el = sectionEls[activeIdx - 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            if (activeIdx < SECTION_IDS.length - 1) {
+              var el = sectionEls[activeIdx + 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              window.location.href = 'processos.html';
+            }
+          });
+        }
+
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            for (var i = 0; i < SECTION_IDS.length; i++) {
+              var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
+              if (!btn || !btn.classList.contains('studied')) {
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
+            var fc = document.querySelector('.flashcards-section');
+            if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        function syncSidebar() {
+          var doneCount = 0;
+          SECTION_IDS.forEach(function(id) {
+            var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
+            var done = studyBtn && studyBtn.classList.contains('studied');
+            if (done) doneCount++;
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
+          });
+
+          var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
+          var fill = document.querySelector('.lm-ring-fill');
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
+
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            dot.setAttribute('cx', (45 + 36 * Math.cos(rad)).toFixed(2));
+            dot.setAttribute('cy', (45 + 36 * Math.sin(rad)).toFixed(2));
+          }
+
+          var ringPct = document.querySelector('.lm-ring-pct');
+          if (ringPct) ringPct.textContent = pct + '%';
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
+          var bar = document.getElementById('lm-progressbar');
+          if (bar) bar.setAttribute('aria-valuenow', pct);
+        }
+
+        document.addEventListener('linuxwiki:section-study-change', syncSidebar);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
+        } else {
+          syncSidebar(); setTimeout(syncSidebar, 250);
+        }
+        setActiveStep(0);
+      })();
+    </script>
   </body>
 </html>

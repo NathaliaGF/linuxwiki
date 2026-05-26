@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Aprenda a estrutura de diretórios do Linux, o princípio 'tudo é arquivo', inodes, hard links e symbolic links."
-    />
-    <title>Módulo 02 — Sistema de Arquivos | LinuxWiki</title>
+    <meta name="description" content="Aprenda a estrutura de diretórios do Linux, o princípio 'tudo é arquivo', inodes, hard links e symbolic links." />
+    <title>Módulo 02: Sistema de Arquivos Linux | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/module-design.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
   </head>
@@ -21,9 +19,7 @@
 
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
-        >
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
         <nav class="header-nav">
           <a href="../index.html" class="back-link">← Módulos</a>
           <button class="btn-install-pwa">Instalar PWA</button>
@@ -35,36 +31,82 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <!-- CABEÇALHO DO MÓDULO -->
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 02</span>
-          <h1 class="module-page-title">Sistema de Arquivos Linux</h1>
-          <p class="module-intro">
-            Domine a estrutura de diretórios do Linux, entenda por que "tudo é
-            arquivo", e aprenda o que é um inode, hard link e symbolic link —
-            conceitos que aparecem em todo trabalho de infraestrutura.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 20 min de leitura</span>
-            <span class="module-meta-item">🃏 6 flashcards</span>
-            <span class="module-meta-item">📝 5 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="module-layout">
 
-        <!-- SEÇÃO 1 -->
+          <!-- COLUNA PRINCIPAL -->
+          <div class="module-main">
+
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 02</span>
+              </nav>
+
+              <div class="module-header-body">
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="22" width="36" height="26" rx="3" fill="none" stroke="rgba(14,165,233,0.55)" stroke-width="1.8"/>
+              <path d="M10 26 L10 22 Q10 20 12 20 L24 20 L28 24 L46 24" fill="none" stroke="rgba(14,165,233,0.5)" stroke-width="1.5"/>
+              <line x1="17" y1="33" x2="39" y2="33" stroke="rgba(14,165,233,0.4)" stroke-width="1.2"/>
+              <line x1="17" y1="38" x2="33" y2="38" stroke="rgba(14,165,233,0.28)" stroke-width="1.2"/>
+              <line x1="17" y1="43" x2="28" y2="43" stroke="rgba(14,165,233,0.18)" stroke-width="1.2"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-iniciante">Iniciante</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Sistema de Arquivos Linux</h1>
+                  <p class="module-subtitle">Estrutura de diretórios, inodes e links, a base de como o Linux organiza dados.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="tudo-e-arquivo" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">Tudo é Arquivo</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="arvore-diretorios" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">Árvore FHS</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="diretorios-especiais" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">/proc, /dev, /sys</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="inodes" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">Inodes</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="links" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">Links</span>
+              </button>
+            </nav>
+
+<!-- SEÇÃO 1 -->
         <section class="content-section" id="tudo-e-arquivo">
           <div class="section-header">
-            <h2>O princípio: Tudo é Arquivo</h2>
+            <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>O princípio: Tudo é Arquivo</h2>
+                </div>
             <button class="mark-studied" data-section="tudo-e-arquivo">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>"Tudo é arquivo"</strong> é a filosofia central do
               Unix/Linux. Não é apenas um slogan — é uma decisão de design que
@@ -106,7 +148,7 @@
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Tudo é arquivo — na prática:
 
 # Ler informações da CPU como se fosse um arquivo de texto
@@ -128,7 +170,7 @@ ls -la /proc/1   # processo init/systemd</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 Hardware, processos, pipes e sockets são todos acessíveis como
@@ -145,18 +187,19 @@ ls -la /proc/1   # processo init/systemd</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 2 -->
         <section class="content-section" id="arvore-diretorios">
           <div class="section-header">
-            <h2>A Árvore de Diretórios</h2>
+            <div>
+                  <span class="section-kicker">02. Estrutura</span>
+                  <h2>A Árvore de Diretórios</h2>
+                </div>
             <button class="mark-studied" data-section="arvore-diretorios">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               No Linux há <strong>uma única árvore de diretórios</strong>, com
               raiz em <code>/</code>. Diferente do Windows com <code>C:\</code>,
@@ -224,7 +267,7 @@ ls -la /proc/1   # processo init/systemd</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Listar a raiz com permissões e tamanhos
 ls -la /
 
@@ -255,7 +298,7 @@ find /var/log -name "*.log" -mtime -7</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>Confundir /root com /"</strong> — <code>/root</code> é o
               diretório home do usuário root. <code>/</code> (root do
@@ -274,18 +317,19 @@ find /var/log -name "*.log" -mtime -7</code></pre>
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 3 -->
         <section class="content-section" id="diretorios-especiais">
           <div class="section-header">
-            <h2>Diretórios Especiais: /proc, /dev, /sys</h2>
+            <div>
+                  <span class="section-kicker">03. Especiais</span>
+                  <h2>Diretórios Especiais: /proc, /dev, /sys</h2>
+                </div>
             <button class="mark-studied" data-section="diretorios-especiais">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Estes três diretórios são
               <strong>sistemas de arquivos virtuais</strong> — não existem no
@@ -341,7 +385,7 @@ find /var/log -name "*.log" -mtime -7</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Informações da CPU (lendo um "arquivo" na memória)
 cat /proc/cpuinfo | head -20
 # processor : 0
@@ -370,18 +414,19 @@ file /dev/sda
 cat /sys/class/net/eth0/speed  # velocidade da interface de rede</code></pre>
           </div>
         </section>
-
-        <!-- SEÇÃO 4 -->
         <section class="content-section" id="inodes">
           <div class="section-header">
-            <h2>Inodes: o que é um arquivo por dentro</h2>
+            <div>
+                  <span class="section-kicker">04. Internos</span>
+                  <h2>Inodes: o que é um arquivo por dentro</h2>
+                </div>
             <button class="mark-studied" data-section="inodes">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Um <strong>inode</strong> (index node) é uma estrutura de dados
               que o sistema de arquivos mantém para cada arquivo. Ele armazena
@@ -414,7 +459,7 @@ cat /sys/class/net/eth0/speed  # velocidade da interface de rede</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver todas as informações do inode de um arquivo
 stat arquivo.txt
 
@@ -439,7 +484,7 @@ df -i
           </div>
 
           <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — Ficha de biblioteca</span>
+            <span class="card-label">Analogia: Ficha de biblioteca</span>
             <p>
               Pense no inode como uma ficha de biblioteca. A ficha contém todas
               as informações do livro: autor, páginas, data de aquisição,
@@ -451,7 +496,7 @@ df -i
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>"Copiar um arquivo cria um inode novo"</strong> — sim,
               <code>cp</code> cria um inode e blocos de dados novos. Mas
@@ -466,18 +511,19 @@ df -i
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 5 -->
         <section class="content-section" id="links">
           <div class="section-header">
-            <h2>Hard Links e Symbolic Links</h2>
+            <div>
+                  <span class="section-kicker">05. Referência</span>
+                  <h2>Hard Links e Symbolic Links</h2>
+                </div>
             <button class="mark-studied" data-section="links">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Existem dois tipos de links no Linux, com comportamentos muito
               diferentes:
@@ -501,7 +547,7 @@ df -i
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Criar um hard link
 ln arquivo.txt hard_link.txt
 
@@ -537,7 +583,7 @@ ls -la meu_link   # aparece em vermelho — link quebrado</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 <strong>Hard link:</strong> mesmo inode, dados sobrevivem
@@ -559,30 +605,128 @@ ls -la meu_link   # aparece em vermelho — link quebrado</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- FLASHCARDS -->
         <section class="flashcards-section">
           <h2>🃏 Flashcards</h2>
           <div id="flashcard-widget"></div>
         </section>
-
-        <!-- QUIZ -->
         <section class="quiz-section">
-          <h2>📝 Quiz — Módulo 02</h2>
+          <h2>📝 Quiz: Módulo 02</h2>
           <div id="quiz-widget"></div>
         </section>
 
-        <!-- NAVEGAÇÃO -->
-        <nav class="module-nav">
-          <a href="filosofia.html" class="module-nav-link prev">← Anterior</a>
-          <a href="permissoes.html" class="module-nav-link next">Próximo →</a>
-        </nav>
-      </div>
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 5</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="filosofia.html" class="module-nav-link prev">← Anterior</a>
+              <a href="permissoes.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- SIDEBAR DIREITA -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+                  <defs>
+                    <filter id="dot-glow-filesystem">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad-filesystem" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+                  <circle class="lm-ring-fill" cx="45" cy="45" r="36" fill="none"
+                    stroke="url(#ringGrad-filesystem)" stroke-width="5" stroke-linecap="round"
+                    stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 45 45)"/>
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow-filesystem)"/>
+                  <text class="lm-ring-pct" x="45" y="51" text-anchor="middle"
+                    font-size="16" font-weight="700" fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 5 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~20 min de leitura
+                </div>
+              </div>
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#tudo-e-arquivo" data-topic="tudo-e-arquivo">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Tudo é Arquivo</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#arvore-diretorios" data-topic="arvore-diretorios">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Árvore FHS</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#diretorios-especiais" data-topic="diretorios-especiais">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">/proc, /dev, /sys</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#inodes" data-topic="inodes">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Inodes</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#links" data-topic="links">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Links</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">4–5 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
       </div>
     </footer>
 
@@ -596,5 +740,121 @@ ls -la meu_link   # aparece em vermelho — link quebrado</code></pre>
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
+    <script>
+      (function () {
+        var SECTION_IDS = ['tudo-e-arquivo','arvore-diretorios','diretorios-especiais','inodes','links'];
+        var CIRC = 2 * Math.PI * 36;
+        var activeIdx = 0;
+
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var prevBtn     = document.getElementById('lm-btn-prev');
+        var nextBtn     = document.getElementById('lm-btn-next');
+        var counter     = document.getElementById('lm-step-counter');
+        var continueBtn = document.getElementById('lm-btn-continue');
+
+        function setActiveStep(idx) {
+          activeIdx = idx;
+          stepBtns.forEach(function(btn, i) { btn.classList.toggle('active', i === idx); });
+          if (prevBtn) prevBtn.disabled = idx === 0;
+          if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
+        }
+
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                var idx = SECTION_IDS.indexOf(entry.target.id);
+                if (idx !== -1) setActiveStep(idx);
+              }
+            });
+          }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+          sectionEls.forEach(function(el){ io.observe(el); });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            if (activeIdx > 0) {
+              var el = sectionEls[activeIdx - 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            if (activeIdx < SECTION_IDS.length - 1) {
+              var el = sectionEls[activeIdx + 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              window.location.href = 'permissoes.html';
+            }
+          });
+        }
+
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            for (var i = 0; i < SECTION_IDS.length; i++) {
+              var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
+              if (!btn || !btn.classList.contains('studied')) {
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
+            var fc = document.querySelector('.flashcards-section');
+            if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        function syncSidebar() {
+          var doneCount = 0;
+          SECTION_IDS.forEach(function(id) {
+            var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
+            var done = studyBtn && studyBtn.classList.contains('studied');
+            if (done) doneCount++;
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
+          });
+
+          var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
+          var fill = document.querySelector('.lm-ring-fill');
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
+
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            dot.setAttribute('cx', (45 + 36 * Math.cos(rad)).toFixed(2));
+            dot.setAttribute('cy', (45 + 36 * Math.sin(rad)).toFixed(2));
+          }
+
+          var ringPct = document.querySelector('.lm-ring-pct');
+          if (ringPct) ringPct.textContent = pct + '%';
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
+          var bar = document.getElementById('lm-progressbar');
+          if (bar) bar.setAttribute('aria-valuenow', pct);
+        }
+
+        document.addEventListener('linuxwiki:section-study-change', syncSidebar);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
+        } else {
+          syncSidebar(); setTimeout(syncSidebar, 250);
+        }
+        setActiveStep(0);
+      })();
+    </script>
   </body>
 </html>

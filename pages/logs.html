@@ -3,64 +3,108 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Aprenda logs no Linux com journalctl e /var/log: filtros úteis, leitura por serviço, follow e troubleshooting orientado por evidência."
-    />
-    <title>Módulo 07 — Logs com journalctl e /var/log | LinuxWiki</title>
+    <meta name="description" content="Aprenda a ler logs com journalctl e /var/log: filtre por serviço, tempo e prioridade para diagnosticar problemas." />
+    <title>Módulo 07: Logs com journalctl e /var/log | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/module-design.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
   </head>
   <body data-module="logs">
     <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
-        >
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
         <nav class="header-nav">
-          <a href="../index.html#modulos" class="back-link">← Módulos</a>
+          <a href="../index.html" class="back-link">← Módulos</a>
           <button class="btn-install-pwa">Instalar PWA</button>
         </nav>
       </div>
     </header>
+
     <div class="module-progress-bar"><div class="fill"></div></div>
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 07</span>
-          <h1 class="module-page-title">Logs com journalctl e /var/log</h1>
-          <p class="module-intro">
-            Troubleshooting sem log vira chute. Este módulo te ensina a procurar
-            evidência de forma objetiva: últimos eventos, filtro por serviço,
-            follow em tempo real e leitura das trilhas clássicas em
-            <code>/var/log</code>.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 17 min de leitura</span>
-            <span class="module-meta-item">🃏 6 flashcards</span>
-            <span class="module-meta-item">📝 6 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="module-layout">
 
-        <section class="content-section" id="por-que-logs">
+          <!-- COLUNA PRINCIPAL -->
+          <div class="module-main">
+
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 07</span>
+              </nav>
+
+              <div class="module-header-body">
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="14" y="12" width="28" height="36" rx="3" fill="none" stroke="rgba(14,165,233,0.5)" stroke-width="1.8"/>
+              <line x1="20" y1="22" x2="36" y2="22" stroke="rgba(14,165,233,0.45)" stroke-width="1.2"/>
+              <line x1="20" y1="28" x2="36" y2="28" stroke="rgba(14,165,233,0.38)" stroke-width="1.2"/>
+              <line x1="20" y1="34" x2="32" y2="34" stroke="rgba(14,165,233,0.28)" stroke-width="1.2"/>
+              <line x1="20" y1="40" x2="28" y2="40" stroke="rgba(14,165,233,0.18)" stroke-width="1.2"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-fundamental">Intermediário</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Logs com journalctl e /var/log</h1>
+                  <p class="module-subtitle">journalctl, /var/log e grep, encontre evidência em vez de adivinhar.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="por-que-logs" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">Por que logs</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="journalctl-basico" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">journalctl</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="var-log" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">/var/log</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="grep-tail-less" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">grep & tail</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="metodo-leitura" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">Método</span>
+              </button>
+            </nav>
+
+<section class="content-section" id="por-que-logs">
           <div class="section-header">
-            <h2>Por que logs importam</h2>
+            <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>Por que logs importam</h2>
+                </div>
             <button class="mark-studied" data-section="por-que-logs">
               ☆ Marcar como estudado
             </button>
           </div>
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Log é a memória operacional do sistema. Se um serviço caiu às
               03:14, o log é o registro mais próximo do que realmente aconteceu.
@@ -68,7 +112,7 @@
             </p>
           </div>
           <div class="card card-analogy">
-            <span class="card-label">💡 Analogia</span>
+            <span class="card-label">Analogia</span>
             <p>
               Pense em logs como a caixa-preta de um avião. Ela não impede o
               problema, mas explica a sequência de eventos com muito mais
@@ -79,13 +123,16 @@
 
         <section class="content-section" id="journalctl-basico">
           <div class="section-header">
-            <h2>journalctl no dia a dia</h2>
+            <div>
+                  <span class="section-kicker">02. journalctl</span>
+                  <h2>journalctl no dia a dia</h2>
+                </div>
             <button class="mark-studied" data-section="journalctl-basico">
               ☆ Marcar como estudado
             </button>
           </div>
           <div class="card card-example">
-            <span class="card-label">🔍 Comandos reais</span>
+            <span class="card-label">Comandos reais</span>
             <pre><code>sudo journalctl -xe
 sudo journalctl -u nginx
 sudo journalctl -u nginx -n 50 --no-pager
@@ -93,7 +140,7 @@ sudo journalctl -u ssh --since "today"
 sudo journalctl -f</code></pre>
           </div>
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <code>journalctl</code> lê o journal do systemd. O segredo é
               filtrar cedo: por unit, por tempo, por prioridade ou acompanhando
@@ -101,7 +148,7 @@ sudo journalctl -f</code></pre>
             </p>
           </div>
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erro comum</span>
+            <span class="card-label">Erro comum</span>
             <p>
               Rodar <code>journalctl</code> puro e se afogar em milhares de
               linhas. Entre com contexto: serviço, intervalo de tempo e volume
@@ -112,13 +159,16 @@ sudo journalctl -f</code></pre>
 
         <section class="content-section" id="var-log">
           <div class="section-header">
-            <h2>Arquivos clássicos em /var/log</h2>
+            <div>
+                  <span class="section-kicker">03. Arquivos</span>
+                  <h2>Arquivos clássicos em /var/log</h2>
+                </div>
             <button class="mark-studied" data-section="var-log">
               ☆ Marcar como estudado
             </button>
           </div>
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Mesmo com journal, muitos softwares ainda escrevem em arquivos
               tradicionais. Saber os caminhos clássicos acelera muito o
@@ -126,7 +176,7 @@ sudo journalctl -f</code></pre>
             </p>
           </div>
           <div class="card card-example">
-            <span class="card-label">🔍 Referências práticas</span>
+            <span class="card-label">Referências práticas</span>
             <pre><code>/var/log/syslog      # Debian/Ubuntu, visão geral
 /var/log/messages    # RHEL/CentOS/Fedora
 /var/log/auth.log    # autenticação
@@ -135,7 +185,7 @@ sudo journalctl -f</code></pre>
 /var/log/apache2/error.log</code></pre>
           </div>
           <div class="card card-summary">
-            <span class="card-label">⚡ Mini troubleshooting</span>
+            <span class="card-label">Mini troubleshooting</span>
             <ul>
               <li>
                 Falha de login? Veja <code>auth.log</code> ou journal do
@@ -152,13 +202,16 @@ sudo journalctl -f</code></pre>
 
         <section class="content-section" id="grep-tail-less">
           <div class="section-header">
-            <h2>Ferramentas que aceleram leitura</h2>
+            <div>
+                  <span class="section-kicker">04. Ferramentas</span>
+                  <h2>Ferramentas que aceleram leitura</h2>
+                </div>
             <button class="mark-studied" data-section="grep-tail-less">
               ☆ Marcar como estudado
             </button>
           </div>
           <div class="card card-example">
-            <span class="card-label">🔍 Comandos reais</span>
+            <span class="card-label">Comandos reais</span>
             <pre><code>tail -f /var/log/nginx/error.log
 less +G /var/log/syslog
 grep -i error /var/log/syslog
@@ -166,7 +219,7 @@ grep -Ei "denied|failed|timeout" /var/log/auth.log
 journalctl -u nginx | grep -i upstream</code></pre>
           </div>
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Nem todo diagnóstico pede ferramenta sofisticada. Muitas vezes
               <code>tail -f</code>, <code>less</code> e
@@ -178,13 +231,16 @@ journalctl -u nginx | grep -i upstream</code></pre>
 
         <section class="content-section" id="metodo-leitura">
           <div class="section-header">
-            <h2>Como ler sem se perder</h2>
+            <div>
+                  <span class="section-kicker">05. Método</span>
+                  <h2>Como ler sem se perder</h2>
+                </div>
             <button class="mark-studied" data-section="metodo-leitura">
               ☆ Marcar como estudado
             </button>
           </div>
           <div class="card card-explanation">
-            <span class="card-label">📖 Método</span>
+            <span class="card-label">Método</span>
             <p>
               Comece pelo momento do incidente. Depois identifique o processo
               envolvido. Só então procure mensagens imediatamente antes e
@@ -193,7 +249,7 @@ journalctl -u nginx | grep -i upstream</code></pre>
             </p>
           </div>
           <div class="card card-summary">
-            <span class="card-label">⚡ Checklist</span>
+            <span class="card-label">Checklist</span>
             <ul>
               <li>Qual serviço ou subsistema está implicado?</li>
               <li>Quando o problema aconteceu?</li>
@@ -213,22 +269,122 @@ journalctl -u nginx | grep -i upstream</code></pre>
           <div id="quiz-widget"></div>
         </section>
 
-        <nav class="module-nav">
-          <a href="systemctl.html" class="module-nav-link prev"
-            >← Módulo Anterior</a
-          >
-          <a href="rede-linux.html" class="module-nav-link next"
-            >Próximo Módulo →</a
-          >
-        </nav>
-      </div>
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 5</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="systemctl.html" class="module-nav-link prev">← Anterior</a>
+              <a href="rede-linux.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- SIDEBAR DIREITA -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+                  <defs>
+                    <filter id="dot-glow-logs">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad-logs" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+                  <circle class="lm-ring-fill" cx="45" cy="45" r="36" fill="none"
+                    stroke="url(#ringGrad-logs)" stroke-width="5" stroke-linecap="round"
+                    stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 45 45)"/>
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow-logs)"/>
+                  <text class="lm-ring-pct" x="45" y="51" text-anchor="middle"
+                    font-size="16" font-weight="700" fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 5 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~17 min de leitura
+                </div>
+              </div>
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#por-que-logs" data-topic="por-que-logs">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Por que logs</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#journalctl-basico" data-topic="journalctl-basico">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">journalctl</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#var-log" data-topic="var-log">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">/var/log</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#grep-tail-less" data-topic="grep-tail-less">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">grep & tail</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#metodo-leitura" data-topic="metodo-leitura">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Método</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">3–4 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
       </div>
     </footer>
+
     <div id="toast-container"></div>
     <script src="../data/modules/index.js"></script>
     <script src="../scripts/catalog.js"></script>
@@ -239,5 +395,121 @@ journalctl -u nginx | grep -i upstream</code></pre>
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
+    <script>
+      (function () {
+        var SECTION_IDS = ['por-que-logs','journalctl-basico','var-log','grep-tail-less','metodo-leitura'];
+        var CIRC = 2 * Math.PI * 36;
+        var activeIdx = 0;
+
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var prevBtn     = document.getElementById('lm-btn-prev');
+        var nextBtn     = document.getElementById('lm-btn-next');
+        var counter     = document.getElementById('lm-step-counter');
+        var continueBtn = document.getElementById('lm-btn-continue');
+
+        function setActiveStep(idx) {
+          activeIdx = idx;
+          stepBtns.forEach(function(btn, i) { btn.classList.toggle('active', i === idx); });
+          if (prevBtn) prevBtn.disabled = idx === 0;
+          if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
+        }
+
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                var idx = SECTION_IDS.indexOf(entry.target.id);
+                if (idx !== -1) setActiveStep(idx);
+              }
+            });
+          }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+          sectionEls.forEach(function(el){ io.observe(el); });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            if (activeIdx > 0) {
+              var el = sectionEls[activeIdx - 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            if (activeIdx < SECTION_IDS.length - 1) {
+              var el = sectionEls[activeIdx + 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              window.location.href = 'rede-linux.html';
+            }
+          });
+        }
+
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            for (var i = 0; i < SECTION_IDS.length; i++) {
+              var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
+              if (!btn || !btn.classList.contains('studied')) {
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
+            var fc = document.querySelector('.flashcards-section');
+            if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        function syncSidebar() {
+          var doneCount = 0;
+          SECTION_IDS.forEach(function(id) {
+            var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
+            var done = studyBtn && studyBtn.classList.contains('studied');
+            if (done) doneCount++;
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
+          });
+
+          var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
+          var fill = document.querySelector('.lm-ring-fill');
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
+
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            dot.setAttribute('cx', (45 + 36 * Math.cos(rad)).toFixed(2));
+            dot.setAttribute('cy', (45 + 36 * Math.sin(rad)).toFixed(2));
+          }
+
+          var ringPct = document.querySelector('.lm-ring-pct');
+          if (ringPct) ringPct.textContent = pct + '%';
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
+          var bar = document.getElementById('lm-progressbar');
+          if (bar) bar.setAttribute('aria-valuenow', pct);
+        }
+
+        document.addEventListener('linuxwiki:section-study-change', syncSidebar);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
+        } else {
+          syncSidebar(); setTimeout(syncSidebar, 250);
+        }
+        setActiveStep(0);
+      })();
+    </script>
   </body>
 </html>

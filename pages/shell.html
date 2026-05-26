@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Domine o shell Linux: bash, zsh, variáveis de ambiente, pipes, redirecionamentos, stdin/stdout/stderr, globbing, histórico e aliases — com terminal simulado para praticar."
-    />
-    <title>Módulo 05 — Shell | LinuxWiki</title>
+    <meta name="description" content="Domine o shell Linux: bash, zsh, variáveis de ambiente, pipes, redirecionamentos, stdin/stdout/stderr e globbing." />
+    <title>Módulo 05: Shell | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/module-design.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
   </head>
@@ -21,9 +19,7 @@
 
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
-        >
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
         <nav class="header-nav">
           <a href="../index.html" class="back-link">← Módulos</a>
           <button class="btn-install-pwa">Instalar PWA</button>
@@ -35,35 +31,86 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 05</span>
-          <h1 class="module-page-title">Shell</h1>
-          <p class="module-intro">
-            O shell é a sua interface de poder com o sistema. Aprenda a dominar
-            variáveis de ambiente, pipes, redirecionamentos e o globbing — e
-            pratique no terminal simulado direto no browser.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 22 min de leitura</span>
-            <span class="module-meta-item">🃏 7 flashcards</span>
-            <span class="module-meta-item">📝 6 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="module-layout">
 
-        <!-- SEÇÃO 1 -->
+          <!-- COLUNA PRINCIPAL -->
+          <div class="module-main">
+
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 05</span>
+              </nav>
+
+              <div class="module-header-body">
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <text x="28" y="38" text-anchor="middle" font-size="26" fill="rgba(14,165,233,0.8)" font-family="monospace" font-weight="700">$_</text>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-fundamental">Intermediário</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Shell</h1>
+                  <p class="module-subtitle">Variáveis, pipes, redirecionamentos e globbing, a linha de comando como ferramenta de poder.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="bash-vs-outros" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">bash & zsh</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="variaveis-ambiente" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">Variáveis</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="pipes-redirects" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">Pipes</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="stdin-stdout-stderr" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">stdin/stdout</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="expansao-globbing" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">Globbing</span>
+              </button>
+              <button class="step-item" data-step="5" data-target="historico-aliases" type="button">
+                <span class="step-number">06</span>
+                <span class="step-label">Histórico</span>
+              </button>
+              <button class="step-item" data-step="6" data-target="terminal-pratica" type="button">
+                <span class="step-number">07</span>
+                <span class="step-label">Prática</span>
+              </button>
+            </nav>
+
+<!-- SEÇÃO 1 -->
         <section class="content-section" id="bash-vs-outros">
           <div class="section-header">
-            <h2>bash, zsh e sh: qual usar e por quê</h2>
+            <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>bash, zsh e sh: qual usar e por quê</h2>
+                </div>
             <button class="mark-studied" data-section="bash-vs-outros">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               O <strong>shell</strong> é o intérprete que lê seus comandos, faz
               expansões (variáveis, globs, etc.) e pede ao kernel que execute os
@@ -98,7 +145,7 @@
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver qual shell você está usando
 $ echo $SHELL
 /bin/bash
@@ -126,7 +173,7 @@ $ chsh -s /usr/bin/zsh
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 <strong>bash</strong>: padrão no Linux — aprenda bem antes de
@@ -150,18 +197,19 @@ $ chsh -s /usr/bin/zsh
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 2 -->
         <section class="content-section" id="variaveis-ambiente">
           <div class="section-header">
-            <h2>Variáveis de ambiente: $PATH, $HOME, $USER</h2>
+            <div>
+                  <span class="section-kicker">02. Ambiente</span>
+                  <h2>Variáveis de ambiente: $PATH, $HOME, $USER</h2>
+                </div>
             <button class="mark-studied" data-section="variaveis-ambiente">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Variáveis de ambiente são pares chave=valor que o shell mantém e
               passa para processos filhos. Elas configuram o comportamento do
@@ -198,7 +246,7 @@ $ chsh -s /usr/bin/zsh
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver o $PATH atual
 $ echo $PATH
 /home/usuario/.local/bin:/usr/local/bin:/usr/bin:/bin
@@ -230,7 +278,7 @@ $ . .env      # equivalente (. é alias para source)</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>Espaços em torno do =</strong> —
               <code>VARIAVEL = valor</code> dá erro. Em shell, não pode ter
@@ -249,7 +297,7 @@ $ . .env      # equivalente (. é alias para source)</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 $PATH determina onde o shell busca executáveis (da esquerda para
@@ -270,18 +318,19 @@ $ . .env      # equivalente (. é alias para source)</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 3 -->
         <section class="content-section" id="pipes-redirects">
           <div class="section-header">
-            <h2>Pipes e Redirecionamentos</h2>
+            <div>
+                  <span class="section-kicker">03. Fluxo</span>
+                  <h2>Pipes e Redirecionamentos</h2>
+                </div>
             <button class="mark-studied" data-section="pipes-redirects">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — Linha de montagem</span>
+            <span class="card-label">Analogia: Linha de montagem</span>
             <p>
               O pipe é como uma linha de montagem industrial: cada programa faz
               uma coisa específica e passa o resultado para o próximo.
@@ -293,7 +342,7 @@ $ . .env      # equivalente (. é alias para source)</code></pre>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>Pipe <code>|</code></strong> — conecta o stdout de um
               processo ao stdin do próximo. Os dois processos rodam em paralelo
@@ -337,7 +386,7 @@ $ . .env      # equivalente (. é alias para source)</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Pipe — encontrar os 5 processos que mais usam memória
 $ ps aux --sort=-%mem | head -6
 
@@ -375,7 +424,7 @@ $ comando | tee -a output.txt  # append</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>Ordem errada em 2&gt;&amp;1</strong> —
               <code>comando 2&gt;&amp;1 &gt; arquivo</code> está errado. O
@@ -393,7 +442,7 @@ $ comando | tee -a output.txt  # append</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li><code>|</code> conecta stdout → stdin (paralelamente)</li>
               <li>
@@ -415,18 +464,19 @@ $ comando | tee -a output.txt  # append</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 4 -->
         <section class="content-section" id="stdin-stdout-stderr">
           <div class="section-header">
-            <h2>stdin, stdout e stderr: os três file descriptors</h2>
+            <div>
+                  <span class="section-kicker">04. Descritores</span>
+                  <h2>stdin, stdout e stderr: os três file descriptors</h2>
+                </div>
             <button class="mark-studied" data-section="stdin-stdout-stderr">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Todo processo no Unix começa com três
               <strong>file descriptors</strong> (FDs) abertos — canais de
@@ -463,7 +513,7 @@ $ comando | tee -a output.txt  # append</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver FDs abertos do seu shell
 $ ls -la /proc/$$/fd/
 lrwxrwxrwx 0 -> /dev/pts/0    # FD 0 = stdin (terminal)
@@ -491,7 +541,7 @@ cat "$1"  # resultado -> stdout (FD 1)</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>FD 0 = stdin, FD 1 = stdout, FD 2 = stderr</li>
               <li>
@@ -509,18 +559,19 @@ cat "$1"  # resultado -> stdout (FD 1)</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 5 -->
         <section class="content-section" id="expansao-globbing">
           <div class="section-header">
-            <h2>Expansão e globbing</h2>
+            <div>
+                  <span class="section-kicker">05. Padrões</span>
+                  <h2>Expansão e globbing</h2>
+                </div>
             <button class="mark-studied" data-section="expansao-globbing">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               O shell faz várias <strong>expansões</strong> antes de executar um
               comando — transforma o que você digitou em algo concreto. Entender
@@ -563,7 +614,7 @@ cat "$1"  # resultado -> stdout (FD 1)</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Globbing básico
 $ ls *.py             # todos os .py
 $ ls arquivo?.txt     # arquivo1.txt, arquivo2.txt, etc.
@@ -596,7 +647,7 @@ $ echo '$HOME'     # $HOME (literal)</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <p>
               <strong>Glob sem aspas em variável</strong> — se
               <code>$ARQUIVO</code> contém espaços ou caracteres glob, usar sem
@@ -613,7 +664,7 @@ $ echo '$HOME'     # $HOME (literal)</code></pre>
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 <code>*</code> qualquer string; <code>?</code> um char;
@@ -634,18 +685,19 @@ $ echo '$HOME'     # $HOME (literal)</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 6 -->
         <section class="content-section" id="historico-aliases">
           <div class="section-header">
-            <h2>Histórico e aliases</h2>
+            <div>
+                  <span class="section-kicker">06. Produtividade</span>
+                  <h2>Histórico e aliases</h2>
+                </div>
             <button class="mark-studied" data-section="historico-aliases">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               O bash salva os comandos que você digita em
               <code>~/.bash_history</code> (zsh usa
@@ -679,7 +731,7 @@ $ echo '$HOME'     # $HOME (literal)</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Histórico
 $ history | tail -10
   421  ls -la /etc/nginx/
@@ -732,7 +784,7 @@ mkcd() {
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 <kbd>Ctrl+R</kbd> — busca no histórico (mais útil que ↑↑↑)
@@ -755,7 +807,10 @@ mkcd() {
         <!-- SEÇÃO 7 — TERMINAL SIMULADO -->
         <section class="content-section" id="terminal-pratica">
           <div class="section-header">
-            <h2>Terminal Simulado — Pratique aqui</h2>
+            <div>
+                  <span class="section-kicker">07. Prática</span>
+                  <h2>Terminal Simulado — Pratique aqui</h2>
+                </div>
             <button class="mark-studied" data-section="terminal-pratica">
               ☆ Marcar como estudado
             </button>
@@ -796,34 +851,140 @@ mkcd() {
             </p>
           </div>
         </section>
-
-        <!-- FLASHCARDS -->
         <section class="flashcards-section">
           <h2>🃏 Flashcards</h2>
           <div id="flashcard-widget"></div>
         </section>
-
-        <!-- QUIZ -->
         <section class="quiz-section">
-          <h2>📝 Quiz — Módulo 05</h2>
+          <h2>📝 Quiz: Módulo 05</h2>
           <div id="quiz-widget"></div>
         </section>
 
-        <!-- NAVEGAÇÃO -->
-        <nav class="module-nav">
-          <a href="processos.html" class="module-nav-link prev"
-            >← Módulo Anterior</a
-          >
-          <a href="systemctl.html" class="module-nav-link next"
-            >Próximo Módulo →</a
-          >
-        </nav>
-      </div>
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 7</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="processos.html" class="module-nav-link prev">← Anterior</a>
+              <a href="usuarios.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- SIDEBAR DIREITA -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+                  <defs>
+                    <filter id="dot-glow-shell">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad-shell" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+                  <circle class="lm-ring-fill" cx="45" cy="45" r="36" fill="none"
+                    stroke="url(#ringGrad-shell)" stroke-width="5" stroke-linecap="round"
+                    stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 45 45)"/>
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow-shell)"/>
+                  <text class="lm-ring-pct" x="45" y="51" text-anchor="middle"
+                    font-size="16" font-weight="700" fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 7 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~22 min de leitura
+                </div>
+              </div>
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#bash-vs-outros" data-topic="bash-vs-outros">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">bash & zsh</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#variaveis-ambiente" data-topic="variaveis-ambiente">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Variáveis</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#pipes-redirects" data-topic="pipes-redirects">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Pipes</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#stdin-stdout-stderr" data-topic="stdin-stdout-stderr">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">stdin/stdout</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#expansao-globbing" data-topic="expansao-globbing">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Globbing</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#historico-aliases" data-topic="historico-aliases">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Histórico</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#terminal-pratica" data-topic="terminal-pratica">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Prática</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">3–4 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
       </div>
     </footer>
 
@@ -837,5 +998,121 @@ mkcd() {
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
+    <script>
+      (function () {
+        var SECTION_IDS = ['bash-vs-outros','variaveis-ambiente','pipes-redirects','stdin-stdout-stderr','expansao-globbing','historico-aliases','terminal-pratica'];
+        var CIRC = 2 * Math.PI * 36;
+        var activeIdx = 0;
+
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var prevBtn     = document.getElementById('lm-btn-prev');
+        var nextBtn     = document.getElementById('lm-btn-next');
+        var counter     = document.getElementById('lm-step-counter');
+        var continueBtn = document.getElementById('lm-btn-continue');
+
+        function setActiveStep(idx) {
+          activeIdx = idx;
+          stepBtns.forEach(function(btn, i) { btn.classList.toggle('active', i === idx); });
+          if (prevBtn) prevBtn.disabled = idx === 0;
+          if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
+        }
+
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                var idx = SECTION_IDS.indexOf(entry.target.id);
+                if (idx !== -1) setActiveStep(idx);
+              }
+            });
+          }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+          sectionEls.forEach(function(el){ io.observe(el); });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            if (activeIdx > 0) {
+              var el = sectionEls[activeIdx - 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            if (activeIdx < SECTION_IDS.length - 1) {
+              var el = sectionEls[activeIdx + 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              window.location.href = 'usuarios.html';
+            }
+          });
+        }
+
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            for (var i = 0; i < SECTION_IDS.length; i++) {
+              var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
+              if (!btn || !btn.classList.contains('studied')) {
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
+            var fc = document.querySelector('.flashcards-section');
+            if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        function syncSidebar() {
+          var doneCount = 0;
+          SECTION_IDS.forEach(function(id) {
+            var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
+            var done = studyBtn && studyBtn.classList.contains('studied');
+            if (done) doneCount++;
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
+          });
+
+          var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
+          var fill = document.querySelector('.lm-ring-fill');
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
+
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            dot.setAttribute('cx', (45 + 36 * Math.cos(rad)).toFixed(2));
+            dot.setAttribute('cy', (45 + 36 * Math.sin(rad)).toFixed(2));
+          }
+
+          var ringPct = document.querySelector('.lm-ring-pct');
+          if (ringPct) ringPct.textContent = pct + '%';
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
+          var bar = document.getElementById('lm-progressbar');
+          if (bar) bar.setAttribute('aria-valuenow', pct);
+        }
+
+        document.addEventListener('linuxwiki:section-study-change', syncSidebar);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
+        } else {
+          syncSidebar(); setTimeout(syncSidebar, 250);
+        }
+        setActiveStep(0);
+      })();
+    </script>
   </body>
 </html>

@@ -3,16 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Aprenda a gerenciar pacotes no Linux com APT, DNF, Pacman, Snap, Flatpak e como compilar da fonte."
-    />
-    <title>Módulo 07 — Gerenciamento de Pacotes | LinuxWiki</title>
+    <meta name="description" content="Domine o gerenciamento de software: repositórios, verificação GPG, APT, DNF, Pacman, Snap, Flatpak e compilação da fonte." />
+    <title>Módulo 07: Gerenciamento de Pacotes | LinuxWiki</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
     <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/module-design.css" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
   </head>
@@ -21,9 +19,7 @@
 
     <header class="site-header">
       <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><span class="logo-icon">&gt;_</span> LinuxWiki</a
-        >
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
         <nav class="header-nav">
           <a href="../index.html" class="back-link">← Módulos</a>
           <button class="btn-install-pwa">Instalar PWA</button>
@@ -35,35 +31,93 @@
 
     <main id="main" class="module-page">
       <div class="container--narrow">
-        <div class="module-header">
-          <span class="module-number-badge">Módulo 07</span>
-          <h1 class="module-page-title">Gerenciamento de Pacotes</h1>
-          <p class="module-intro">
-            Domine o gerenciamento de software no Linux: entenda como
-            repositórios, verificação GPG e resolução de dependências funcionam.
-            Aprenda APT, DNF, Pacman e quando compilar da fonte faz sentido.
-          </p>
-          <div class="module-meta">
-            <span class="module-meta-item">⏱ 25 min de leitura</span>
-            <span class="module-meta-item">🃏 6 flashcards</span>
-            <span class="module-meta-item">📝 5 questões</span>
-            <span class="progress-display"
-              >Progresso: <strong id="progress-pct">0%</strong></span
-            >
-          </div>
-        </div>
+        <div class="module-layout">
 
-        <!-- SEÇÃO 1 -->
+          <!-- COLUNA PRINCIPAL -->
+          <div class="module-main">
+
+            <header class="module-header-premium">
+              <nav class="module-breadcrumb" aria-label="Navegação estrutural">
+                <a href="../index.html">Módulos</a>
+                <span class="module-breadcrumb-sep" aria-hidden="true">›</span>
+                <span aria-current="page">Módulo 07</span>
+              </nav>
+
+              <div class="module-header-body">
+                <div class="tux-hex-wrapper" aria-hidden="true">
+                  <div class="tux-hex-border"></div>
+                  <div class="tux-hex">
+                    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="12" y="28" width="32" height="22" rx="2" fill="none" stroke="rgba(14,165,233,0.5)" stroke-width="1.8"/>
+              <line x1="28" y1="28" x2="28" y2="50" stroke="rgba(14,165,233,0.3)" stroke-width="1.2"/>
+              <line x1="12" y1="36" x2="44" y2="36" stroke="rgba(14,165,233,0.35)" stroke-width="1.2"/>
+              <path d="M12 24 L28 18 L44 24 L44 28 L12 28 Z" fill="none" stroke="rgba(14,165,233,0.55)" stroke-width="1.8"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="module-header-text">
+                  <div class="badge-row">
+                    <span class="badge badge-fundamental">Intermediário</span>
+                    <span class="badge badge-fundamental">Fundamental</span>
+                    <span class="badge badge-progresso">Progresso <strong id="progress-pct">0%</strong></span>
+                  </div>
+                  <h1 class="module-title">Gerenciamento de Pacotes</h1>
+                  <p class="module-subtitle">APT, DNF, Pacman e compilação da fonte, gestão de software de ponta a ponta.</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- STEP NAVIGATION -->
+            <nav class="step-nav" aria-label="Tópicos do módulo">
+              <button class="step-item active" data-step="0" data-target="o-que-e-gerenciador" type="button">
+                <span class="step-number">01</span>
+                <span class="step-label">Gerenciador</span>
+              </button>
+              <button class="step-item" data-step="1" data-target="repositorios" type="button">
+                <span class="step-number">02</span>
+                <span class="step-label">Repositórios</span>
+              </button>
+              <button class="step-item" data-step="2" data-target="gpg" type="button">
+                <span class="step-number">03</span>
+                <span class="step-label">GPG</span>
+              </button>
+              <button class="step-item" data-step="3" data-target="apt" type="button">
+                <span class="step-number">04</span>
+                <span class="step-label">APT</span>
+              </button>
+              <button class="step-item" data-step="4" data-target="dnf-rpm" type="button">
+                <span class="step-number">05</span>
+                <span class="step-label">DNF / RPM</span>
+              </button>
+              <button class="step-item" data-step="5" data-target="pacman" type="button">
+                <span class="step-number">06</span>
+                <span class="step-label">Pacman</span>
+              </button>
+              <button class="step-item" data-step="6" data-target="snap-flatpak" type="button">
+                <span class="step-number">07</span>
+                <span class="step-label">Snap / Flatpak</span>
+              </button>
+              <button class="step-item" data-step="7" data-target="compilar-fonte" type="button">
+                <span class="step-number">08</span>
+                <span class="step-label">Da fonte</span>
+              </button>
+            </nav>
+
+<!-- SEÇÃO 1 -->
         <section class="content-section" id="o-que-e-gerenciador">
           <div class="section-header">
-            <h2>O que é um gerenciador de pacotes</h2>
+            <div>
+                  <span class="section-kicker">01. Conceito</span>
+                  <h2>O que é um gerenciador de pacotes</h2>
+                </div>
             <button class="mark-studied" data-section="o-que-e-gerenciador">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Um <strong>gerenciador de pacotes</strong> é o sistema responsável
               por instalar, atualizar, remover e verificar softwares no Linux.
@@ -109,7 +163,7 @@
           </div>
 
           <div class="card card-summary">
-            <span class="card-label">⚡ O que você precisa guardar</span>
+            <span class="card-label">O que você precisa guardar</span>
             <ul>
               <li>
                 Gerenciador de pacotes resolve dependências automaticamente
@@ -123,18 +177,19 @@
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 2 -->
         <section class="content-section" id="repositorios">
           <div class="section-header">
-            <h2>Repositórios e como funcionam</h2>
+            <div>
+                  <span class="section-kicker">02. Repositórios</span>
+                  <h2>Repositórios e como funcionam</h2>
+                </div>
             <button class="mark-studied" data-section="repositorios">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Um <strong>repositório</strong> é um servidor que contém pacotes
               compilados, assinados e indexados. O gerenciador baixa o índice e
@@ -163,7 +218,7 @@
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Ver repositórios configurados no Ubuntu
 cat /etc/apt/sources.list
 
@@ -182,7 +237,7 @@ sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <ul>
               <li>
                 <strong>Adicionar PPAs em servidores de produção</strong> sem
@@ -200,18 +255,19 @@ sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 3 -->
         <section class="content-section" id="gpg">
           <div class="section-header">
-            <h2>Verificação GPG: por que confiar nos pacotes</h2>
+            <div>
+                  <span class="section-kicker">03. Segurança</span>
+                  <h2>Verificação GPG: por que confiar nos pacotes</h2>
+                </div>
             <button class="mark-studied" data-section="gpg">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Cada repositório tem um <strong>par de chaves GPG</strong>. O
               mantenedor assina os pacotes com a chave privada. Seu sistema
@@ -238,7 +294,7 @@ sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <ul>
               <li>
                 <strong>Nunca desabilite verificação GPG</strong>
@@ -257,18 +313,19 @@ sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 4 -->
         <section class="content-section" id="apt">
           <div class="section-header">
-            <h2>APT: Debian, Ubuntu e derivados</h2>
+            <div>
+                  <span class="section-kicker">04. Debian</span>
+                  <h2>APT: Debian, Ubuntu e derivados</h2>
+                </div>
             <button class="mark-studied" data-section="apt">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>APT</strong> (Advanced Package Tool) é o gerenciador de
               pacotes das distribuições baseadas em Debian. É uma camada de alto
@@ -282,7 +339,7 @@ sudo apt update    # atualiza índice incluindo novo repositório</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code>sudo apt update                    # atualiza índice de repositórios
 sudo apt upgrade                   # atualiza pacotes instalados
 sudo apt full-upgrade              # upgrade com remoção de conflitos
@@ -299,7 +356,7 @@ dpkg -S /usr/bin/python3           # qual pacote instalou este arquivo</code></p
           </div>
 
           <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — apt vs dpkg</span>
+            <span class="card-label">Analogia: apt vs dpkg</span>
             <p>
               dpkg é como copiar um arquivo manualmente. APT é como um
               assistente que descobre o que você precisa antes de copiar, vai
@@ -309,7 +366,7 @@ dpkg -S /usr/bin/python3           # qual pacote instalou este arquivo</code></p
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <ul>
               <li>
                 <strong>apt upgrade vs apt full-upgrade</strong>:
@@ -329,18 +386,19 @@ dpkg -S /usr/bin/python3           # qual pacote instalou este arquivo</code></p
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 5 -->
         <section class="content-section" id="dnf-rpm">
           <div class="section-header">
-            <h2>DNF/YUM: Red Hat, Fedora, CentOS</h2>
+            <div>
+                  <span class="section-kicker">05. Red Hat</span>
+                  <h2>DNF/YUM: Red Hat, Fedora, CentOS</h2>
+                </div>
             <button class="mark-studied" data-section="dnf-rpm">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>DNF</strong> (Dandified YUM) é o gerenciador de pacotes
               das distribuições Red Hat desde o Fedora 22 e RHEL 8. YUM foi o
@@ -355,7 +413,7 @@ dpkg -S /usr/bin/python3           # qual pacote instalou este arquivo</code></p
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code>sudo dnf install nginx             # instala nginx
 sudo dnf remove nginx              # remove nginx
 sudo dnf update                    # atualiza tudo
@@ -378,18 +436,19 @@ rpm -qi nginx                      # informações detalhadas via rpm</code></pr
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 6 -->
         <section class="content-section" id="pacman">
           <div class="section-header">
-            <h2>Pacman: Arch Linux</h2>
+            <div>
+                  <span class="section-kicker">06. Arch</span>
+                  <h2>Pacman: Arch Linux</h2>
+                </div>
             <button class="mark-studied" data-section="pacman">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>Pacman</strong> é o gerenciador de pacotes do Arch Linux e
               derivados (Manjaro, EndeavourOS). É conhecido pela sintaxe concisa
@@ -404,7 +463,7 @@ rpm -qi nginx                      # informações detalhadas via rpm</code></pr
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code>sudo pacman -S nginx               # instala (sync)
 sudo pacman -R nginx               # remove
 sudo pacman -Rs nginx              # remove + dependências não usadas
@@ -419,7 +478,7 @@ yay -Syu                           # atualiza tudo incluindo AUR</code></pre>
           </div>
 
           <div class="card card-analogy">
-            <span class="card-label">💡 Analogia — Flags do Pacman</span>
+            <span class="card-label">Analogia: Flags do Pacman</span>
             <p>
               As flags do pacman seguem lógica: <code>-S</code> = Sync
               (repositório), <code>-R</code> = Remove, <code>-Q</code> = Query
@@ -430,18 +489,19 @@ yay -Syu                           # atualiza tudo incluindo AUR</code></pre>
             </p>
           </div>
         </section>
-
-        <!-- SEÇÃO 7 -->
         <section class="content-section" id="snap-flatpak">
           <div class="section-header">
-            <h2>Snap e Flatpak: o futuro dos pacotes universais</h2>
+            <div>
+                  <span class="section-kicker">07. Universal</span>
+                  <h2>Snap e Flatpak: o futuro dos pacotes universais</h2>
+                </div>
             <button class="mark-studied" data-section="snap-flatpak">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               <strong>Snap</strong> (Canonical) e <strong>Flatpak</strong> (Red
               Hat/Comunidade) são formatos de pacote universais que empacotam a
@@ -470,7 +530,7 @@ yay -Syu                           # atualiza tudo incluindo AUR</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Snap
 snap find vlc                      # busca
 sudo snap install vlc              # instala
@@ -486,7 +546,7 @@ flatpak update                     # atualiza todos</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <ul>
               <li>
                 <strong>Misturar snap e apt para a mesma aplicação</strong>:
@@ -500,18 +560,19 @@ flatpak update                     # atualiza todos</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- SEÇÃO 8 -->
         <section class="content-section" id="compilar-fonte">
           <div class="section-header">
-            <h2>Compilar da fonte: ./configure &amp;&amp; make</h2>
+            <div>
+                  <span class="section-kicker">08. Avançado</span>
+                  <h2>Compilar da fonte: ./configure &amp;&amp; make</h2>
+                </div>
             <button class="mark-studied" data-section="compilar-fonte">
               ☆ Marcar como estudado
             </button>
           </div>
 
           <div class="card card-explanation">
-            <span class="card-label">📖 Explicação</span>
+            <span class="card-label">Explicação</span>
             <p>
               Compilar da fonte significa obter o código-fonte do software e
               transformá-lo em binário você mesmo. Necessário quando:
@@ -536,7 +597,7 @@ flatpak update                     # atualiza todos</code></pre>
           </div>
 
           <div class="card card-example">
-            <span class="card-label">🔍 Exemplo Concreto</span>
+            <span class="card-label">Exemplo Concreto</span>
             <pre><code># Fluxo clássico autotools
 ./configure --prefix=/usr/local    # verifica dependências, gera Makefile
 make                               # compila (use make -j$(nproc) para paralelo)
@@ -557,7 +618,7 @@ sudo make uninstall</code></pre>
           </div>
 
           <div class="card card-warning">
-            <span class="card-label">⚠️ Erros comuns</span>
+            <span class="card-label">Erros comuns</span>
             <ul>
               <li>
                 <strong>Não ler o output do ./configure</strong>: quando falha,
@@ -581,34 +642,146 @@ sudo make uninstall</code></pre>
             </ul>
           </div>
         </section>
-
-        <!-- FLASHCARDS -->
         <section class="flashcards-section">
           <h2>🃏 Flashcards</h2>
           <div id="flashcard-widget"></div>
         </section>
-
-        <!-- QUIZ -->
         <section class="quiz-section">
-          <h2>📝 Quiz — Módulo 07</h2>
+          <h2>📝 Quiz: Módulo 07</h2>
           <div id="quiz-widget"></div>
         </section>
 
-        <!-- NAVEGAÇÃO -->
-        <nav class="module-nav">
-          <a href="usuarios.html" class="module-nav-link prev"
-            >← Módulo Anterior</a
-          >
-          <a href="rede-linux.html" class="module-nav-link next"
-            >Próximo Módulo →</a
-          >
-        </nav>
-      </div>
+            <div class="module-nav-footer">
+              <button id="lm-btn-prev" class="btn-nav btn-nav-prev" type="button" disabled>← Anterior</button>
+              <span class="step-counter-label" id="lm-step-counter" aria-live="polite">Tópico 1 de 8</span>
+              <button id="lm-btn-next" class="btn-nav btn-nav-next" type="button">Próximo →</button>
+            </div>
+
+            <!-- Mantido para main.js (completion panel + module nav dinâmico) -->
+            <nav class="module-nav" aria-hidden="true">
+              <a href="usuarios.html" class="module-nav-link prev">← Anterior</a>
+              <a href="rede-linux.html" class="module-nav-link next">Próximo →</a>
+            </nav>
+
+          </div><!-- /module-main -->
+
+          <!-- SIDEBAR DIREITA -->
+          <aside class="module-sidebar" aria-label="Progresso e tópicos do módulo">
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Seu progresso neste módulo</p>
+              <div class="progress-ring-wrapper">
+                <svg width="90" height="90" viewBox="0 0 90 90" aria-hidden="true">
+                  <defs>
+                    <filter id="dot-glow-pacotes">
+                      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <linearGradient id="ringGrad-pacotes" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="45" cy="45" r="36" fill="none" stroke="#1f2937" stroke-width="5"/>
+                  <circle class="lm-ring-fill" cx="45" cy="45" r="36" fill="none"
+                    stroke="url(#ringGrad-pacotes)" stroke-width="5" stroke-linecap="round"
+                    stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 45 45)"/>
+                  <circle id="progress-dot" cx="45" cy="9" r="4"
+                    fill="#38bdf8" filter="url(#dot-glow-pacotes)"/>
+                  <text class="lm-ring-pct" x="45" y="51" text-anchor="middle"
+                    font-size="16" font-weight="700" fill="#f1f5f9"
+                    font-family="'Space Grotesk', sans-serif">0%</text>
+                </svg>
+              </div>
+              <div class="progress-meta" id="lm-progressbar"
+                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Progresso do módulo">
+                <div class="progress-meta-item">
+                  ✓&nbsp;<strong class="progress-done-count">0</strong>&nbsp;de 8 tópicos concluídos
+                </div>
+                <div class="progress-meta-item">
+                  ⏱&nbsp;~25 min de leitura
+                </div>
+              </div>
+              <button id="lm-btn-continue" class="btn-continue" type="button">
+                Continue aprendendo!
+              </button>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Nesta lição você vai aprender</p>
+              <ol class="lesson-topics">
+                <li>
+                  <a class="lesson-topic-item" href="#o-que-e-gerenciador" data-topic="o-que-e-gerenciador">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Gerenciador</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#repositorios" data-topic="repositorios">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Repositórios</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#gpg" data-topic="gpg">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">GPG</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#apt" data-topic="apt">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">APT</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#dnf-rpm" data-topic="dnf-rpm">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">DNF / RPM</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#pacman" data-topic="pacman">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Pacman</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#snap-flatpak" data-topic="snap-flatpak">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Snap / Flatpak</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="lesson-topic-item" href="#compilar-fonte" data-topic="compilar-fonte">
+                    <span class="topic-radio" aria-hidden="true"></span>
+                    <span class="topic-label">Da fonte</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="sidebar-card">
+              <p class="sidebar-card-title">Tempo estimado</p>
+              <div class="time-card-content">
+                <div class="time-icon" aria-hidden="true">⏱</div>
+                <div>
+                  <p class="time-value">3–4 min</p>
+                  <p class="time-desc">por tópico · Leitura tranquila</p>
+                </div>
+              </div>
+            </div>
+
+          </aside><!-- /module-sidebar -->
+
+        </div><!-- /module-layout -->
+      </div><!-- /container--narrow -->
     </main>
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="footer-tagline">LinuxWiki — Conteúdo livre para estudo.</p>
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
       </div>
     </footer>
 
@@ -622,101 +795,121 @@ sudo make uninstall</code></pre>
     <script src="../scripts/terminal.js"></script>
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
+
     <script>
-      const flashcards = [
-        {
-          front: "Para que serve <code>apt update</code>?",
-          back: "Atualiza o índice local de pacotes disponíveis nos repositórios. NÃO instala ou atualiza nada — apenas baixa a lista atualizada. Sempre rode antes de <code>apt install</code> ou <code>apt upgrade</code> para garantir que você vê as versões mais recentes.",
-        },
-        {
-          front:
-            "Qual a diferença entre <code>apt remove</code> e <code>apt purge</code>?",
-          back: "<code>apt remove</code> desinstala o pacote mas mantém arquivos de configuração (em /etc e ~/.config). <code>apt purge</code> remove o pacote E os arquivos de configuração. Se quiser reinstalar limpo depois, use purge. Se quiser reinstalar preservando configs, use remove.",
-        },
-        {
-          front: "O que o gerenciador de pacotes faz com dependências?",
-          back: "Resolve automaticamente — se nginx precisa da libssl, o gerenciador baixa e instala libssl também. Ao remover, <code>apt autoremove</code> limpa dependências que ficaram sem uso. Compilar da fonte não tem esse mecanismo — você resolve manualmente.",
-        },
-        {
-          front: "Por que a verificação GPG de repositórios é importante?",
-          back: "Garante autenticidade — os pacotes foram assinados pelo mantenedor oficial. Sem isso, um ataque man-in-the-middle ou repositório comprometido poderia distribuir pacotes maliciosos. Nunca desabilite verificação GPG em produção.",
-        },
-        {
-          front:
-            "Qual o equivalente de <code>apt install</code> no Arch Linux?",
-          back: "<code>pacman -S pacote</code>. Para atualizar tudo: <code>pacman -Syu</code> (sync + upgrade). Para remover: <code>pacman -R</code>. Para remover com dependências desnecessárias: <code>pacman -Rs</code>. O AUR (Arch User Repository) tem pacotes adicionais via helpers como yay.",
-        },
-        {
-          front: "O que faz <code>./configure</code> antes de compilar?",
-          back: "Verifica se todas as dependências de compilação estão presentes, detecta capacidades do sistema e gera o Makefile personalizado para o ambiente atual. Se falhar, mostra qual biblioteca está faltando. Leia o output com atenção — quase sempre diz exatamente o que instalar.",
-        },
-      ];
+      (function () {
+        var SECTION_IDS = ['o-que-e-gerenciador','repositorios','gpg','apt','dnf-rpm','pacman','snap-flatpak','compilar-fonte'];
+        var CIRC = 2 * Math.PI * 36;
+        var activeIdx = 0;
 
-      window._quizData_pacotes = [
-        {
-          question:
-            "Qual comando atualiza o índice de repositórios no Ubuntu sem instalar nada?",
-          options: ["apt upgrade", "apt update", "apt refresh", "apt sync"],
-          correct: 1,
-          explanation:
-            "<code>apt update</code> baixa as listas de pacotes dos repositórios configurados. É o primeiro passo antes de instalar ou atualizar qualquer coisa — sem ele, você instala versões antigas.",
-        },
-        {
-          question: "Para instalar o nginx no Fedora 38+, o comando correto é:",
-          options: [
-            "apt install nginx",
-            "yum install nginx",
-            "dnf install nginx",
-            "pacman -S nginx",
-          ],
-          correct: 2,
-          explanation:
-            "Fedora usa DNF (Dandified YUM) desde o Fedora 22. YUM ainda funciona como wrapper, mas DNF é o padrão moderno. Arch usa pacman; Debian/Ubuntu usam apt.",
-        },
-        {
-          question:
-            "Você removeu um pacote mas quer limpar também os arquivos de configuração que ficaram. O comando é:",
-          options: [
-            "apt remove --clean",
-            "apt purge pacote",
-            "apt delete pacote",
-            "dpkg --purge-all",
-          ],
-          correct: 1,
-          explanation:
-            "<code>apt purge</code> remove o pacote e todos os arquivos de configuração relacionados. Útil quando você quer reinstalar do zero ou simplesmente limpar o sistema.",
-        },
-        {
-          question: "O que faz <code>sudo pacman -Syu</code> no Arch Linux?",
-          options: [
-            "Remove pacotes não utilizados",
-            "Instala e atualiza todos os pacotes do sistema",
-            "Busca atualizações sem instalar",
-            "Sincroniza apenas o banco de dados",
-          ],
-          correct: 1,
-          explanation:
-            "<code>-S</code> = sync (modo de instalação), <code>-y</code> = atualiza banco de dados, <code>-u</code> = upgrade de todos os pacotes. É o equivalente ao <code>apt update &amp;&amp; apt upgrade</code>, mas em um só comando.",
-        },
-        {
-          question:
-            "Ao compilar da fonte com autotools, qual é a sequência correta?",
-          options: [
-            "make → configure → make install",
-            "configure → make install → make",
-            "make install → configure → make",
-            "./configure → make → sudo make install",
-          ],
-          correct: 3,
-          explanation:
-            "<code>./configure</code> verifica dependências e gera Makefile. <code>make</code> compila o código. <code>sudo make install</code> copia os binários para o sistema. Esta ordem é obrigatória — make sem configure não tem Makefile; make install sem make não tem o que instalar.",
-        },
-      ];
+        var stepBtns    = Array.from(document.querySelectorAll('.step-item'));
+        var sectionEls  = SECTION_IDS.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+        var prevBtn     = document.getElementById('lm-btn-prev');
+        var nextBtn     = document.getElementById('lm-btn-next');
+        var counter     = document.getElementById('lm-step-counter');
+        var continueBtn = document.getElementById('lm-btn-continue');
 
-      document.addEventListener("DOMContentLoaded", () => {
-        initFlashcards(flashcards, "pacotes");
-        initQuiz(window._quizData_pacotes, "pacotes");
-      });
+        function setActiveStep(idx) {
+          activeIdx = idx;
+          stepBtns.forEach(function(btn, i) { btn.classList.toggle('active', i === idx); });
+          if (prevBtn) prevBtn.disabled = idx === 0;
+          if (counter) counter.textContent = 'Tópico ' + (idx + 1) + ' de ' + SECTION_IDS.length;
+          if (nextBtn) nextBtn.textContent = idx >= SECTION_IDS.length - 1 ? 'Próximo Módulo →' : 'Próximo →';
+        }
+
+        stepBtns.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var el = document.getElementById(btn.dataset.target);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                var idx = SECTION_IDS.indexOf(entry.target.id);
+                if (idx !== -1) setActiveStep(idx);
+              }
+            });
+          }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+          sectionEls.forEach(function(el){ io.observe(el); });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function() {
+            if (activeIdx > 0) {
+              var el = sectionEls[activeIdx - 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function() {
+            if (activeIdx < SECTION_IDS.length - 1) {
+              var el = sectionEls[activeIdx + 1];
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              window.location.href = 'rede-linux.html';
+            }
+          });
+        }
+
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            for (var i = 0; i < SECTION_IDS.length; i++) {
+              var btn = document.querySelector('.mark-studied[data-section="' + SECTION_IDS[i] + '"]');
+              if (!btn || !btn.classList.contains('studied')) {
+                var el = document.getElementById(SECTION_IDS[i]);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+            }
+            var fc = document.querySelector('.flashcards-section');
+            if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        function syncSidebar() {
+          var doneCount = 0;
+          SECTION_IDS.forEach(function(id) {
+            var studyBtn = document.querySelector('.mark-studied[data-section="' + id + '"]');
+            var topicEl  = document.querySelector('.lesson-topic-item[data-topic="' + id + '"]');
+            var stepBtn  = document.querySelector('.step-item[data-target="' + id + '"]');
+            var done = studyBtn && studyBtn.classList.contains('studied');
+            if (done) doneCount++;
+            if (topicEl) topicEl.classList.toggle('done', !!done);
+            if (stepBtn) stepBtn.classList.toggle('done', !!done);
+          });
+
+          var pct = Math.round((doneCount / SECTION_IDS.length) * 100);
+          var fill = document.querySelector('.lm-ring-fill');
+          if (fill) fill.style.strokeDashoffset = CIRC - (pct / 100) * CIRC;
+
+          var dot = document.getElementById('progress-dot');
+          if (dot && pct > 0) {
+            var angle = (pct / 100) * 360 - 90;
+            var rad = angle * Math.PI / 180;
+            dot.setAttribute('cx', (45 + 36 * Math.cos(rad)).toFixed(2));
+            dot.setAttribute('cy', (45 + 36 * Math.sin(rad)).toFixed(2));
+          }
+
+          var ringPct = document.querySelector('.lm-ring-pct');
+          if (ringPct) ringPct.textContent = pct + '%';
+          var doneLabel = document.querySelector('.progress-done-count');
+          if (doneLabel) doneLabel.textContent = doneCount;
+          var bar = document.getElementById('lm-progressbar');
+          if (bar) bar.setAttribute('aria-valuenow', pct);
+        }
+
+        document.addEventListener('linuxwiki:section-study-change', syncSidebar);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() { syncSidebar(); setTimeout(syncSidebar, 250); });
+        } else {
+          syncSidebar(); setTimeout(syncSidebar, 250);
+        }
+        setActiveStep(0);
+      })();
     </script>
   </body>
 </html>
