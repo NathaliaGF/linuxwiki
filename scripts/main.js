@@ -83,7 +83,7 @@
     banner.innerHTML = `
       <div class="continue-banner-inner">
         <div class="continue-banner-text">
-          <span class="continue-banner-label">// continuar estudando</span>
+          <span class="continue-banner-label">continuar estudando</span>
           <strong class="continue-banner-module">${mod.title}</strong>
           <span class="continue-banner-progress">${progress.percent}% concluído · ${progress.sections.length} seção(ões) marcadas</span>
         </div>
