@@ -558,8 +558,54 @@
     Quiz.initWidget(moduleData.quiz, moduleId);
   }
 
+  function initHeroTypewriter() {
+    const terminal = document.querySelector(".hero-terminal-body");
+    if (!terminal) return;
+    if (global.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const lines = Array.from(terminal.children);
+    lines.forEach((line) => {
+      line.style.opacity = "0";
+    });
+
+    const CHAR_DELAY = 42;
+    const CMD_PAUSE = 260;
+    const OUT_PAUSE = 160;
+    let t = 480;
+
+    lines.forEach((line) => {
+      const isCmd = line.classList.contains("hero-line");
+      const cmdSpan = isCmd ? line.querySelector(".hero-cmd") : null;
+      const cmdText = cmdSpan ? cmdSpan.textContent : "";
+
+      if (cmdSpan) cmdSpan.textContent = "";
+
+      setTimeout(() => {
+        line.style.transition = "opacity 0.15s ease";
+        line.style.opacity = "1";
+        if (cmdSpan && cmdText) {
+          let i = 0;
+          const tick = () => {
+            cmdSpan.textContent += cmdText[i++];
+            if (i < cmdText.length) setTimeout(tick, CHAR_DELAY);
+          };
+          tick();
+        }
+      }, t);
+
+      t += isCmd && cmdText ? CMD_PAUSE + cmdText.length * CHAR_DELAY : OUT_PAUSE;
+    });
+  }
+
   function initRevealMotion() {
     if (global.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // Assign stagger delays to grid cards before observing
+    document.querySelectorAll(".modules-grid, .tools-grid").forEach((grid) => {
+      grid.querySelectorAll(".module-card, .tool-card").forEach((card, i) => {
+        card.style.setProperty("--stagger-delay", `${i * 48}ms`);
+      });
+    });
 
     const candidates = document.querySelectorAll(
       ".section-block, .content-section, .tool-card, .module-card, .card, .exercise-item, .cheatsheet-section, .module-header",
@@ -603,7 +649,7 @@
     const page = body.dataset.page;
     const moduleId = body.dataset.module;
 
-    if (page === "home") initHomePage();
+    if (page === "home") { initHomePage(); initHeroTypewriter(); }
     if (page === "revisao") initRevisao();
     if (page === "simulado" && global.simuladoQuestions)
       Quiz.initSimulado(global.simuladoQuestions);
