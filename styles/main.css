@@ -1825,12 +1825,25 @@ pre code {
   flex: 1;
   background: transparent;
   border: none;
+  outline: none;
   color: var(--text);
   caret-color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.terminal-input:focus,
+.terminal-input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .terminal-input::placeholder {
-  color: var(--text-faint);
+  color: transparent;
+}
+
+.terminal-input-row:focus-within {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .terminal-notice {
@@ -2101,19 +2114,31 @@ pre code {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
-  color: var(--text-muted);
 }
 
 .quiz-feedback.show {
   display: block;
 }
 
-.quiz-feedback.correct-fb strong {
+.quiz-fb-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+}
+
+.quiz-feedback.correct-fb .quiz-fb-label {
   color: var(--cyan);
 }
 
-.quiz-feedback.wrong-fb strong {
+.quiz-feedback.wrong-fb .quiz-fb-label {
   color: var(--red);
+}
+
+.quiz-fb-explanation {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .quiz-score,

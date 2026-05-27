@@ -122,7 +122,7 @@
 
             const feedback = document.getElementById("quiz-fb");
             feedback.className = `quiz-feedback show ${correct ? "correct-fb" : "wrong-fb"}`;
-            feedback.innerHTML = `<strong>${correct ? "✓ Correto!" : "✗ Incorreto"}</strong>${question.explanation}`;
+            feedback.innerHTML = `<div class="quiz-fb-label">${correct ? "✓ Correto!" : "✗ Incorreto"}</div><div class="quiz-fb-explanation">${question.explanation}</div>`;
 
             document.getElementById("quiz-next").classList.add("show");
           });
@@ -291,7 +291,7 @@
 
             const feedback = document.getElementById("sim-fb");
             feedback.className = `quiz-feedback show ${correct ? "correct-fb" : "wrong-fb"}`;
-            feedback.innerHTML = `<strong>${correct ? "✓ Correto!" : "✗ Incorreto"}</strong>${question.explanation}`;
+            feedback.innerHTML = `<div class="quiz-fb-label">${correct ? "✓ Correto!" : "✗ Incorreto"}</div><div class="quiz-fb-explanation">${question.explanation}</div>`;
             document.getElementById("sim-next").classList.add("show");
           });
         });
