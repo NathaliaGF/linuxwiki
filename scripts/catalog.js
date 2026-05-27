@@ -49,6 +49,7 @@
       './scripts/terminal.js',
       './scripts/pwa.js',
       './scripts/main.js',
+      './scripts/search.js',
       './data/modules/index.js',
       './manifest.json',
       './404.html',
