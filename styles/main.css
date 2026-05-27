@@ -1891,20 +1891,13 @@ pre code {
   -webkit-backdrop-filter: var(--glass-blur);
   cursor: pointer;
   text-align: center;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.4s ease,
-    border-color 0.2s;
+  transition: border-color 0.2s;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.30);
 }
 
 .flashcard:hover {
   border-color: rgba(34, 211, 238, 0.28);
   box-shadow: 0 8px 36px rgba(0, 0, 0, 0.40);
-}
-
-.flashcard.flipped {
-  transform: rotateY(180deg);
 }
 
 .flashcard-front,
@@ -1916,13 +1909,24 @@ pre code {
   align-items: center;
   justify-content: center;
   padding: 40px;
-  backface-visibility: hidden;
+  transition: opacity 0.3s ease;
 }
 
 .flashcard-back {
   background: rgba(34, 211, 238, 0.04);
   border-radius: 16px;
-  transform: rotateY(180deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flashcard.flipped .flashcard-front {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flashcard.flipped .flashcard-back {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .flashcard-question {
@@ -2550,7 +2554,8 @@ pre code {
 body[data-page="revisao"] .module-header,
 body[data-page="simulado"] .module-header,
 body[data-page="resumos"] .module-header,
-body[data-page="exercicios"] .module-header {
+body[data-page="exercicios"] .module-header,
+body[data-page="infinito"] .module-header {
   padding: 24px;
   border: 1px solid var(--border);
   border-radius: 18px;
