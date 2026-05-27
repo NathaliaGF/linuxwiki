@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Projeto Final — três cenários reais para praticar Linux no browser com terminal interativo." />
+    <title>Projeto Final — Linux na Prática | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+
+  <body data-page="projeto">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-search" title="Buscar" aria-label="Buscar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <button class="btn-coffee" title="Apoiar o projeto" aria-label="Apoiar o projeto">☕</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+
+        <!-- ── Hero ────────────────────────────────────────── -->
+        <div class="projeto-hero">
+          <span class="module-number-badge">Projeto Final</span>
+          <h1 class="module-page-title">Projeto Final — Linux na Prática</h1>
+          <p class="module-intro">
+            Três cenários reais. Use o terminal para resolver cada um.
+            Sem consultar — tente do seu jeito primeiro.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">🎯 3 cenários</span>
+            <span class="module-meta-item">💻 Terminal interativo</span>
+            <span class="module-meta-item">✓ Validação automática</span>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CENÁRIO 1 — Processo Fantasma
+             ══════════════════════════════════════════════════ -->
+        <div class="projeto-scenario">
+          <div class="scenario-header">
+            <div class="scenario-title-row">
+              <h2 class="scenario-title">Cenário 1 — Processo Fantasma</h2>
+              <span class="scenario-difficulty badge-iniciante">Iniciante+</span>
+            </div>
+            <p class="scenario-desc-text">
+              Um processo está consumindo <strong>99% da CPU</strong>.
+              Identifique-o com <code>ps aux</code>, anote o PID e encerre com
+              <code>kill -9 &lt;PID&gt;</code>. Confirme com <code>ps aux</code> novamente.
+            </p>
+          </div>
+          <div class="scenario-terminal">
+            <div id="terminal-proj-1" class="terminal-wrapper">
+              <div class="terminal-titlebar">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">usuario@linuxwiki: ~</span>
+              </div>
+              <div class="terminal-output"></div>
+              <div class="terminal-input-row">
+                <span class="terminal-prompt"></span>
+                <input class="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="Digite um comando (ex: ps aux)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CENÁRIO 2 — Script Sem Permissão
+             ══════════════════════════════════════════════════ -->
+        <div class="projeto-scenario">
+          <div class="scenario-header">
+            <div class="scenario-title-row">
+              <h2 class="scenario-title">Cenário 2 — Script Sem Permissão</h2>
+              <span class="scenario-difficulty badge-iniciante">Iniciante+</span>
+            </div>
+            <p class="scenario-desc-text">
+              Seu script <code>deploy.sh</code> não executa. Use <code>ls -la</code> para ver as
+              permissões, depois <code>chmod 755 deploy.sh</code> para torná-lo executável e
+              finalmente <code>./deploy.sh</code> para executá-lo.
+            </p>
+          </div>
+          <div class="scenario-terminal">
+            <div id="terminal-proj-2" class="terminal-wrapper">
+              <div class="terminal-titlebar">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">usuario@linuxwiki: ~</span>
+              </div>
+              <div class="terminal-output"></div>
+              <div class="terminal-input-row">
+                <span class="terminal-prompt"></span>
+                <input class="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="Digite um comando (ex: ls -la)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CENÁRIO 3 — Disco Cheio
+             ══════════════════════════════════════════════════ -->
+        <div class="projeto-scenario">
+          <div class="scenario-header">
+            <div class="scenario-title-row">
+              <h2 class="scenario-title">Cenário 3 — Disco Cheio</h2>
+              <span class="scenario-difficulty badge-intermediario">Intermediário</span>
+            </div>
+            <p class="scenario-desc-text">
+              O sistema reporta disco cheio. Use <code>df -h</code> para ver o uso geral, depois
+              <code>du -sh *</code> no home para identificar o diretório culpado
+              (o diretório <code>downloads</code> está com 48 GB!),
+              e finalmente <code>rm -r downloads</code> para liberar espaço.
+            </p>
+          </div>
+          <div class="scenario-terminal">
+            <div id="terminal-proj-3" class="terminal-wrapper">
+              <div class="terminal-titlebar">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">usuario@linuxwiki: ~</span>
+              </div>
+              <div class="terminal-output"></div>
+              <div class="terminal-input-row">
+                <span class="terminal-prompt"></span>
+                <input class="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="Digite um comando (ex: df -h)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /container--narrow -->
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-tagline">LinuxWiki. Conteúdo livre para estudo.</p>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/progress.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/quiz.js"></script>
+    <script src="../scripts/terminal.js"></script>
+    <script src="../data/glossary.js"></script>
+    <script src="../scripts/glossary.js"></script>
+    <script src="../scripts/search.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script src="../scripts/main.js"></script>
+
+    <script>
+    (function () {
+      /* ── Cenário 1: Processo Fantasma ──────────────────── */
+      var s1Ran = false;
+      var s1Killed = false;
+
+      LinuxWiki.Terminal.initScenario('terminal-proj-1', {
+        description: 'Identifique o processo que está consumindo 99% da CPU e encerre-o.',
+        steps: [
+          {
+            label: 'Listar processos',
+            hint: 'Execute ps aux para ver os processos em execução.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              if (lastCmd.trim().startsWith('ps')) { s1Ran = true; return true; }
+              return false;
+            }
+          },
+          {
+            label: 'Matar processo',
+            hint: 'Use kill -9 1042 para encerrar o processo stress --cpu 4.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              if (/kill.*1042/.test(lastCmd)) { s1Killed = true; return true; }
+              return false;
+            }
+          },
+          {
+            label: 'Confirmar',
+            hint: 'Execute ps aux novamente para confirmar que o processo foi encerrado.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              if (!lastCmd.trim().startsWith('ps')) return false;
+              return !processes.some(function (p) { return p.pid === 1042; });
+            }
+          }
+        ]
+      });
+
+      /* ── Cenário 2: Script Sem Permissão ───────────────── */
+      LinuxWiki.Terminal.initScenario('terminal-proj-2', {
+        description: 'O script deploy.sh não está executável. Corrija as permissões e execute-o.',
+        setupFS: function (fs) {
+          var home = fs['/home/usuario'];
+          if (home && home.children) {
+            home.children['deploy.sh'] = {
+              type: 'file',
+              content: '#!/bin/bash\necho "Deploy concluído!"\n',
+              perm: '-rw-r--r--'
+            };
+          }
+        },
+        steps: [
+          {
+            label: 'Ver permissões',
+            hint: 'Execute ls -la para ver as permissões do deploy.sh.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              return /ls\s.*-.*l/.test(lastCmd) || /ls\s+-la/.test(lastCmd) || /ls\s+-al/.test(lastCmd);
+            }
+          },
+          {
+            label: 'chmod 755',
+            hint: 'Execute chmod 755 deploy.sh para torná-lo executável.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              if (!/chmod\s+755\s+deploy\.sh/.test(lastCmd)) return false;
+              var home = fs['/home/usuario'];
+              var script = home && home.children && home.children['deploy.sh'];
+              return script && script.perm && script.perm.includes('x');
+            }
+          },
+          {
+            label: 'Executar script',
+            hint: 'Execute ./deploy.sh para rodar o script.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              return lastCmd.trim() === './deploy.sh';
+            }
+          }
+        ]
+      });
+
+      /* ── Cenário 3: Disco Cheio ────────────────────────── */
+      LinuxWiki.Terminal.initScenario('terminal-proj-3', {
+        description: 'O disco está cheio. Descubra qual diretório ocupa mais espaço e remova-o.',
+        setupFS: function (fs) {
+          var home = fs['/home/usuario'];
+          if (home && home.children) {
+            home.children['downloads'] = {
+              type: 'dir',
+              children: {
+                'video1.mp4': { type: 'file', content: '[arquivo de 12GB]', perm: '-rw-r--r--' },
+                'video2.mp4': { type: 'file', content: '[arquivo de 18GB]', perm: '-rw-r--r--' },
+                'backup_antigo.tar.gz': { type: 'file', content: '[arquivo de 18GB — backup de 2022]', perm: '-rw-r--r--' }
+              }
+            };
+          }
+        },
+        steps: [
+          {
+            label: 'df -h',
+            hint: 'Execute df -h para ver o uso de disco de cada filesystem.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              return /^df(\s|$)/.test(lastCmd.trim());
+            }
+          },
+          {
+            label: 'du -sh *',
+            hint: 'Execute du -sh * para ver o tamanho de cada item no diretório atual.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              return /^du(\s|$)/.test(lastCmd.trim());
+            }
+          },
+          {
+            label: 'rm -r downloads',
+            hint: 'Execute rm -r downloads para remover o diretório downloads.',
+            validate: function (processes, fs, cwd, lastCmd) {
+              if (!/rm\s+.*downloads/.test(lastCmd)) return false;
+              var home = fs['/home/usuario'];
+              return !home.children['downloads'];
+            }
+          }
+        ]
+      });
+    })();
+    </script>
+  </body>
+</html>

@@ -3292,3 +3292,417 @@ body[data-page="exercicios"] .module-header {
     box-shadow: none;
   }
 }
+
+/* ============================================================
+   SEARCH — btn-search + modal
+   ============================================================ */
+.btn-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+}
+
+.btn-search:hover {
+  background: rgba(34, 211, 238, 0.10);
+  border-color: rgba(34, 211, 238, 0.40);
+  color: var(--cyan);
+  transform: scale(1.08);
+  text-decoration: none;
+}
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 80px 20px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.search-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-box {
+  width: 100%;
+  max-width: 600px;
+  background: #0e0f1c;
+  border: 1px solid var(--border-mid);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8);
+  transform: translateY(-12px);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.search-overlay.open .search-box {
+  transform: translateY(0);
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 16px;
+  font-family: var(--font-sans);
+}
+
+.search-input::placeholder {
+  color: var(--text-faint);
+}
+
+.search-close {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.search-results {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.search-no-results {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.search-group {
+  padding: 0 0 8px;
+}
+
+.search-group + .search-group {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.search-group-title {
+  padding: 6px 20px 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.search-result-item {
+  display: block;
+  padding: 10px 20px;
+  transition: background 0.14s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.search-result-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+}
+
+.search-result-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-result-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.search-result-type {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.badge-tipo-modulo {
+  background: rgba(34, 211, 238, 0.10);
+  border-color: rgba(34, 211, 238, 0.30);
+  color: var(--cyan);
+}
+
+.badge-tipo-flashcard {
+  background: rgba(167, 139, 250, 0.10);
+  border-color: rgba(167, 139, 250, 0.30);
+  color: var(--purple);
+}
+
+.badge-tipo-quiz {
+  background: rgba(96, 165, 250, 0.10);
+  border-color: rgba(96, 165, 250, 0.30);
+  color: var(--blue);
+}
+
+.search-result-body {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+mark {
+  background: rgba(34, 211, 238, 0.22);
+  color: var(--text);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* ============================================================
+   GLOSSARY TOOLTIPS
+   ============================================================ */
+.gloss-term {
+  border-bottom: 1px dashed rgba(34, 211, 238, 0.50);
+  cursor: help;
+  text-decoration: none;
+}
+
+#gloss-tooltip {
+  position: fixed;
+  z-index: 8000;
+  max-width: 280px;
+  padding: 10px 14px;
+  background: #0e0f1c;
+  border: 1px solid var(--border-mid);
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  display: none;
+  pointer-events: none;
+}
+
+/* ============================================================
+   PROJETO PAGE
+   ============================================================ */
+.projeto-hero {
+  padding: 48px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+.projeto-scenario {
+  margin-bottom: 56px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid var(--border);
+}
+
+.projeto-scenario:last-child {
+  border-bottom: none;
+}
+
+.scenario-header {
+  margin-bottom: 20px;
+}
+
+.scenario-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.scenario-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.scenario-difficulty {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.badge-iniciante {
+  background: rgba(34, 211, 238, 0.10);
+  border: 1px solid rgba(34, 211, 238, 0.30);
+  color: var(--cyan);
+}
+
+.badge-intermediario {
+  background: rgba(251, 191, 36, 0.10);
+  border: 1px solid rgba(251, 191, 36, 0.30);
+  color: var(--amber);
+}
+
+.scenario-desc-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.scenario-terminal {
+  margin-top: 20px;
+}
+
+/* ── Scenario Panel (injected by initScenario) ── */
+.scenario-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px 12px 0 0;
+  border-bottom: none;
+  padding: 16px 20px 12px;
+}
+
+.scenario-panel.complete {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.scenario-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.scenario-steps-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.scenario-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-mid);
+  font-size: 11px;
+  color: var(--text-faint);
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  font-family: var(--font-mono);
+}
+
+.scenario-step.active {
+  border-color: rgba(34, 211, 238, 0.45);
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--cyan);
+}
+
+.scenario-step.done {
+  border-color: rgba(34, 197, 94, 0.40);
+  background: rgba(34, 197, 94, 0.07);
+  color: var(--green);
+}
+
+.scenario-step-num {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.scenario-step.done .scenario-step-num::after {
+  content: "✓";
+  font-size: 9px;
+}
+
+.scenario-step.done .scenario-step-num {
+  font-size: 0; /* hide number, show checkmark */
+}
+
+.scenario-hint-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.scenario-hint-icon {
+  flex-shrink: 0;
+}
+
+.scenario-hint {
+  line-height: 1.5;
+}
+
+/* Make terminal connect visually to panel */
+.scenario-panel + .terminal-wrapper,
+.scenario-terminal .scenario-panel + .terminal-wrapper {
+  border-radius: 0 0 10px 10px;
+}
+
+/* ── Badge for tools page ── */
+.badge-fundamental {
+  background: rgba(167, 139, 250, 0.10);
+  border: 1px solid rgba(167, 139, 250, 0.30);
+  color: var(--purple);
+}
