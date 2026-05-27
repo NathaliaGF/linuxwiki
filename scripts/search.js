@@ -235,11 +235,9 @@
     if (e.key === "Escape") closeSearch();
   });
 
-  /* ── Wire up all .btn-search buttons ─────────────────────────── */
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".btn-search").forEach(function (btn) {
-      btn.addEventListener("click", openSearch);
-    });
+  /* ── Wire up .btn-search via event delegation ────────────────── */
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-search")) openSearch();
   });
 
 })(globalThis);
