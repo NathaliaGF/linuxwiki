@@ -33,8 +33,8 @@
           <span>LinuxWiki</span>
         </a>
         <nav class="header-nav">
+          <a href="#inicio">Início</a>
           <a href="#modulos">Módulos</a>
-          <a href="#ferramentas">Ferramentas</a>
           <a href="#progresso">Progresso</a>
         </nav>
         <button class="btn-coffee" title="Apoiar o projeto" aria-label="Apoiar o projeto">☕</button>
@@ -42,72 +42,84 @@
     </header>
 
     <main id="main">
-      <section class="hero-shell">
-        <div class="container hero-shell-inner">
-          <div class="hero-copy">
-            <p class="eyebrow">WIKI GRATUITA &amp; OPEN-SOURCE</p>
-            <h1 class="hero-title">
-              Aprenda<br />Linux<br /><span class="muted">de verdade.</span>
-            </h1>
-            <p class="hero-subtitle">
-              Entenda o porquê antes do o quê. Do kernel ao shell script, com
-              analogias do mundo real e labs que funcionam no browser.
-            </p>
-            <div class="hero-actions">
-              <a href="pages/filosofia.html" class="btn-primary"
-                >Começar agora →</a
-              >
-              <a href="#modulos" class="btn-secondary">Ver módulos</a>
-            </div>
-            <div class="hero-stats" aria-label="Estatísticas do projeto">
-              <div class="hero-stat">
-                <span class="hero-stat-number">10</span>
-                <span class="hero-stat-label">Módulos</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-number">60+</span>
-                <span class="hero-stat-label">Flashcards SM-2</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-number">50+</span>
-                <span class="hero-stat-label">Questões</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-number">PWA</span>
-                <span class="hero-stat-label">Offline</span>
-              </div>
-            </div>
-          </div>
+      <!-- ── Hero Landing ─────────────────────────────── -->
+      <section class="hero-landing" id="inicio">
+        <div class="hl-glow" aria-hidden="true"></div>
+        <div class="hl-hline hl-hline--top" aria-hidden="true"></div>
+        <div class="hl-hline hl-hline--bot" aria-hidden="true"></div>
 
-          <div class="hero-terminal-panel" aria-hidden="true">
-            <div class="hero-terminal">
-              <div class="hero-terminal-topbar">
-                <span class="terminal-dot red"></span>
-                <span class="terminal-dot yellow"></span>
-                <span class="terminal-dot green"></span>
-                <span class="hero-terminal-name">bash — linuxwiki</span>
-              </div>
-              <div class="hero-terminal-body">
-                <div class="hero-cmd-group">
-                  <div class="hero-line"><span class="hero-prompt">root@lab</span><span class="hero-path">:/</span><span class="hero-dollar"> $</span><span class="hero-cmd"> ls -la /etc</span></div>
-                  <div class="hero-out t-dir">drwxr-xr-x  2 root  cron.d</div>
-                  <div class="hero-out t-dir">drwxr-xr-x 92 root  systemd</div>
-                  <div class="hero-out">-rw-r--r--  1 root  hosts</div>
-                </div>
-                <div class="hero-cmd-group">
-                  <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~/scripts</span><span class="hero-dollar"> $</span><span class="hero-cmd"> chmod 755 script.sh</span></div>
-                </div>
-                <div class="hero-cmd-group">
-                  <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~/scripts</span><span class="hero-dollar"> $</span><span class="hero-cmd"> ./script.sh</span></div>
-                  <div class="hero-out success">[ok] backup finalizado</div>
-                  <div class="hero-out">logs em /var/log/linuxwiki.log</div>
-                </div>
-                <div class="hero-line"><span class="hero-prompt">user@lab</span><span class="hero-path">:~</span><span class="hero-dollar"> $</span><span class="hero-cursor"></span></div>
-              </div>
-            </div>
+        <!-- Floating chips -->
+        <div class="hl-chip hl-chip--tl" aria-hidden="true">
+          <span class="hl-dot"></span>
+          <div>
+            <div class="hl-chip-title">Filosofia Linux</div>
+            <div class="hl-chip-sub">Módulo 01</div>
           </div>
         </div>
+
+        <div class="hl-chip hl-chip--tr" aria-hidden="true">
+          <span class="hl-dot"></span>
+          <div>
+            <div class="hl-chip-title">Troubleshooting</div>
+            <div class="hl-chip-sub">Módulo 10</div>
+          </div>
+        </div>
+
+        <div class="hl-badge hl-badge--ml" aria-hidden="true">🃏</div>
+        <div class="hl-chip hl-chip--ml" aria-hidden="true">
+          <div class="hl-chip-title">60+ Flashcards</div>
+          <div class="hl-chip-sub">SM-2</div>
+        </div>
+
+        <div class="hl-badge hl-badge--mr" aria-hidden="true">📝</div>
+        <div class="hl-chip hl-chip--mr" aria-hidden="true">
+          <div class="hl-chip-title">50+ Questões</div>
+          <div class="hl-chip-sub">Simulado</div>
+        </div>
+
+        <!-- Center content -->
+        <div class="hl-center">
+          <span class="hl-eyebrow">✦ WIKI GRATUITA &amp; OPEN-SOURCE</span>
+          <h1 class="hl-title">
+            Aprenda Linux<br />
+            <span class="hl-title-muted">de verdade.</span>
+          </h1>
+          <p class="hl-sub">
+            Do kernel ao shell script, com analogias do mundo real
+            e labs que funcionam no browser.
+          </p>
+          <div class="hl-actions">
+            <a href="pages/filosofia.html" class="btn-primary">Começar agora →</a>
+            <a href="#modulos" class="btn-secondary">Ver módulos</a>
+          </div>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="hl-scroll" aria-hidden="true">
+          <span class="hl-scroll-btn">↓</span>
+          <span>01/03 · Scroll</span>
+        </div>
+
+        <!-- Corner label -->
+        <div class="hl-corner" aria-hidden="true">
+          Linux mastery
+          <span class="hl-corner-line"></span>
+        </div>
       </section>
+
+      <!-- ── Brand strip ────────────────────────────────── -->
+      <div class="brand-strip" aria-hidden="true">
+        <div class="brand-strip-inner">
+          <span>kernel</span><span class="bs-sep">—</span>
+          <span>systemd</span><span class="bs-sep">—</span>
+          <span>bash</span><span class="bs-sep">—</span>
+          <span>journalctl</span><span class="bs-sep">—</span>
+          <span>ssh</span><span class="bs-sep">—</span>
+          <span>iptables</span><span class="bs-sep">—</span>
+          <span>cron</span><span class="bs-sep">—</span>
+          <span>/proc</span>
+        </div>
+      </div>
 
       <div class="container">
         <div id="continue-banner" hidden></div>

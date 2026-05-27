@@ -885,6 +885,276 @@ kbd {
 }
 
 /* ============================================================
+   HERO LANDING (new full-viewport hero)
+   ============================================================ */
+.hero-landing {
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Radial glow orb */
+.hl-glow {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 90vw);
+  height: min(720px, 90vw);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(34, 211, 238, 0.14) 0%,
+    rgba(96, 165, 250, 0.07) 38%,
+    transparent 65%
+  );
+  filter: blur(55px);
+  pointer-events: none;
+}
+
+/* Thin horizontal scan lines */
+.hl-hline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 12%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(255, 255, 255, 0.04) 88%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+.hl-hline--top { top: 30%; }
+.hl-hline--bot { top: 65%; }
+
+/* Floating chips */
+.hl-chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.hl-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.7);
+  flex-shrink: 0;
+}
+
+.hl-chip-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.hl-chip-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Circular icon badges */
+.hl-badge {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Chip/badge positions */
+.hl-chip--tl  { top: 26%; left: 7%; }
+.hl-chip--tr  { top: 24%; right: 7%; }
+.hl-badge--ml { top: 45%; left: 11%; }
+.hl-chip--ml  { top: 54%; left: 7%; }
+.hl-badge--mr { top: 43%; right: 11%; }
+.hl-chip--mr  { top: 54%; right: 7%; }
+
+/* Center content block */
+.hl-center {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 620px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hl-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  background: rgba(34, 211, 238, 0.05);
+  margin-bottom: 28px;
+}
+
+.hl-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.5vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.05em;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.hl-title-muted {
+  color: var(--text-faint);
+}
+
+.hl-sub {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 440px;
+  margin: 0 0 36px;
+}
+
+.hl-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Scroll hint — bottom-left */
+.hl-scroll {
+  position: absolute;
+  bottom: 28px;
+  left: 36px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+}
+
+.hl-scroll-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  animation: hl-bounce 2.2s ease-in-out infinite;
+}
+
+@keyframes hl-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
+/* Corner label — bottom-right */
+.hl-corner {
+  position: absolute;
+  bottom: 28px;
+  right: 36px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+.hl-corner-line {
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--border-strong);
+  margin-top: 6px;
+  margin-left: auto;
+}
+
+/* Brand / keyword strip */
+.brand-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.012);
+  padding: 18px 0;
+}
+
+.brand-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.brand-strip-inner span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+}
+
+.brand-strip-inner .bs-sep {
+  color: var(--border-strong);
+  font-size: 10px;
+}
+
+/* ── Responsive: hide floating chips on small screens ── */
+@media (max-width: 768px) {
+  .hl-chip,
+  .hl-badge,
+  .hl-hline,
+  .hl-scroll,
+  .hl-corner {
+    display: none;
+  }
+
+  .hl-title {
+    font-size: clamp(2.6rem, 10vw, 3.5rem);
+  }
+}
+
+/* ============================================================
    SECTION BLOCKS
    ============================================================ */
 .section-block {
