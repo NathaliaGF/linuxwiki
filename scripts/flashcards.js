@@ -86,7 +86,13 @@
       const container = document.getElementById("flashcard-widget");
       if (!container || !cards?.length) return;
 
-      const normalizedCards = this.normalizeCards(cards, moduleId);
+      const allCards = this.normalizeCards(cards, moduleId);
+      const dueCards = allCards.filter((c) => Flashcards.isDue(c.id));
+      const upcomingCards = allCards.filter((c) => !Flashcards.isDue(c.id));
+      const hasDue = dueCards.length > 0;
+
+      let normalizedCards = hasDue ? dueCards : allCards;
+      let showingUpcoming = !hasDue;
       let currentIndex = 0;
       let isFlipped = false;
       let keyHandler = null;
@@ -100,27 +106,52 @@
 
       function render() {
         removeKeyHandler();
+
         if (currentIndex >= normalizedCards.length) {
+          if (hasDue && !showingUpcoming && upcomingCards.length > 0) {
+            container.innerHTML = `
+              <div class="flashcard-done" role="status" aria-live="polite">
+                <h3>✓ Revisão de hoje concluída!</h3>
+                <p>Você revisou os <strong>${dueCards.length}</strong> card${dueCards.length !== 1 ? "s" : ""} que venciam hoje.</p>
+                <p class="flashcard-sm2-note">${upcomingCards.length} card${upcomingCards.length !== 1 ? "s" : ""} com revisão futura agendada pelo SM-2.</p>
+                <button class="btn-ghost with-top-gap" id="fc-see-upcoming">Ver os ${upcomingCards.length} restantes →</button>
+              </div>`;
+            document.getElementById("fc-see-upcoming")?.addEventListener("click", () => {
+              normalizedCards = upcomingCards;
+              showingUpcoming = true;
+              currentIndex = 0;
+              isFlipped = false;
+              render();
+            });
+            return;
+          }
+
           container.innerHTML = `
             <div class="flashcard-done" role="status" aria-live="polite">
               <h3>✓ Flashcards concluídos!</h3>
-              <p>Você revisou todos os ${normalizedCards.length} flashcards deste módulo.</p>
+              <p>Você revisou todos os ${allCards.length} flashcards deste módulo.</p>
               <button class="btn-ghost with-top-gap" onclick="location.reload()">Repetir</button>
             </div>`;
           return;
         }
 
         const card = normalizedCards[currentIndex];
-        const isDue = Flashcards.isDue(card.id);
         const progressPercent = Math.round(
           ((currentIndex + 1) / normalizedCards.length) * 100,
         );
+        const totalLabel = hasDue && !showingUpcoming
+          ? `${currentIndex + 1} de ${dueCards.length} · vencidos hoje`
+          : `${currentIndex + 1} de ${normalizedCards.length}`;
+        const upcomingNotice = showingUpcoming && !hasDue
+          ? `<div class="flashcard-sm2-notice">Todos os cards estão em dia — revisando para fixar o conteúdo.</div>`
+          : "";
 
         container.innerHTML = `
+          ${upcomingNotice}
           <div class="flashcard-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progressPercent}" aria-label="Progresso dos flashcards">
             <div class="fill" style="width:${progressPercent}%"></div>
           </div>
-          <p class="flashcard-progress-info" aria-live="polite">Flashcard ${currentIndex + 1} de ${normalizedCards.length}${isDue ? "" : " · próxima revisão agendada"}</p>
+          <p class="flashcard-progress-info" aria-live="polite">Flashcard ${totalLabel}</p>
           <div class="flashcard-container">
             <div class="flashcard" id="fc-card" tabindex="0" role="button" aria-expanded="false" aria-label="Virar flashcard para ver a resposta">
               <div class="flashcard-front">

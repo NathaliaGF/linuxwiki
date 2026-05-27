@@ -199,6 +199,38 @@
         }, 1000);
       }
 
+      function showReview() {
+        simuladoArea.innerHTML =
+          '<div class="quiz-review">' +
+          '<h3 class="quiz-review-title">Revisão — ' + score + '/' + questions.length + ' corretas</h3>' +
+          questions.map(function (q, i) {
+            const userAns = userAnswers[i];
+            const isCorrect = userAns === q.correct;
+            return (
+              '<div class="review-item ' + (isCorrect ? 'review-item-correct' : 'review-item-wrong') + '">' +
+                '<div class="review-item-header">' +
+                  '<span class="review-item-num">' + (i + 1) + '</span>' +
+                  '<span class="review-item-verdict">' + (isCorrect ? '✓ Correto' : '✗ Incorreto') + '</span>' +
+                  (q.module ? '<span class="review-item-module">' + q.module + '</span>' : '') +
+                '</div>' +
+                '<div class="review-item-question">' + q.question + '</div>' +
+                '<div class="review-item-options">' +
+                  q.options.map(function (opt, j) {
+                    let cls = 'review-option';
+                    if (j === q.correct) cls += ' review-option-correct';
+                    else if (j === userAns && !isCorrect) cls += ' review-option-wrong';
+                    return '<div class="' + cls + '"><span class="quiz-option-letter">' +
+                      String.fromCharCode(65 + j) + '</span>' + opt + '</div>';
+                  }).join('') +
+                '</div>' +
+                (!isCorrect ? '<div class="review-explanation">' + q.explanation + '</div>' : '') +
+              '</div>'
+            );
+          }).join('') +
+          '<button class="btn-start-simulado with-top-gap" onclick="location.reload()">Novo simulado</button>' +
+          '</div>';
+      }
+
       function showResult() {
         clearInterval(timerInterval);
         const pct = Math.round((score / questions.length) * 100);
@@ -226,8 +258,13 @@
             <div class="quiz-result-score">${score}/${questions.length}</div>
             <div class="quiz-result-label">${pct >= 75 ? "🎉 Aprovado! Excelente resultado." : pct >= 50 ? "📚 Precisa revisar alguns tópicos." : "📖 Continue estudando — você chega lá!"}</div>
             <div class="simulado-result-breakdown">${breakdownHtml}</div>
-            <button class="btn-start-simulado with-top-gap" onclick="location.reload()">Tentar novamente</button>
+            <div class="simulado-result-actions">
+              <button class="btn-retry-quiz" id="sim-review-btn">Revisar questões →</button>
+              <button class="btn-start-simulado" onclick="location.reload()">Tentar novamente</button>
+            </div>
           </div>`;
+
+        document.getElementById("sim-review-btn")?.addEventListener("click", showReview);
       }
 
       const renderQuestion = () => {

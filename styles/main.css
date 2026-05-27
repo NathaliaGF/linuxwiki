@@ -3035,3 +3035,304 @@ body[data-page="exercicios"] .module-header {
     box-shadow: none;
   }
 }
+
+/* ── Search overlay ──────────────────────────────────────── */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 9, 15, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.search-overlay.is-open {
+  opacity: 1;
+}
+
+.search-box {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-mid);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: var(--font-sans);
+}
+
+.search-input::placeholder { color: var(--text-faint); }
+.search-input::-webkit-search-cancel-button { display: none; }
+
+.search-esc-key {
+  background: var(--border);
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.search-results {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.1s ease;
+  cursor: pointer;
+}
+
+.search-result-item:last-child { border-bottom: none; }
+
+.search-result-item:hover,
+.search-result-item.is-selected {
+  background: var(--cyan-glow);
+}
+
+.search-result-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-result-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.search-result-type {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.search-result-title {
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.search-result-title mark {
+  background: rgba(34, 211, 238, 0.18);
+  color: var(--cyan);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.search-empty {
+  padding: 24px 20px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.search-footer {
+  padding: 9px 20px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  border-top: 1px solid var(--border);
+}
+
+.search-footer kbd {
+  background: var(--border);
+  border: 1px solid var(--border-mid);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+}
+
+/* ── btn-search ──────────────────────────────────────────── */
+.btn-search {
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.btn-search:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--cyan-glow);
+}
+
+/* ── Simulado review ─────────────────────────────────────── */
+.simulado-result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.quiz-review {
+  padding: 4px 0 24px;
+}
+
+.quiz-review-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--text);
+}
+
+.review-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+}
+
+.review-item-correct { border-left-color: var(--green); }
+.review-item-wrong   { border-left-color: var(--red); }
+
+.review-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.review-item-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--border-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.review-item-verdict {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.review-item-correct .review-item-verdict { color: var(--green); }
+.review-item-wrong   .review-item-verdict { color: var(--red); }
+
+.review-item-module {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+.review-item-question {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.review-item-options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.review-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 11px;
+  border-radius: 8px;
+  font-size: 0.835rem;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+}
+
+.review-option-correct {
+  background: rgba(34, 197, 94, 0.07);
+  color: var(--green);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.review-option-wrong {
+  background: rgba(248, 113, 113, 0.07);
+  color: var(--red);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.review-explanation {
+  font-size: 0.835rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 2px solid var(--border-mid);
+}
+
+/* ── Flashcard SM-2 notices ──────────────────────────────── */
+.flashcard-sm2-notice {
+  background: rgba(34, 211, 238, 0.05);
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.flashcard-sm2-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
