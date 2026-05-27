@@ -115,311 +115,311 @@
     <script src="../scripts/pwa.js"></script>
     <script src="../scripts/main.js"></script>
     <script>
-      const simuladoQuestions = [
+      window.simuladoQuestions = [
         // Filosofia Linux
         {
           module: "Filosofia Linux",
           question: "Linus Torvalds anunciou o Linux em 1991 em qual fórum?",
-          options: ["Stack Overflow", "comp.os.minix", "Reddit", "Slashdot"],
-          correct: 1,
+          options: ["Reddit", "Slashdot", "Stack Overflow", "comp.os.minix"],
+          correct: 3,
           explanation:
-            "Em 25 de agosto de 1991, Linus postou na newsgroup comp.os.minix: \"I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu)\".",
+            "Em 25 de agosto de 1991, Linus postou na newsgroup comp.os.minix: \"I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu)\". Reddit e Stack Overflow nem existiam na época.",
         },
         {
           module: "Filosofia Linux",
           question: "Qual a diferença entre kernel e distro Linux?",
           options: [
-            "São a mesma coisa",
+            "O kernel é o núcleo do SO; a distro empacota kernel + ferramentas + gerenciador de pacotes",
+            "São a mesma coisa — distro é apenas outro nome para kernel",
             "O kernel é a interface gráfica; a distro é o núcleo",
-            "O kernel é o núcleo do SO; a distro é kernel + ferramentas + gerenciador de pacotes",
-            "A distro é mais antiga que o kernel",
+            "A distro é mais antiga que o kernel Linux",
           ],
-          correct: 2,
+          correct: 0,
           explanation:
-            "O kernel Linux gerencia hardware, memória e processos. Uma distribuição (distro) combina o kernel com ferramentas GNU, gerenciador de pacotes e opcionalmente uma interface gráfica.",
+            "O kernel Linux gerencia hardware, memória e processos. A distro (Ubuntu, Arch, Fedora) combina esse kernel com ferramentas GNU, gerenciador de pacotes e opcionalmente GUI. Trocar a distro não muda o kernel em essência.",
         },
         {
           module: "Filosofia Linux",
           question:
-            "Qual distro Linux é recomendada para aprender os internos do sistema, com instalação manual?",
-          options: ["Ubuntu", "Debian", "Arch Linux", "Linux Mint"],
-          correct: 2,
+            "Qual distro Linux é recomendada para aprender os internos do sistema, com instalação totalmente manual?",
+          options: ["Ubuntu LTS", "Debian stable", "Linux Mint", "Arch Linux"],
+          correct: 3,
           explanation:
-            "Arch Linux tem instalação completamente manual — você decide cada componente. A Arch Wiki é considerada o melhor recurso de documentação Linux disponível.",
+            "Arch Linux exige instalação manual de cada componente — particionamento, bootloader, rede, desktop. Isso obriga o entendimento de cada peça. A Arch Wiki é o melhor recurso de documentação Linux existente.",
         },
         // Filesystem
         {
           module: "Filesystem",
           question: "O que é um inode em sistemas de arquivos Linux?",
           options: [
-            "O nome de um arquivo",
-            "Uma estrutura de dados com metadados do arquivo (permissões, dono, localização)",
-            "Um tipo de link simbólico",
-            "Um bloco de dados no disco",
+            "O nome visível de um arquivo dentro de um diretório",
+            "Um tipo especial de link simbólico",
+            "Uma estrutura com metadados do arquivo: permissões, dono, timestamps e localização dos blocos",
+            "Um bloco de dados brutos no disco",
           ],
-          correct: 1,
+          correct: 2,
           explanation:
-            "O inode armazena metadados: permissões, dono, grupo, timestamps e ponteiros para blocos de dados. O nome do arquivo fica no diretório, não no inode.",
+            "O inode armazena tudo sobre o arquivo, exceto o nome. O nome fica no diretório e aponta para o número de inode. Hard links são múltiplos nomes apontando para o mesmo inode.",
         },
         {
           module: "Filesystem",
           question:
-            "Qual diretório no Linux contém informações sobre processos em execução (sistema de arquivos virtual)?",
-          options: ["/var/run", "/dev", "/proc", "/sys/proc"],
-          correct: 2,
+            "Qual diretório expõe informações do kernel e processos como arquivos virtuais (não existe no disco)?",
+          options: ["/proc", "/var/run", "/sys/kernel", "/dev/info"],
+          correct: 0,
           explanation:
-            "/proc é um sistema de arquivos virtual criado pelo kernel na memória RAM. /proc/PID/ expõe tudo sobre aquele processo. /proc/cpuinfo, /proc/meminfo mostram estado do sistema.",
+            "/proc é criado pelo kernel na RAM a cada boot. /proc/cpuinfo, /proc/meminfo, /proc/PID/ — leitura em tempo real do estado do sistema. Escrever em /proc pode alterar parâmetros do kernel.",
         },
         {
           module: "Filesystem",
           question: "Qual a diferença entre hard link e symbolic link?",
           options: [
-            "Hard link aponta para inode (mesmos dados); symlink é um arquivo com caminho para outro",
-            "Symlink aponta para inode; hard link é um atalho",
-            "Hard links funcionam entre sistemas de arquivos; symlinks não",
-            "São idênticos, apenas nomes diferentes",
+            "Symlink aponta para o inode; hard link é apenas um atalho visual",
+            "São equivalentes — só diferem na sintaxe de criação",
+            "Hard links funcionam entre sistemas de arquivos diferentes; symlinks não",
+            "Hard link é outro nome para o mesmo inode; symlink é arquivo separado com caminho",
           ],
-          correct: 0,
+          correct: 3,
           explanation:
-            "Hard link: outro nome para o mesmo inode. Deletar um não afeta o outro. Symlink: arquivo separado contendo um caminho — se o destino for deletado, o symlink fica quebrado.",
+            "Hard link: mesmo inode, outro nome. Deletar um não afeta o outro. Symlink: arquivo separado que contém um caminho — se o alvo for deletado, o symlink quebra. Hard links não cruzam sistemas de arquivos.",
         },
         // Permissões
         {
           module: "Permissões",
-          question: "O que significa o octal 755 em chmod?",
+          question: "O que significa chmod 755 em termos rwx?",
           options: [
-            "Dono: rw-, Grupo: r-x, Outros: r-x",
             "Dono: rwx, Grupo: r-x, Outros: r-x",
+            "Dono: rw-, Grupo: r-x, Outros: r-x",
             "Dono: rwx, Grupo: rw-, Outros: r--",
-            "Dono: rw-, Grupo: rw-, Outros: r-x",
+            "Dono: rwx, Grupo: rwx, Outros: r-x",
           ],
-          correct: 1,
+          correct: 0,
           explanation:
-            "7=rwx (4+2+1), 5=r-x (4+0+1), 5=r-x. Representado como rwxr-xr-x. Padrão para executáveis e diretórios de acesso público.",
+            "7 = rwx (4+2+1), 5 = r-x (4+0+1), 5 = r-x. Resulta em rwxr-xr-x. Padrão para scripts executáveis e diretórios de projetos compartilhados.",
         },
         {
           module: "Permissões",
-          question: "Para que serve o SUID bit em /usr/bin/passwd?",
+          question: "Para que serve o SUID bit no executável /usr/bin/passwd?",
           options: [
-            "Protege o arquivo de ser deletado",
-            "Permite que qualquer usuário mude sua senha (roda como root)",
-            "Registra quem executou o arquivo",
-            "Impede execução por usuários comuns",
-          ],
-          correct: 1,
-          explanation:
-            "passwd precisa escrever em /etc/shadow (somente root). Com SUID de root (-rwsr-xr-x), o programa roda com permissões de root independente de quem executou.",
-        },
-        {
-          module: "Permissões",
-          question: 'O /tmp tem permissões drwxrwxrwt. O que o "t" garante?',
-          options: [
-            "Que o diretório é temporário",
-            "Que somente root pode criar arquivos",
-            "Que usuários só podem deletar seus próprios arquivos (sticky bit)",
-            "Que o diretório é montado na memória",
+            "Protege o arquivo de ser apagado por outros usuários",
+            "Registra um log de auditoria de quem executou o arquivo",
+            "Permite que qualquer usuário execute o programa com as permissões do dono (root)",
+            "Impede a execução por usuários sem senha definida",
           ],
           correct: 2,
           explanation:
-            "O sticky bit em diretório (t no lugar do x de others) impede que usuários deletem arquivos de outros, mesmo tendo permissão w no diretório.",
+            "passwd precisa escrever em /etc/shadow, que só root pode modificar. Com SUID de root (-rwsr-xr-x), o processo roda como root temporariamente, independente de quem o invocou.",
+        },
+        {
+          module: "Permissões",
+          question: 'Em drwxrwxrwt (/tmp), o que o "t" (sticky bit) garante?',
+          options: [
+            "Que o diretório é automaticamente limpo no boot",
+            "Que somente root pode criar arquivos nele",
+            "Que o diretório é mantido em RAM para acesso rápido",
+            "Que cada usuário só pode deletar seus próprios arquivos, mesmo com w no diretório",
+          ],
+          correct: 3,
+          explanation:
+            "Sticky bit em diretório: usuários podem criar e editar arquivos, mas só o dono (ou root) pode deletar cada arquivo. Sem ele, qualquer um com w no /tmp poderia apagar arquivos alheios.",
         },
         // Processos
         {
           module: "Processos",
-          question: "Qual sinal é enviado ao pressionar Ctrl+C no terminal?",
+          question: "Qual sinal é enviado ao processo ao pressionar Ctrl+C?",
           options: [
-            "SIGTERM (15)",
-            "SIGKILL (9)",
-            "SIGINT (2)",
-            "SIGSTOP (19)",
+            "SIGINT (2) — interrupt, pode ser capturado pelo processo",
+            "SIGKILL (9) — mata imediatamente, não pode ser ignorado",
+            "SIGTERM (15) — término gracioso, padrão do kill",
+            "SIGSTOP (19) — pausa o processo",
           ],
-          correct: 2,
+          correct: 0,
           explanation:
-            "Ctrl+C gera SIGINT (signal interrupt, número 2). O processo pode capturá-lo. Ctrl+Z gera SIGTSTP (pausa); Ctrl+\\ gera SIGQUIT.",
+            "Ctrl+C envia SIGINT (2). O processo pode capturá-lo e fazer limpeza antes de encerrar. Diferente de SIGKILL (9) que o kernel executa diretamente. Ctrl+Z envia SIGTSTP (pausa).",
         },
         {
           module: "Processos",
-          question: 'Um processo em estado "D" (Disk sleep) no ps aux:',
+          question: 'Um processo em estado "D" (uninterruptible sleep) no ps:',
           options: [
-            "Pode ser morto com kill -9",
-            "Está em modo de baixo consumo",
-            "Não pode ser morto por sinais — aguarda I/O de forma ininterrupta",
-            "É um processo zumbi",
+            "Está em loop infinito consumindo CPU",
+            "Pode ser encerrado com kill -9 normalmente",
+            "É um processo zumbi aguardando o pai fazer wait()",
+            "Aguarda I/O crítico — o kernel não entrega sinais, impossível matar sem reboot",
           ],
-          correct: 2,
+          correct: 3,
           explanation:
-            "Estado D (uninterruptible sleep) — processo dentro de chamada de sistema de I/O crítica. O kernel não entrega sinais neste estado. Você não consegue matar sem reiniciar.",
+            "Estado D = dentro de chamada de sistema de I/O que não pode ser interrompida. O kernel não entrega nenhum sinal, incluindo SIGKILL. Geralmente causado por NFS travado ou driver com bug.",
         },
         {
           module: "Processos",
-          question: "O que é um processo zombie (Z)?",
+          question: "O que é um processo zombie no Linux?",
           options: [
-            "Processo consumindo 100% de CPU",
-            "Processo que terminou mas cujo exit code não foi coletado pelo pai",
-            "Processo rodando sem terminal associado",
-            "Processo com permissões de root sem ser root",
+            "Processo que consumiu toda a memória disponível",
+            "Processo que terminou mas o pai ainda não coletou seu exit code com wait()",
+            "Processo rodando em background sem terminal associado",
+            "Processo com UID 0 executado por usuário comum",
           ],
           correct: 1,
           explanation:
-            "Zombie: processo que terminou mas o pai não chamou wait() para coletar o exit code. Ocupa entrada na tabela de processos mas pouca memória. Zombies acumulados podem esgotar PIDs disponíveis.",
+            "Zombie: o processo encerrou, mas a entrada na tabela de processos persiste até o pai chamar wait(). Ocupa quase zero memória mas consome uma entrada de PID. Acúmulo pode esgotar PIDs disponíveis.",
         },
         // Shell
         {
           module: "Shell",
-          question: "O que faz o redirecionamento 2>&1?",
+          question: "O que faz o redirecionamento 2>&1 em um comando?",
           options: [
-            "Redireciona stdin para stdout",
-            "Redireciona stderr para onde stdout está apontando",
-            "Duplica stdout para stderr",
-            "Redireciona stderr para /dev/null",
+            "Descarta stderr enviando-o para /dev/null",
+            "Duplica stdout criando dois arquivos de saída",
+            "Redireciona stdin para o descritor 2",
+            "Aponta stderr (fd 2) para o mesmo destino que stdout (fd 1) está usando",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            'fd 2 (stderr) passa a apontar para o mesmo lugar que fd 1 (stdout). Em "cmd > arq.txt 2>&1": stdout e stderr vão para arq.txt. A ordem importa — 2>&1 deve vir depois de >.',
+            'Em "cmd > saida.txt 2>&1": stdout vai para saida.txt, depois stderr aponta para o mesmo lugar. Ordem importa: "cmd 2>&1 > saida.txt" não funciona como esperado — stderr ficaria no terminal.',
         },
         {
           module: "Shell",
-          question: "O que é $PATH?",
+          question: "O que é a variável $PATH no shell?",
           options: [
-            "O diretório home do usuário",
-            "O arquivo de configuração do bash",
-            "Lista de diretórios onde o shell busca executáveis",
-            "O caminho do shell atual",
+            "O diretório home do usuário atual",
+            "O arquivo de configuração do bash sendo carregado",
+            "Lista de diretórios onde o shell busca executáveis ao digitar um comando",
+            "O caminho absoluto do shell em uso",
           ],
           correct: 2,
           explanation:
-            'Quando você digita um comando, o shell percorre $PATH da esquerda para direita procurando o executável. Se não encontrar em nenhum diretório: "command not found".',
+            'Shell percorre $PATH da esquerda para direita. "which python3" mostra qual diretório venceu. Adicionar ~/.local/bin ao início do PATH prioriza binários locais sobre os do sistema.',
         },
         {
           module: "Shell",
-          question: 'O pipe (|) em "ps aux | grep nginx" funciona como:',
+          question: 'O pipe | em "ps aux | grep nginx" funciona como:',
           options: [
-            "Executa ps aux e depois grep nginx sequencialmente",
-            "Conecta stdout de ps aux ao stdin de grep, ambos rodando em paralelo",
-            "Salva output de ps aux em um arquivo temporário para grep ler",
-            "Combina os dois comandos em um processo único",
+            "Salva stdout de ps num arquivo temporário que grep lê em seguida",
+            "Combina ps e grep num único processo do kernel",
+            "Conecta stdout de ps diretamente ao stdin de grep — ambos rodam em paralelo",
+            "Executa ps aux completamente, só então executa grep nginx",
           ],
-          correct: 1,
+          correct: 2,
           explanation:
-            "O pipe conecta os processos via buffer no kernel — eles rodam em paralelo. ps escreve; grep lê ao mesmo tempo. Não há arquivo temporário intermediário.",
+            "O kernel cria um buffer (pipe) entre os processos. ps escreve; grep lê simultaneamente. Não há arquivo temporário. Isso torna pipes eficientes mesmo com outputs gigantes.",
         },
         // Usuários
         {
           module: "Usuários",
           question:
-            "Qual arquivo contém os hashes de senha dos usuários no Linux?",
+            "Onde ficam armazenados os hashes de senha dos usuários no Linux?",
           options: [
-            "/etc/passwd",
-            "/etc/shadow",
-            "/etc/security",
-            "/etc/login.defs",
+            "/etc/shadow — legível apenas por root",
+            "/etc/passwd — legível por todos os usuários",
+            "/etc/security/passwords — protegido pelo PAM",
+            "/var/lib/passwd — gerenciado pelo systemd-homed",
           ],
-          correct: 1,
+          correct: 0,
           explanation:
-            "/etc/shadow armazena hashes e políticas de senha, legível apenas por root. /etc/passwd tem dados públicos (UID, shell, home) — separação criada para segurança.",
+            "/etc/shadow armazena o hash, data de expiração e política de senha. Legível só por root. /etc/passwd é público (UID, GID, shell, home) — a separação existe justamente para proteger os hashes.",
         },
         {
           module: "Usuários",
-          question: "O comando usermod -G docker joao (sem -a) resulta em:",
+          question: "O que acontece ao rodar usermod -G docker joao (sem -a)?",
           options: [
-            "Joao adicionado ao grupo docker mantendo grupos anteriores",
-            'Grupos suplementares de joao substituídos por apenas "docker"',
-            "Joao removido do grupo docker",
-            "Erro de sintaxe",
+            "joao é adicionado ao grupo docker, mantendo todos os grupos anteriores",
+            "O comando falha por falta da flag obrigatória -a",
+            "joao é removido do grupo docker e posto no grupo padrão",
+            "Os grupos suplementares de joao são substituídos por apenas 'docker'",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "-G sem -a SUBSTITUI todos os grupos suplementares. Se joao estava em sudo, adm, docker: após usermod -G docker joao, ele fica APENAS em docker. Sempre use -aG para adicionar.",
+            "-G sem -a SUBSTITUI todos os grupos suplementares. Se joao era sudo, adm, docker — após o comando fica APENAS em docker, perdendo acesso sudo. Sempre use usermod -aG para adicionar sem remover.",
         },
         {
           module: "Usuários",
-          question: "Qual o UID do usuário root?",
-          options: ["1000", "999", "0", "-1"],
+          question: "Qual o UID reservado para o usuário root?",
+          options: ["UID 1000", "UID 999", "UID 0", "UID -1"],
           correct: 2,
           explanation:
-            "UID 0 é o que confere poderes de root — não o nome. O kernel ignora quase todas as verificações de permissão para UID 0. UIDs 1-999 são contas de sistema; 1000+ são usuários humanos.",
+            "UID 0 concede privilégios de root — é o número que importa, não o nome. UIDs 1–999 são reservados para contas de sistema (www-data, nobody). Usuários humanos começam geralmente em UID 1000.",
         },
         // Pacotes
         {
           module: "Pacotes",
           question:
-            "Qual a sequência correta para compilar software com autotools?",
+            "Qual a sequência correta para compilar software via autotools?",
           options: [
-            "make → ./configure → make install",
-            "./configure → make install → make",
-            "./configure → make → sudo make install",
+            "make → ./configure → sudo make install",
             "sudo make install → ./configure → make",
+            "./configure → sudo make install → make",
+            "./configure → make → sudo make install",
           ],
-          correct: 2,
+          correct: 3,
           explanation:
-            "./configure verifica dependências e gera Makefile. make compila. sudo make install copia binários para o sistema. Esta ordem é obrigatória.",
+            "./configure verifica o ambiente e gera o Makefile personalizado. make compila o código. sudo make install copia os binários para os diretórios do sistema. Alterar a ordem resulta em erro.",
         },
         {
           module: "Pacotes",
           question: "Qual a diferença entre apt remove e apt purge?",
           options: [
-            "São idênticos",
-            "remove desinstala o pacote; purge remove o pacote E arquivos de configuração",
-            "purge é mais rápido que remove",
-            "remove funciona apenas em Ubuntu; purge em Debian",
+            "apt purge é mais rápido por pular verificação de dependências",
+            "apt remove funciona só no Ubuntu; apt purge só no Debian",
+            "São idênticos — apenas aliases com nomes diferentes",
+            "apt remove mantém configs em /etc; apt purge remove o pacote E seus arquivos de configuração",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "apt remove mantém arquivos de configuração em /etc. apt purge remove o pacote e todos os arquivos de configuração. Use purge para reinstalar do zero ou limpar completamente.",
+            "apt remove deixa configurações para facilitar reinstalação. apt purge é uma remoção completa — útil ao trocar serviços (nginx → apache) ou ao limpar antes de reportar um bug.",
         },
         {
           module: "Pacotes",
-          question: "No Arch Linux, qual comando atualiza todos os pacotes?",
+          question: "No Arch Linux, qual comando sincroniza e atualiza todos os pacotes?",
           options: [
-            "pacman -S --upgrade",
             "pacman -Syu",
-            "pacman -U all",
-            "pacman --update",
+            "pacman -U --all",
+            "pacman --upgrade-all",
+            "pacman -S --refresh",
           ],
-          correct: 1,
+          correct: 0,
           explanation:
-            "pacman -Syu: -S = sync mode, -y = atualiza banco de dados, -u = upgrade de todos. Equivale a apt update && apt upgrade em um só comando.",
+            "pacman -Syu: -S (sync/instalar), -y (atualizar banco de dados), -u (upgrade de todos os pacotes desatualizados). Equivale a apt update && apt upgrade em um só comando.",
         },
         // Rede
         {
           module: "Rede",
-          question: "O que mostra o comando ss -tulnp?",
+          question: "O que lista o comando ss -tulnp?",
           options: [
-            "Estatísticas de rede",
-            "Portas TCP/UDP em escuta com o processo responsável",
-            "Tabela de roteamento",
-            "Configuração DNS",
-          ],
-          correct: 1,
-          explanation:
-            "-t TCP, -u UDP, -l listening, -n numérico (sem resolver hostnames), -p processo responsável. Essencial para saber quais portas estão abertas e qual serviço as ocupa.",
-        },
-        {
-          module: "Rede",
-          question: "O que significa uma porta ouvindo em 0.0.0.0:80?",
-          options: [
-            "Porta desabilitada",
-            "Ouvindo apenas no loopback",
-            "Ouvindo em todas as interfaces de rede",
-            "Porta disponível apenas internamente",
+            "Histórico de conexões encerradas nas últimas 24h",
+            "Tabela de roteamento com gateways e métricas",
+            "Portas TCP/UDP em estado LISTEN com o processo responsável por cada uma",
+            "Estatísticas de pacotes transmitidos por interface",
           ],
           correct: 2,
           explanation:
-            '0.0.0.0 significa "qualquer interface". O serviço aceita conexões em qualquer IP que a máquina tenha. Compare com 127.0.0.1:5432 — PostgreSQL acessível apenas localmente.',
+            "-t (TCP) -u (UDP) -l (listening) -n (numérico, sem DNS) -p (processo). Essencial em troubleshooting: saber qual serviço ocupa qual porta, ou se uma porta esperada não está ouvindo.",
+        },
+        {
+          module: "Rede",
+          question: "O que significa um serviço escutando em 0.0.0.0:80?",
+          options: [
+            "Aceita conexões em todas as interfaces de rede disponíveis",
+            "Escuta apenas na interface de loopback (127.0.0.1)",
+            "Porta desativada aguardando ativação manual",
+            "Disponível apenas para conexões de rede interna (RFC 1918)",
+          ],
+          correct: 0,
+          explanation:
+            '0.0.0.0 = "qualquer interface". O serviço responde em todos os IPs da máquina. Compare com 127.0.0.1:5432 (PostgreSQL local-only) ou ::1 (IPv6 loopback).',
         },
         {
           module: "Rede",
           question:
-            "Para qual finalidade serve o ssh -L 8080:localhost:5432 servidor?",
+            "O que faz o comando: ssh -L 8080:localhost:5432 servidor?",
           options: [
-            "Abre a porta 8080 no servidor",
-            "Cria um túnel: localhost:8080 local conecta ao PostgreSQL (5432) do servidor",
-            "Redireciona tráfego do servidor para o cliente",
-            "Verifica se a porta 5432 está aberta no servidor",
+            "Verifica se a porta 5432 do servidor está acessível",
+            "Abre a porta 8080 no servidor para acesso externo",
+            "Redireciona o tráfego da porta 5432 do servidor para 8080 do cliente",
+            "Cria túnel local: acessar localhost:8080 conecta ao PostgreSQL (5432) do servidor",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "Port forwarding local: acessar localhost:8080 no seu computador conecta à porta 5432 do servidor via túnel SSH criptografado. Usado para acessar bancos de dados internos com segurança.",
+            "Port forwarding local: localhost:8080 → túnel SSH → servidor:5432. Acesso ao banco de dados remoto como se fosse local, com criptografia SSH. Útil para bancos sem exposição pública.",
         },
         // Scripting
         {
@@ -427,75 +427,75 @@
           question:
             'O que faz "set -euo pipefail" no início de um script bash?',
           options: [
-            "Habilita modo de depuração com trace completo",
-            "Sai em erros (e), erro em variável indefinida (u), propaga erros em pipes (pipefail)",
-            "Exporta todas as variáveis automaticamente",
-            "Define o ambiente de execução como root",
+            "Habilita trace de execução linha a linha (modo debug)",
+            "Encerra em erro (-e), falha em variável indefinida (-u), propaga erro em pipe (pipefail)",
+            "Exporta automaticamente todas as variáveis do script",
+            "Define o shell como root para execução privilegiada",
           ],
           correct: 1,
           explanation:
-            "set -e: encerra se comando falhar. set -u: trata variável não definida como erro. set -o pipefail: propaga erros em pipes. Juntos previnem erros silenciosos em scripts.",
+            "set -e: sai se qualquer comando retornar != 0. set -u: trata variável sem valor como erro. set -o pipefail: pipe falha se qualquer etapa falhar (sem isso, 'false | true' retorna 0). Juntos tornam scripts seguros.",
         },
         {
           module: "Scripting",
           question:
-            "Para iterar sobre argumentos de função preservando espaços, o correto é:",
+            'Para iterar sobre argumentos preservando espaços internos, use:',
           options: [
-            "for a in $*",
-            'for a in "$*"',
-            'for a in "$@"',
-            "for a in $@",
+            'for arg in "$@"',
+            "for arg in $@",
+            'for arg in "$*"',
+            "for arg in $*",
           ],
-          correct: 2,
+          correct: 0,
           explanation:
-            '"$@" expande cada argumento separadamente, preservando espaços internos. "$*" junta tudo em uma string. Sem aspas, ambos sofrem word splitting. Sempre use "$@".',
+            '"$@" expande cada argumento como elemento separado, preservando espaços. "$*" junta tudo numa string. Sem aspas, word splitting quebra argumentos com espaços. "$@" é sempre a escolha correta.',
         },
         {
           module: "Scripting",
           question:
-            "O shebang #!/usr/bin/env bash é preferível a #!/bin/bash porque:",
+            "Por que #!/usr/bin/env bash é preferível a #!/bin/bash?",
           options: [
-            "É mais rápido de executar",
-            "Funciona mesmo quando bash está em locais diferentes (usa $PATH)",
-            "Habilita features extras do bash",
-            "É a forma padrão exigida pelo POSIX",
+            "Porque /bin/bash foi depreciado nas versões recentes do Linux",
+            "Porque env bash ativa funcionalidades extras do bash",
+            "Porque #!/usr/bin/env bash é o shebang exigido pelo padrão POSIX",
+            "Porque usa o bash encontrado no $PATH, funcionando em sistemas onde bash não está em /bin",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "#!/usr/bin/env bash usa o bash encontrado no $PATH, tornando o script portável para sistemas onde bash pode estar em /usr/local/bin ou outros locais. /bin/bash é hardcoded.",
+            "Em macOS e alguns sistemas, bash pode estar em /usr/local/bin ou /opt/homebrew/bin. #!/usr/bin/env bash localiza o bash via $PATH, tornando o script portável sem hardcodar o caminho.",
         },
         // Certificações
         {
           module: "Certificações",
           question:
-            "Qual certificação Linux usa exame completamente prático (sem múltipla escolha)?",
+            "Qual certificação Linux é 100% prática, sem questões de múltipla escolha?",
           options: ["LPIC-1", "CompTIA Linux+", "RHCSA", "LFCA"],
           correct: 2,
           explanation:
-            "RHCSA é 100% prático — você administra sistemas RHEL reais por 2-3 horas. Tarefas como configurar SELinux, criar usuários, montar LVM, configurar serviços. Não há alternativas para memorizar.",
+            "RHCSA: 2-3 horas administrando VMs RHEL reais. Tarefas como configurar SELinux, criar volumes LVM, habilitar serviços, editar sudoers. Nenhuma alternativa para decorar — você precisa saber fazer.",
         },
         {
           module: "Certificações",
           question:
-            "No roadmap DevOps, qual tecnologia vem imediatamente após dominar Linux?",
-          options: ["Kubernetes", "Terraform", "Docker (containers)", "AWS"],
+            "No roadmap de DevOps, qual tecnologia é recomendada imediatamente após dominar Linux?",
+          options: ["Kubernetes", "AWS/Cloud", "Docker (containers)", "Terraform"],
           correct: 2,
           explanation:
-            "A progressão natural é: Linux → Shell Scripting → Docker → Kubernetes → Cloud → IaC. Docker é a base para entender containers antes de orquestração com Kubernetes.",
+            "Linux → Scripting → Docker → Kubernetes → Cloud → IaC (Terraform). Docker é o passo natural: usa namespaces e cgroups do Linux. Aprender Kubernetes sem Docker é pular etapas críticas.",
         },
         {
           module: "Certificações",
           question:
-            "Por que o Alpine Linux é popular como imagem base em containers Docker?",
+            "Por que Alpine Linux é amplamente usado como imagem base em containers Docker?",
           options: [
-            "Tem suporte oficial da Docker Inc.",
-            "Imagem base de ~5MB, menor superfície de ataque",
-            "É a única distro certificada para containers",
-            "Tem melhor desempenho em CPUs ARM",
+            "É a única distro com suporte oficial da Docker Inc.",
+            "Tem desempenho superior em arquiteturas ARM e RISC-V",
+            "É a única distro certificada para ambientes de produção",
+            "Imagem de ~5MB (vs ~72MB do Ubuntu), menor superfície de ataque",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "Alpine usa musl libc e busybox em vez de glibc e GNU coreutils, resultando em imagem de ~5MB vs ~72MB do Ubuntu. Menos software = menos vulnerabilidades. Padrão para imagens de produção.",
+            "Alpine usa musl libc + busybox em vez de glibc + GNU coreutils. Resultado: ~5MB de imagem base. Menos pacotes = menos CVEs. Ideal para imagens de produção onde tamanho e segurança importam.",
         },
       ];
     </script>

@@ -2015,6 +2015,11 @@ pre code {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: 16px;
+  padding: 20px 28px;
+  margin-top: 24px;
 }
 
 .quiz-body {
