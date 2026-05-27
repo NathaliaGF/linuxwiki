@@ -933,69 +933,6 @@ kbd {
 .hl-hline--top { top: 30%; }
 .hl-hline--bot { top: 65%; }
 
-/* Floating chips */
-.hl-chip {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-mid);
-  border-radius: 12px;
-  padding: 10px 14px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.hl-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 6px rgba(34, 211, 238, 0.7);
-  flex-shrink: 0;
-}
-
-.hl-chip-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.hl-chip-sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  white-space: nowrap;
-}
-
-/* Circular icon badges */
-.hl-badge {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--border-mid);
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  line-height: 1;
-}
-
-/* Chip/badge positions */
-.hl-chip--tl  { top: 26%; left: 7%; }
-.hl-chip--tr  { top: 24%; right: 7%; }
-.hl-badge--ml { top: 45%; left: 11%; }
-.hl-chip--ml  { top: 54%; left: 7%; }
-.hl-badge--mr { top: 43%; right: 11%; }
-.hl-chip--mr  { top: 54%; right: 7%; }
-
 /* Center content block */
 .hl-center {
   position: relative;
@@ -1052,6 +989,50 @@ kbd {
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+/* Stats row */
+.hl-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-top: 4px;
+}
+
+.hl-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 24px;
+}
+
+.hl-stat-num {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.hl-stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.hl-stat-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border-mid);
+  flex-shrink: 0;
 }
 
 /* Scroll hint — bottom-left */
@@ -1139,10 +1120,8 @@ kbd {
   font-size: 10px;
 }
 
-/* ── Responsive: hide floating chips on small screens ── */
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .hl-chip,
-  .hl-badge,
   .hl-hline,
   .hl-scroll,
   .hl-corner {
@@ -1151,6 +1130,14 @@ kbd {
 
   .hl-title {
     font-size: clamp(2.6rem, 10vw, 3.5rem);
+  }
+
+  .hl-stat {
+    padding: 0 14px;
+  }
+
+  .hl-stat-num {
+    font-size: 20px;
   }
 }
 
