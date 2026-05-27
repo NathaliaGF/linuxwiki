@@ -310,7 +310,6 @@ kbd {
 /* ============================================================
    BUTTONS
    ============================================================ */
-.btn-install-pwa,
 .btn-primary,
 .btn-secondary,
 .btn-ghost,
@@ -324,27 +323,176 @@ kbd {
   cursor: pointer;
 }
 
-.btn-install-pwa {
-  display: none;
-  padding: 6px 16px;
-  border-radius: 20px;
-  border-color: var(--border-mid);
+.btn-coffee {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
   background: rgba(255, 255, 255, 0.04);
-  color: var(--text-muted);
-  font-size: 12px;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
   backdrop-filter: var(--glass-blur-sm);
   -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
-.btn-install-pwa.visible {
-  display: inline-flex;
+.btn-coffee:hover {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.45);
+  transform: scale(1.1);
+  text-decoration: none;
 }
 
-.btn-install-pwa:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
+/* Pix Donation Modal */
+.pix-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.pix-modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.pix-modal-box {
+  position: relative;
+  background: #0e0f1c;
+  border: 1px solid var(--border-mid);
+  border-radius: 20px;
+  padding: 40px 28px 28px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7);
+  transform: translateY(14px) scale(0.98);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pix-modal-overlay.open .pix-modal-box {
+  transform: translateY(0) scale(1);
+}
+
+.pix-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.pix-modal-close:hover {
   background: rgba(255, 255, 255, 0.08);
-  text-decoration: none;
+  color: var(--text);
+}
+
+.pix-modal-coffee {
+  font-size: 52px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.pix-modal-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.pix-modal-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+
+.pix-key-block {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.pix-key-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+
+.pix-key-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pix-key-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: all;
+}
+
+.btn-copy-pix {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border-mid);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-copy-pix:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.pix-modal-footer {
+  font-size: 13px;
+  color: var(--text-faint);
+  margin: 0;
 }
 
 .btn-primary,
