@@ -3705,6 +3705,65 @@ mark {
   border-radius: 0 0 10px 10px;
 }
 
+/* ============================================================
+   FLASHCARD INFINITO
+   ============================================================ */
+.inf-session-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.inf-session-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.inf-count {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.inf-correct {
+  font-size: 0.8rem;
+  color: var(--green);
+}
+
+.inf-module-tag {
+  font-size: 0.72rem;
+  color: var(--cyan);
+  background: var(--cyan-glow);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  white-space: nowrap;
+}
+
+.btn-stop-infinite {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-stop-infinite:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
 /* ── Badge for tools page ── */
 .badge-fundamental {
   background: rgba(167, 139, 250, 0.10);

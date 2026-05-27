@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Flashcard Infinito LinuxWiki — revisão contínua de todos os módulos até você decidir parar." />
+    <title>Flashcard Infinito | LinuxWiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml" />
+  </head>
+
+  <body data-page="infinito">
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="../index.html" class="logo"><span class="logo-icon">&gt;_</span> LinuxWiki</a>
+        <nav class="header-nav">
+          <a href="../index.html" class="back-link">← Módulos</a>
+          <button class="btn-search" title="Buscar" aria-label="Buscar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <button class="btn-coffee" title="Apoiar o projeto" aria-label="Apoiar o projeto">☕</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container--narrow page-shell">
+
+        <div class="module-header">
+          <span class="module-number-badge">Ferramenta</span>
+          <h1 class="module-page-title">Flashcard Infinito</h1>
+          <p class="module-intro">
+            Revisão contínua com todos os flashcards de todos os módulos, embaralhados.
+            O SM-2 vai registrando seu desempenho. Pare quando quiser.
+          </p>
+          <div class="module-meta">
+            <span class="module-meta-item">♾ Sem limite de tempo</span>
+            <span class="module-meta-item">🃏 Todos os módulos</span>
+            <span class="module-meta-item">📈 SM-2 ativo</span>
+          </div>
+        </div>
+
+        <!-- Intro / Start -->
+        <div id="inf-intro">
+          <div class="card card-info with-bottom-gap-lg">
+            <div class="card-label">ℹ️ Como funciona</div>
+            <ul>
+              <li>Flashcards de todos os módulos embaralhados juntos</li>
+              <li>Quando o baralho acaba, começa de novo com nova ordem</li>
+              <li>Cada resposta atualiza o SM-2 (espaçamento de repetição)</li>
+              <li>Use <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> para avaliar sem sair do teclado</li>
+              <li>Clique em <strong>Parar</strong> a qualquer momento para ver seu resumo</li>
+            </ul>
+          </div>
+          <div style="text-align:center; padding: 8px 0 32px;">
+            <button class="btn-primary" id="btn-start-inf" style="font-size:1rem; padding: 14px 36px;">
+              Começar sessão →
+            </button>
+          </div>
+        </div>
+
+        <!-- Widget renderizado pelo JS -->
+        <div id="infinite-fc-widget"></div>
+
+      </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script src="../data/modules/index.js"></script>
+    <script src="../scripts/catalog.js"></script>
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/flashcards.js"></script>
+    <script src="../scripts/search.js"></script>
+    <script src="../scripts/pwa.js"></script>
+    <script>
+      document.getElementById('btn-start-inf').addEventListener('click', function () {
+        document.getElementById('inf-intro').hidden = true;
+        LinuxWiki.Flashcards.initInfinite('infinite-fc-widget');
+      });
+    </script>
+  </body>
+</html>

@@ -183,6 +183,135 @@
 
       render();
     },
+
+    initInfinite(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      function getAllCards() {
+        const mods = (global.LinuxWikiData || {}).modules || {};
+        const cards = [];
+        Object.values(mods).forEach(function (mod) {
+          (mod.flashcards || []).forEach(function (fc) {
+            cards.push({ id: fc.id, question: fc.question, answer: fc.answer, moduleTitle: mod.title });
+          });
+        });
+        return cards;
+      }
+
+      function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+
+      let deck = shuffle(getAllCards());
+      let idx = 0;
+      let total = 0;
+      let correct = 0;
+      let isFlipped = false;
+      let stopped = false;
+      let keyHandler = null;
+
+      function removeKeyHandler() {
+        if (keyHandler) { document.removeEventListener('keydown', keyHandler); keyHandler = null; }
+      }
+
+      function renderStopped() {
+        removeKeyHandler();
+        container.innerHTML = `
+          <div class="flashcard-done">
+            <h3>Sessão encerrada</h3>
+            <p>Você revisou <strong>${total}</strong> flashcard${total !== 1 ? 's' : ''} nesta sessão.</p>
+            <p style="color:var(--text-muted);font-size:0.9rem;">${correct} sabia bem · ${total - correct} para reforçar</p>
+            <button class="btn-ghost with-top-gap" onclick="location.reload()">Nova sessão</button>
+          </div>`;
+      }
+
+      function renderCard() {
+        removeKeyHandler();
+        if (stopped) { renderStopped(); return; }
+        if (idx >= deck.length) { deck = shuffle(deck); idx = 0; }
+        const card = deck[idx];
+        isFlipped = false;
+        container.innerHTML = `
+          <div class="inf-session-bar">
+            <div class="inf-session-info">
+              <span class="inf-count"><strong>${total}</strong> revisados</span>
+              <span class="inf-correct">${correct} certos</span>
+              <span class="inf-module-tag">${card.moduleTitle}</span>
+            </div>
+            <button class="btn-stop-infinite" id="btn-stop-inf">&#9632; Parar</button>
+          </div>
+          <div class="flashcard-container">
+            <div class="flashcard" id="fc-inf-card" tabindex="0" role="button" aria-expanded="false" aria-label="Virar flashcard">
+              <div class="flashcard-front">
+                <div class="card-side-label">Pergunta</div>
+                <div class="flashcard-question">${card.question}</div>
+                <div class="flashcard-hint">Clique para ver a resposta</div>
+              </div>
+              <div class="flashcard-back">
+                <div class="card-side-label">Resposta</div>
+                <div class="flashcard-answer">${card.answer}</div>
+              </div>
+            </div>
+          </div>
+          <div class="flashcard-actions is-hidden" id="fc-inf-actions">
+            <button class="btn-flashcard no" data-q="0"><kbd>1</kbd> Não sei</button>
+            <button class="btn-flashcard maybe" data-q="3"><kbd>2</kbd> Mais ou menos</button>
+            <button class="btn-flashcard yes" data-q="5"><kbd>3</kbd> Sei bem</button>
+          </div>`;
+
+        const cardEl = document.getElementById('fc-inf-card');
+        const actionsEl = document.getElementById('fc-inf-actions');
+
+        document.getElementById('btn-stop-inf').addEventListener('click', function () {
+          stopped = true; renderStopped();
+        });
+
+        cardEl.addEventListener('click', function () {
+          if (!isFlipped) {
+            cardEl.classList.add('flipped');
+            cardEl.setAttribute('aria-expanded', 'true');
+            actionsEl.classList.remove('is-hidden');
+            isFlipped = true;
+          }
+        });
+
+        cardEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cardEl.click(); }
+        });
+
+        actionsEl.querySelectorAll('.btn-flashcard').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const q = parseInt(btn.dataset.q, 10);
+            Flashcards.saveResult(card.id, q);
+            idx++; total++;
+            if (q >= 3) correct++;
+            renderCard();
+          });
+        });
+
+        keyHandler = function (e) {
+          if (!isFlipped) return;
+          const map = { '1': 0, '2': 3, '3': 5 };
+          if (map[e.key] !== undefined) {
+            e.preventDefault();
+            actionsEl.querySelector(`[data-q="${map[e.key]}"]`)?.click();
+          }
+        };
+        document.addEventListener('keydown', keyHandler);
+      }
+
+      if (deck.length === 0) {
+        container.innerHTML = '<p class="search-no-results">Nenhum flashcard encontrado.</p>';
+        return;
+      }
+      renderCard();
+    },
   };
 
   LinuxWiki.Flashcards = Flashcards;
