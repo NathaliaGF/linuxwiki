@@ -50,6 +50,8 @@
       './scripts/pwa.js',
       './scripts/main.js',
       './scripts/search.js',
+      './scripts/glossary.js',
+      './data/glossary.js',
       './data/modules/index.js',
       './manifest.json',
       './404.html',

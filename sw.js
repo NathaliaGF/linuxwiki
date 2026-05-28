@@ -5,8 +5,8 @@
 
 importScripts('./data/modules/index.js', './scripts/catalog.js');
 
-const CACHE_NAME = 'linuxwiki-v2';
-const STATIC_CACHE = 'linuxwiki-static-v2';
+const CACHE_NAME = 'linuxwiki-v3';
+const STATIC_CACHE = 'linuxwiki-static-v3';
 const OFFLINE_404_URL = new URL('./404.html', self.location).href;
 
 // Assets que queremos cachear imediatamente no install
